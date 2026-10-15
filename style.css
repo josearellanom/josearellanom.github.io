@@ -217,7 +217,10 @@ main { padding: 3.5rem 0 4rem; }
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
-  background: var(--amber-soft);
+  background-color: var(--amber-soft);
+  /* the two white seam lines of a tennis ball */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' opacity='0.9'%3E%3Cpath d='M15 4 C30 18 30 46 15 60'/%3E%3Cpath d='M49 4 C34 18 34 46 49 60'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: cover;
   right: 0;
   top: 2.5rem;
   transition: transform 0.2s ease;
