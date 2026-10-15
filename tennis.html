@@ -143,7 +143,7 @@
   <main>
     <div class="wrap">
       <h1 class="page-title">Take a break</h1>
-      <p class="game-intro">You found the hidden court. Keep the rally going: every point you win counts, and the game ends when the computer wins 3 points. It gets faster as you go.</p>
+      <p class="game-intro">You found the hidden court, and I'm your opponent. Every point you win counts, and the game ends when I win 3 points. I get faster as you go.</p>
 
       <div class="game-layout">
         <div>
@@ -286,6 +286,7 @@
     const ctx = canvas.getContext('2d');
     const W = canvas.width, H = canvas.height;
     const PAD_W = 12, PAD_H = 84, BALL_R = 8, EDGE = 14;
+    const CPU_EDGE = 34;           // the computer's paddle sits a bit further in, so the face fits
 
     const scoreEl = document.getElementById('score');
     const livesEl = document.getElementById('lives');
@@ -363,10 +364,10 @@
         ball.x = EDGE + PAD_W + BALL_R;
       }
       // Computer paddle
-      if (ball.vx > 0 && ball.x + BALL_R >= W - EDGE - PAD_W && ball.x < W - EDGE &&
+      if (ball.vx > 0 && ball.x + BALL_R >= W - CPU_EDGE - PAD_W && ball.x < W - CPU_EDGE &&
           ball.y >= cpuY - BALL_R && ball.y <= cpuY + PAD_H + BALL_R) {
         bounce(cpuY, -1, 1.02);
-        ball.x = W - EDGE - PAD_W - BALL_R;
+        ball.x = W - CPU_EDGE - PAD_W - BALL_R;
       }
 
       // Points
@@ -390,6 +391,23 @@
       ball.vy = speed * Math.sin(angle);
     }
 
+    // The computer's paddle carries a round photo (images/face.png).
+    const face = new Image();
+    face.src = 'images/face.png';
+    face.onload = () => { if (!running) draw(); };
+    const FACE_R = 21;
+    function drawFace(x, y) {
+      if (!face.complete || !face.naturalWidth) return;
+      ctx.save();
+      ctx.beginPath(); ctx.arc(x, y, FACE_R, 0, Math.PI * 2); ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(face, x - FACE_R, y - FACE_R, FACE_R * 2, FACE_R * 2);
+      ctx.restore();
+      ctx.strokeStyle = '#e57c69';
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(x, y, FACE_R, 0, Math.PI * 2); ctx.stroke();
+    }
+
     function draw() {
       ctx.fillStyle = '#2f7d55';
       ctx.fillRect(0, 0, W, H);
@@ -409,7 +427,8 @@
       ctx.fillStyle = '#f1c879';                       // you
       ctx.beginPath(); ctx.roundRect(EDGE, playerY, PAD_W, PAD_H, 5); ctx.fill();
       ctx.fillStyle = '#e57c69';                       // computer
-      ctx.beginPath(); ctx.roundRect(W - EDGE - PAD_W, cpuY, PAD_W, PAD_H, 5); ctx.fill();
+      ctx.beginPath(); ctx.roundRect(W - CPU_EDGE - PAD_W, cpuY, PAD_W, PAD_H, 5); ctx.fill();
+      drawFace(W - CPU_EDGE - PAD_W / 2, cpuY + PAD_H / 2);  // my face rides on the computer's paddle
 
       ctx.fillStyle = '#dff04a';                       // ball
       ctx.beginPath(); ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI * 2); ctx.fill();
@@ -440,7 +459,7 @@
         nameInput.value = '';
         nameInput.focus();
       } else {
-        ovText.textContent = score > 0 ? 'Nice rally. Want another go?' : 'The computer got you this time.';
+        ovText.textContent = score > 0 ? 'Nice rally. Want another go?' : 'I got you this time.';
         nameForm.hidden = true;
         overlay.hidden = false;
         startBtn.focus();
