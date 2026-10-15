@@ -143,13 +143,13 @@
   <main>
     <div class="wrap">
       <h1 class="page-title">Take a break</h1>
-      <p class="game-intro">You found the hidden court, and I'm your opponent. Every point you win counts, and the game ends when I win 3 points. I get faster as you go.</p>
+      <p class="game-intro">You found the hidden court, and I'm your opponent. Every point you win counts, and the game ends the moment I win a single point. I get faster as you go.</p>
 
       <div class="game-layout">
         <div>
           <div class="scorebar">
             <span>Score<strong id="score">0</strong></span>
-            <span>Lives <span class="lives" id="lives" aria-label="3 lives left">●●●</span></span>
+            <span class="lives-wrap">Lives <span class="lives" id="lives" aria-label="1 life left">●</span></span>
           </div>
           <div class="court-wrap">
             <canvas id="court" width="700" height="420" aria-label="Tennis court"></canvas>
@@ -200,7 +200,7 @@
       appId: "1:300754349668:web:7289dfe8fcb24671747971"
     };
 
-    const MAX_LIVES = 3;          // the game ends when the computer wins this many points
+    const MAX_LIVES = 1;          // the game ends when the computer wins this many points
     const MAX_SCORE = 200;        // must match the limit in the Firestore rules
     const BOARD_SIZE = 5;
 
@@ -324,8 +324,11 @@
       requestAnimationFrame(loop);
     }
 
+    if (MAX_LIVES === 1) document.querySelector('.lives-wrap').textContent = 'One miss and you\u2019re out';
+
     function updateHud() {
       scoreEl.textContent = score;
+      if (!livesEl.isConnected) return;
       livesEl.textContent = '●'.repeat(lives) + '○'.repeat(MAX_LIVES - lives);
       livesEl.setAttribute('aria-label', lives + (lives === 1 ? ' life' : ' lives') + ' left');
     }
