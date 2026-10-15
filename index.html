@@ -19,6 +19,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Icon library for the contact links (Font Awesome) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -55,13 +57,14 @@
             <p>Before my doctoral studies, I worked extensively on applied research and behavioral interventions with public and private organizations in Peru and across Latin America.</p>
           </div>
 
-          <!-- CONTACT LINKS -->
-          <ul class="links" aria-label="Contact and profiles">
-            <li><a href="mailto:josearel@andrew.cmu.edu">Email</a></li>
-            <li><a href="https://scholar.google.com/citations?user=qfkP73gAAAAJ">Google Scholar</a></li>
-            <li><a href="https://orcid.org/0000-0002-6596-2134">ORCID</a></li>
-            <li><a href="https://www.linkedin.com/in/jose-arellano-martorellet/">LinkedIn</a></li>
-            <li><a href="https://www.cmu.edu/dietrich/sds/people/phdstudents/jose-arellano.html">CMU profile</a></li>
+          <!-- CONTACT LINKS: icons only. The aria-label/title text is what screen readers
+               read aloud and what appears when someone hovers over the icon. -->
+          <ul class="icon-links" aria-label="Contact and profiles">
+            <li><a href="mailto:josearel@andrew.cmu.edu" aria-label="Email" title="Email"><i class="fa-regular fa-envelope" aria-hidden="true"></i></a></li>
+            <li><a href="https://www.linkedin.com/in/jose-arellano-martorellet/" aria-label="LinkedIn" title="LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a></li>
+            <li><a href="https://scholar.google.com/citations?user=qfkP73gAAAAJ" aria-label="Google Scholar" title="Google Scholar"><i class="fa-brands fa-google-scholar" aria-hidden="true"></i></a></li>
+            <li><a href="https://orcid.org/0000-0002-6596-2134" aria-label="ORCID" title="ORCID"><i class="fa-brands fa-orcid" aria-hidden="true"></i></a></li>
+            <li><a href="https://www.cmu.edu/dietrich/sds/people/phdstudents/jose-arellano.html" aria-label="CMU profile" title="CMU profile"><i class="fa-solid fa-building-columns" aria-hidden="true"></i></a></li>
           </ul>
         </div>
 

@@ -161,15 +161,31 @@ main { padding: 3.5rem 0 4rem; }
 
 .bio p { max-width: var(--text); }
 
-.links {
+/* Contact icons under the bio */
+.icon-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem 1.4rem;
+  gap: 0.6rem;
   list-style: none;
   margin: 1.5rem 0 0;
   padding: 0;
-  font-size: 0.97rem;
 }
+.icon-links a {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  color: var(--ink);
+  font-size: 1.3rem;
+  text-decoration: none;
+  transition: color 0.15s, background-color 0.15s;
+}
+.icon-links a:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.icon-links li:first-child a { margin-left: -0.55rem; } /* lines the first icon up with the text above */
 
 /* The cut-out photo "stands" on the line above the research themes.
    The soft circle and small dot behind it are drawn here, not in the image. */
