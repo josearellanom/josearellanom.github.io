@@ -197,8 +197,7 @@ main { padding: 3.5rem 0 4rem; }
   align-items: flex-end;
   justify-content: center;
 }
-.figure::before,
-.figure::after {
+.figure::before {
   content: "";
   position: absolute;
   border-radius: 50%;
@@ -212,13 +211,18 @@ main { padding: 3.5rem 0 4rem; }
   top: 3.75rem;
   transform: translateX(-50%);
 }
-.figure::after {             /* small gold dot */
+.ball {                      /* small gold dot: secretly a link to the tennis game */
+  position: absolute;
+  z-index: 2;
   width: 3rem;
   height: 3rem;
+  border-radius: 50%;
   background: var(--amber-soft);
   right: 0;
   top: 2.5rem;
+  transition: transform 0.2s ease;
 }
+.ball:hover { transform: scale(1.12) rotate(20deg); }
 .figure img {
   position: relative;
   z-index: 1;
@@ -455,7 +459,7 @@ main { padding: 3.5rem 0 4rem; }
     margin-bottom: 1.75rem;
   }
   .figure::before { width: 12rem; height: 12rem; top: 2.5rem; left: 6rem; }
-  .figure::after  { width: 2rem; height: 2rem; top: 1.5rem; right: auto; left: 11.5rem; }
+  .ball { width: 2rem; height: 2rem; top: 1.5rem; right: auto; left: 11.5rem; }
   .hero-text { padding-bottom: 2.25rem; }
   .themes { grid-template-columns: 1fr; }
   .theme,

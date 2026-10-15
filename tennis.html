@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Take a break | Jose Arellano Martorellet</title>
+  <meta name="description" content="A small tennis game hidden on Jose Arellano Martorellet's website.">
+  <meta name="robots" content="noindex">
+
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .game-intro { color: var(--muted); max-width: var(--text); margin: 0 0 1.75rem; }
+    .game-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 16rem;
+      gap: 2.5rem;
+      align-items: start;
+    }
+    .scorebar {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.6rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+    .scorebar strong {
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-left: 0.35rem;
+    }
+    .lives { letter-spacing: 0.2em; color: var(--coral); }
+    .court-wrap { position: relative; }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      touch-action: none;
+      cursor: pointer;
+    }
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.9rem;
+      padding: 1rem;
+      text-align: center;
+      color: #fff;
+      background: rgba(10, 30, 20, 0.62);
+      border-radius: 10px;
+    }
+    .overlay[hidden] { display: none; }
+    .overlay h2 { font-size: clamp(1.4rem, 3.5vw, 2rem); color: #fff; }
+    .overlay p { margin: 0; color: rgba(255, 255, 255, 0.85); max-width: 26rem; }
+    .btn {
+      font: inherit;
+      font-weight: 600;
+      padding: 0.6rem 1.3rem;
+      border: 0;
+      border-radius: 999px;
+      background: var(--amber-soft);
+      color: #1b2330;
+      cursor: pointer;
+    }
+    .btn:hover { filter: brightness(1.05); }
+    .btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+    .name-form { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+    .name-form[hidden] { display: none; }
+    .name-form input {
+      font: inherit;
+      width: 11rem;
+      padding: 0.55rem 0.8rem;
+      border-radius: 999px;
+      border: 0;
+      color: #1b2330;
+    }
+    .form-msg { min-height: 1.2em; font-size: 0.9rem; }
+    .hint { font-size: 0.88rem; color: var(--muted); margin: 0.75rem 0 0; }
+
+    .board h2 { font-size: 1.4rem; margin-bottom: 0.75rem; }
+    .board ol {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      counter-reset: rank;
+    }
+    .board li {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--rule);
+      counter-increment: rank;
+    }
+    .board li::before {
+      content: counter(rank);
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      width: 1.25rem;
+      flex: none;
+    }
+    .board .who { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .board .pts { font-weight: 600; font-variant-numeric: tabular-nums; }
+    .board .empty { color: var(--muted); font-size: 0.95rem; }
+    .board .empty::before { content: none; }
+    .board-note { font-size: 0.85rem; color: var(--muted); margin-top: 0.75rem; }
+
+    .visually-hidden {
+      position: absolute; width: 1px; height: 1px; overflow: hidden;
+      clip: rect(0 0 0 0); white-space: nowrap;
+    }
+
+    @media (max-width: 760px) {
+      .game-layout { grid-template-columns: 1fr; gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="site-name" href="index.html">Jose Arellano Martorellet</a>
+      <nav class="site-nav" aria-label="Main">
+        <ul>
+          <li><a href="index.html">About</a></li>
+          <li><a href="research.html">Research</a></li>
+          <li><a href="cv.html">CV</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <h1 class="page-title">Take a break</h1>
+      <p class="game-intro">You found the hidden court. Keep the rally going: every point you win counts, and the game ends when the computer wins 3 points. It gets faster as you go.</p>
+
+      <div class="game-layout">
+        <div>
+          <div class="scorebar">
+            <span>Score<strong id="score">0</strong></span>
+            <span>Lives <span class="lives" id="lives" aria-label="3 lives left">●●●</span></span>
+          </div>
+          <div class="court-wrap">
+            <canvas id="court" width="700" height="420" aria-label="Tennis court"></canvas>
+
+            <div class="overlay" id="overlay">
+              <h2 id="ov-title">Ready?</h2>
+              <p id="ov-text">Move with the mouse, a finger, W/S, or the arrow keys.</p>
+              <form class="name-form" id="name-form" hidden>
+                <label class="visually-hidden" for="player-name">Your name</label>
+                <input id="player-name" maxlength="12" autocomplete="off" placeholder="Your name (max 12)">
+                <button class="btn" type="submit">Save score</button>
+              </form>
+              <p class="form-msg" id="form-msg" aria-live="polite"></p>
+              <button class="btn" id="start-btn" type="button">Start</button>
+            </div>
+          </div>
+          <p class="hint">Tip: hitting the ball with the edge of your paddle sends it at a sharper angle.</p>
+        </div>
+
+        <aside class="board" aria-labelledby="board-title">
+          <h2 id="board-title">Top 5</h2>
+          <ol id="board"><li class="empty">Loading…</li></ol>
+          <p class="board-note" id="board-note"></p>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>Jose Arellano Martorellet</span>
+      <span><a href="index.html">Back to the site</a></span>
+    </div>
+  </footer>
+
+  <script type="module">
+    // ============================================================
+    // LEADERBOARD SETTINGS
+    // Paste the firebaseConfig values from the Firebase console here.
+    // While apiKey is empty, the game works but scores are not saved.
+    // ============================================================
+    const firebaseConfig = {
+      apiKey: "",
+      authDomain: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: ""
+    };
+
+    const MAX_LIVES = 3;          // the game ends when the computer wins this many points
+    const MAX_SCORE = 200;        // must match the limit in the Firestore rules
+    const BOARD_SIZE = 5;
+
+    // ---------------- Leaderboard ----------------
+    const boardEl = document.getElementById('board');
+    const boardNote = document.getElementById('board-note');
+    let db = null, fs = null;
+    let topScores = [];
+
+    async function initDb() {
+      if (!firebaseConfig.apiKey) {
+        boardEl.innerHTML = '<li class="empty">The leaderboard opens soon.</li>';
+        return;
+      }
+      try {
+        const app = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+        fs = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+        db = fs.getFirestore(app.initializeApp(firebaseConfig));
+        await loadBoard();
+      } catch (err) {
+        console.error(err);
+        db = null;
+        boardEl.innerHTML = '<li class="empty">The leaderboard is unavailable right now.</li>';
+      }
+    }
+
+    async function loadBoard() {
+      if (!db) return;
+      const q = fs.query(fs.collection(db, 'scores'), fs.orderBy('score', 'desc'), fs.limit(BOARD_SIZE));
+      const snap = await fs.getDocs(q);
+      topScores = snap.docs.map(d => d.data());
+      renderBoard();
+    }
+
+    function renderBoard() {
+      boardEl.innerHTML = '';
+      if (!topScores.length) {
+        boardEl.innerHTML = '<li class="empty">No scores yet. Be the first.</li>';
+        return;
+      }
+      for (const s of topScores) {
+        const li = document.createElement('li');
+        const who = document.createElement('span');
+        who.className = 'who';
+        who.textContent = s.name;               // textContent, so names can't inject HTML
+        const pts = document.createElement('span');
+        pts.className = 'pts';
+        pts.textContent = s.score;
+        li.append(who, pts);
+        boardEl.append(li);
+      }
+    }
+
+    function qualifies(score) {
+      if (!db || score < 1) return false;
+      if (topScores.length < BOARD_SIZE) return true;
+      return score > topScores[topScores.length - 1].score;
+    }
+
+    // Simple filter for obviously offensive names (English and Spanish).
+    const BLOCKED = ['fuck', 'shit', 'bitch', 'cunt', 'nigg', 'fag', 'whore', 'dick', 'cock', 'pussy', 'asshole',
+      'puta', 'puto', 'mierda', 'pendej', 'cabron', 'verga', 'pinga', 'culo', 'coño', 'cono', 'maricon',
+      'concha', 'chucha', 'huevon', 'cojud', 'carajo', 'hitler', 'nazi'];
+    function cleanName(raw) {
+      const name = raw.replace(/\s+/g, ' ').trim().slice(0, 12);
+      const flat = name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/[0@]/g, 'o').replace(/[1!]/g, 'i').replace(/3/g, 'e').replace(/[4]/g, 'a')
+        .replace(/[^a-zñ]/g, '');
+      if (!name) return { ok: false, msg: 'Type a name first.' };
+      if (BLOCKED.some(w => flat.includes(w))) return { ok: false, msg: 'Please choose a different name.' };
+      return { ok: true, name };
+    }
+
+    async function saveScore(name, score) {
+      await fs.addDoc(fs.collection(db, 'scores'), {
+        name, score: Math.min(score, MAX_SCORE), createdAt: fs.serverTimestamp()
+      });
+      await loadBoard();
+    }
+
+    // ---------------- Game ----------------
+    const canvas = document.getElementById('court');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const PAD_W = 12, PAD_H = 84, BALL_R = 8, EDGE = 14;
+
+    const scoreEl = document.getElementById('score');
+    const livesEl = document.getElementById('lives');
+    const overlay = document.getElementById('overlay');
+    const ovTitle = document.getElementById('ov-title');
+    const ovText = document.getElementById('ov-text');
+    const startBtn = document.getElementById('start-btn');
+    const nameForm = document.getElementById('name-form');
+    const nameInput = document.getElementById('player-name');
+    const formMsg = document.getElementById('form-msg');
+
+    let playerY, cpuY, ball, score, lives, running = false, last = 0, keys = {}, pointerY = null, serveTimer = 0;
+
+    function resetRound(towardPlayer) {
+      ball = { x: W / 2, y: H / 2, vx: 0, vy: 0 };
+      serveTimer = 0.7;                          // short pause before each serve
+      ball.dir = towardPlayer ? -1 : 1;
+    }
+
+    function serve() {
+      const speed = 330 + score * 9;            // pixels per second; grows as you score
+      const angle = (Math.random() * 50 - 25) * Math.PI / 180;
+      ball.vx = ball.dir * speed * Math.cos(angle);
+      ball.vy = speed * Math.sin(angle);
+    }
+
+    function newGame() {
+      playerY = cpuY = H / 2 - PAD_H / 2;
+      score = 0; lives = MAX_LIVES;
+      updateHud();
+      resetRound(true);
+      running = true;
+      overlay.hidden = true;
+      last = performance.now();
+      requestAnimationFrame(loop);
+    }
+
+    function updateHud() {
+      scoreEl.textContent = score;
+      livesEl.textContent = '●'.repeat(lives) + '○'.repeat(MAX_LIVES - lives);
+      livesEl.setAttribute('aria-label', lives + (lives === 1 ? ' life' : ' lives') + ' left');
+    }
+
+    function cpuSpeed() { return Math.min(230 + score * 14, 520); }  // the computer improves as you score
+
+    function step(dt) {
+      // Player: keyboard or pointer
+      const move = 420 * dt;
+      if (keys.up) playerY -= move;
+      if (keys.down) playerY += move;
+      if (pointerY !== null) playerY += (pointerY - PAD_H / 2 - playerY) * Math.min(1, dt * 18);
+      playerY = Math.max(0, Math.min(H - PAD_H, playerY));
+
+      // Computer: follows the ball with limited speed
+      const target = (ball.vx > 0 ? ball.y : H / 2) - PAD_H / 2;
+      const diff = target - cpuY;
+      cpuY += Math.sign(diff) * Math.min(Math.abs(diff), cpuSpeed() * dt);
+      cpuY = Math.max(0, Math.min(H - PAD_H, cpuY));
+
+      if (serveTimer > 0) {
+        serveTimer -= dt;
+        if (serveTimer <= 0) serve();
+        return;
+      }
+
+      ball.x += ball.vx * dt;
+      ball.y += ball.vy * dt;
+      if (ball.y < BALL_R) { ball.y = BALL_R; ball.vy = Math.abs(ball.vy); }
+      if (ball.y > H - BALL_R) { ball.y = H - BALL_R; ball.vy = -Math.abs(ball.vy); }
+
+      // Player paddle
+      if (ball.vx < 0 && ball.x - BALL_R <= EDGE + PAD_W && ball.x > EDGE &&
+          ball.y >= playerY - BALL_R && ball.y <= playerY + PAD_H + BALL_R) {
+        bounce(playerY, 1, 1.05);
+        ball.x = EDGE + PAD_W + BALL_R;
+      }
+      // Computer paddle
+      if (ball.vx > 0 && ball.x + BALL_R >= W - EDGE - PAD_W && ball.x < W - EDGE &&
+          ball.y >= cpuY - BALL_R && ball.y <= cpuY + PAD_H + BALL_R) {
+        bounce(cpuY, -1, 1.02);
+        ball.x = W - EDGE - PAD_W - BALL_R;
+      }
+
+      // Points
+      if (ball.x > W + BALL_R) {                 // computer missed: you score
+        score = Math.min(score + 1, MAX_SCORE);
+        updateHud();
+        resetRound(false);
+      } else if (ball.x < -BALL_R) {             // you missed: lose a life
+        lives -= 1;
+        updateHud();
+        if (lives <= 0) return gameOver();
+        resetRound(true);
+      }
+    }
+
+    function bounce(padY, dir, boost) {
+      const hit = Math.max(-1, Math.min(1, (ball.y - (padY + PAD_H / 2)) / (PAD_H / 2)));
+      const speed = Math.min(Math.hypot(ball.vx, ball.vy) * boost, 900);
+      const angle = hit * 55 * Math.PI / 180;
+      ball.vx = dir * speed * Math.cos(angle);
+      ball.vy = speed * Math.sin(angle);
+    }
+
+    function draw() {
+      ctx.fillStyle = '#2f7d55';
+      ctx.fillRect(0, 0, W, H);
+      ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(8, 8, W - 16, H - 16);
+      ctx.beginPath();
+      ctx.moveTo(8, H * 0.15); ctx.lineTo(W - 8, H * 0.15);
+      ctx.moveTo(8, H * 0.85); ctx.lineTo(W - 8, H * 0.85);
+      ctx.moveTo(W * 0.25, H * 0.15); ctx.lineTo(W * 0.25, H * 0.85);
+      ctx.moveTo(W * 0.75, H * 0.15); ctx.lineTo(W * 0.75, H * 0.85);
+      ctx.moveTo(W * 0.25, H / 2); ctx.lineTo(W * 0.75, H / 2);
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      ctx.fillRect(W / 2 - 2, 4, 4, H - 8);           // net
+
+      ctx.fillStyle = '#f1c879';                       // you
+      ctx.beginPath(); ctx.roundRect(EDGE, playerY, PAD_W, PAD_H, 5); ctx.fill();
+      ctx.fillStyle = '#e57c69';                       // computer
+      ctx.beginPath(); ctx.roundRect(W - EDGE - PAD_W, cpuY, PAD_W, PAD_H, 5); ctx.fill();
+
+      ctx.fillStyle = '#dff04a';                       // ball
+      ctx.beginPath(); ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(ball.x - 4, ball.y, BALL_R * 0.8, -0.9, 0.9); ctx.stroke();
+    }
+
+    function loop(now) {
+      if (!running) return;
+      const dt = Math.min((now - last) / 1000, 0.033);  // cap the step so a slow frame can't skip a paddle
+      last = now;
+      step(dt);
+      if (running) draw();
+      requestAnimationFrame(loop);
+    }
+
+    function gameOver() {
+      running = false;
+      draw();
+      ovTitle.textContent = score === 1 ? 'Game over: 1 point' : `Game over: ${score} points`;
+      formMsg.textContent = '';
+      startBtn.textContent = 'Play again';
+      if (qualifies(score)) {
+        ovText.textContent = 'You made the top 5! Add your name to the leaderboard.';
+        nameForm.hidden = false;
+        overlay.hidden = false;
+        nameInput.value = '';
+        nameInput.focus();
+      } else {
+        ovText.textContent = score > 0 ? 'Nice rally. Want another go?' : 'The computer got you this time.';
+        nameForm.hidden = true;
+        overlay.hidden = false;
+        startBtn.focus();
+      }
+    }
+
+    nameForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const check = cleanName(nameInput.value);
+      if (!check.ok) { formMsg.textContent = check.msg; return; }
+      const btn = nameForm.querySelector('button');
+      btn.disabled = true;
+      formMsg.textContent = 'Saving…';
+      try {
+        await saveScore(check.name, score);
+        formMsg.textContent = 'Saved. You are on the board!';
+        nameForm.hidden = true;
+      } catch (err) {
+        console.error(err);
+        formMsg.textContent = 'Could not save the score. Please try again.';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    startBtn.addEventListener('click', () => { nameForm.hidden = true; newGame(); });
+
+    // Controls
+    const KEYS_UP = ['ArrowUp', 'w', 'W'], KEYS_DOWN = ['ArrowDown', 's', 'S'];
+    document.addEventListener('keydown', (e) => {
+      if (document.activeElement === nameInput) return;
+      if (KEYS_UP.includes(e.key)) { keys.up = true; pointerY = null; }
+      if (KEYS_DOWN.includes(e.key)) { keys.down = true; pointerY = null; }
+      if (running && (KEYS_UP.includes(e.key) || KEYS_DOWN.includes(e.key))) e.preventDefault();
+    });
+    document.addEventListener('keyup', (e) => {
+      if (KEYS_UP.includes(e.key)) keys.up = false;
+      if (KEYS_DOWN.includes(e.key)) keys.down = false;
+    });
+    function toCanvasY(clientY) {
+      const r = canvas.getBoundingClientRect();
+      return (clientY - r.top) * (H / r.height);
+    }
+    canvas.addEventListener('pointermove', (e) => { pointerY = toCanvasY(e.clientY); });
+    canvas.addEventListener('pointerdown', (e) => { pointerY = toCanvasY(e.clientY); });
+    canvas.addEventListener('touchmove', (e) => { if (running) e.preventDefault(); }, { passive: false });
+
+    // Pause between points if the tab is hidden
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && running) last = performance.now();
+    });
+
+    // First paint
+    playerY = cpuY = H / 2 - PAD_H / 2;
+    score = 0; lives = MAX_LIVES;
+    resetRound(true);
+    draw();
+    initDb();
+  </script>
+</body>
+</html>

@@ -8,7 +8,8 @@ Personal academic website of Jose Arellano Martorellet. Plain HTML and CSS, no b
 |---|---|
 | `index.html` | About page (photo, bio, research themes, current work, contact links) |
 | `research.html` | Publications, working papers, presentations |
-| `cv.html` | Education, awards and grants, teaching |
+| `cv.html` | Education, experience, awards and grants, teaching, public writing, skills |
+| `tennis.html` | Hidden tennis game (opened by clicking the small gold dot next to the photo) with a top-5 leaderboard stored in Firebase |
 | `style.css` | All colors, fonts, and spacing (colors are at the top) |
 | `images/` | `portrait.webp` (cut-out photo on the About page), `profile.jpg` (photo shown when the site is shared on social media), `favicon.svg` (browser-tab icon) |
 | `CNAME` | Tells GitHub Pages to serve the site at josearellanom.com. Don't delete it |
@@ -59,3 +60,9 @@ You can preview the site anytime by double-clicking `index.html`.
 - The header and footer are repeated on each page. If you change one (for example, adding a nav link), change it on all three.
 - To change colors, edit the variables at the top of `style.css`. The three research-theme colors are `--amber`, `--teal`, and `--coral`.
 - The "Current work" list on the About page is a short highlight. When a paper changes status, update it both there and in `research.html`.
+
+## Tennis leaderboard
+
+- The leaderboard is stored in a free Firebase (Firestore) database, in a collection called `scores`.
+- The connection settings are the `firebaseConfig` block near the top of the script in `tennis.html`. While `apiKey` is empty, the game still works but scores are not saved.
+- To remove an unwanted entry, open the Firebase console → Firestore Database → `scores`, and delete the document. Visitors cannot edit or delete scores.
