@@ -35,6 +35,14 @@
       <h1 class="page-title">Curriculum vitae</h1>
       <p class="page-lede">Highlights below. Publications and presentations are on the <a href="research.html">Research</a> page.</p>
 
+      <!-- THEME KEY: a colored dot next to a year marks which research theme that item belongs to.
+           Add one with <span class="dot" style="--dot: var(--coral)" aria-hidden="true"></span> inside the "when" span. -->
+      <ul class="theme-key" aria-label="Research themes">
+        <li style="--dot: var(--amber)"><span class="dot"></span>Health communication</li>
+        <li style="--dot: var(--teal)"><span class="dot"></span>Norms, trust, and credibility</li>
+        <li style="--dot: var(--coral)"><span class="dot"></span>Latin American interventions</li>
+      </ul>
+
       <!-- CV DOWNLOAD BUTTON: once you add your CV as "cv.pdf" in the main folder,
            delete the two comment markers around the line below to show the button.
       <a class="cv-download" href="cv.pdf">Download full CV (PDF)</a>
@@ -60,9 +68,9 @@
           <li><span class="when">2025</span><span class="what">J. Frank Yates Memorial Student Travel Award, Society for Judgment and Decision Making</span></li>
           <li><span class="when">2023</span><span class="what">Graduate Student Small Project Help (GuSH) Research Grant, Carnegie Mellon University<span class="detail">$750</span></span></li>
           <li><span class="when">2022</span><span class="what">Dietrich College Scholar’s Fellowship, Carnegie Mellon University<span class="detail">$79,998</span></span></li>
-          <li><span class="when">2020</span><span class="what">Funded research project, Annual Research Projects Competition, Pontificia Universidad Católica del Perú<span class="detail">$39,022</span></span></li>
-          <li><span class="when">2019</span><span class="what">Funded research project, Inter-American Development Bank, Increasing Trust in Latin America and the Caribbean<span class="detail">$30,000</span></span></li>
-          <li><span class="when">2017</span><span class="what">Selected research proposal, MineduLAB, Ministry of Education of Peru</span></li>
+          <li><span class="when">2020<span class="dot" style="--dot: var(--coral)" aria-hidden="true"></span></span><span class="what">Funded research project, Annual Research Projects Competition, Pontificia Universidad Católica del Perú<span class="detail">$39,022</span></span></li>
+          <li><span class="when">2019<span class="dot" style="--dot: var(--coral)" aria-hidden="true"></span></span><span class="what">Funded research project, Inter-American Development Bank, Increasing Trust in Latin America and the Caribbean<span class="detail">$30,000</span></span></li>
+          <li><span class="when">2017<span class="dot" style="--dot: var(--coral)" aria-hidden="true"></span></span><span class="what">Selected research proposal, MineduLAB, Ministry of Education of Peru</span></li>
         </ul>
       </section>
 
