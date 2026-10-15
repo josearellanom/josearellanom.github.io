@@ -57,8 +57,8 @@
           <p class="authors">With Silvia Saccardo and Gretchen B. Chapman</p>
           <p class="venue">In <em>The SAGE Handbook of Health Psychology</em> (2nd ed., Vol. 2, pp. 433–460). SAGE Publications, 2025.</p>
           <ul class="entry-links">
-            <li><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4411039">Open-access manuscript (SSRN)</a></li>
-            <li><a href="https://us2.sagepub.com/en-us/nam/the-sage-handbook-of-health-psychology/book280825">Book (SAGE)</a></li>
+            <li><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4411039" target="_blank" rel="noopener">Open-access manuscript (SSRN)</a></li>
+            <li><a href="https://us2.sagepub.com/en-us/nam/the-sage-handbook-of-health-psychology/book280825" target="_blank" rel="noopener">Book (SAGE)</a></li>
           </ul>
         </article>
       </section>
@@ -127,5 +127,11 @@
     </div>
   </footer>
 
+  <!-- Opens every link to another website in a new tab, including links added later. -->
+  <script>
+    document.querySelectorAll('a[href^="http"]').forEach(function (a) {
+      if (a.hostname !== location.hostname) { a.target = '_blank'; a.rel = 'noopener'; }
+    });
+  </script>
 </body>
 </html>
