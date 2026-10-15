@@ -15,7 +15,7 @@ Personal academic website of Jose Arellano Martorellet. Plain HTML and CSS, no b
 
 ## Before you publish
 
-1. **Photo:** save a portrait-shaped photo (roughly 4:5, at least 600 px wide) as `images/profile.jpg`. Until then, the page shows your initials.
+1. **Photo:** use attached tiff file. Resize appropriately for website.
 2. **CV (later):** save your CV as `cv.pdf` in the main folder, then in `cv.html` remove the `<!--` and `-->` around the "Download full CV" line.
 
 You can preview the site anytime by double-clicking `index.html`.
