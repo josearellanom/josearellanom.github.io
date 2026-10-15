@@ -6,16 +6,16 @@ Personal academic website of Jose Arellano Martorellet. Plain HTML and CSS, no b
 
 | File | What it is |
 |---|---|
-| `index.html` | About page (photo, bio, interests, contact) |
+| `index.html` | About page (photo, bio, research themes, current work, contact links) |
 | `research.html` | Publications, working papers, presentations |
 | `cv.html` | Education, awards and grants, teaching |
 | `style.css` | All colors, fonts, and spacing (colors are at the top) |
-| `images/` | Put `profile.jpg` here. `favicon.svg` is the browser-tab icon |
+| `images/` | `portrait.webp` (cut-out photo on the About page), `profile.jpg` (photo shown when the site is shared on social media), `favicon.svg` (browser-tab icon) |
 | `CNAME` | Tells GitHub Pages to serve the site at josearellanom.com. Don't delete it |
 
 ## Before you publish
 
-1. **Photo:** use attached tiff file. Resize appropriately for website.
+1. **Photo:** the About page uses `images/portrait.webp`, a photo with the background removed. `images/profile.jpg` is only used for link previews on social media.
 2. **CV (later):** save your CV as `cv.pdf` in the main folder, then in `cv.html` remove the `<!--` and `-->` around the "Download full CV" line.
 
 You can preview the site anytime by double-clicking `index.html`.
@@ -56,4 +56,5 @@ You can preview the site anytime by double-clicking `index.html`.
 - On github.com, open a file, click the pencil icon, make the change, and click **Commit changes**. The live site updates within a minute or two.
 - To add a paper, copy an `<article class="entry"> … </article>` block in `research.html` and edit it. Comments in the files mark where things go.
 - The header and footer are repeated on each page. If you change one (for example, adding a nav link), change it on all three.
-- To change colors, edit the variables at the top of `style.css`.
+- To change colors, edit the variables at the top of `style.css`. The three research-theme colors are `--amber`, `--teal`, and `--coral`.
+- The "Current work" list on the About page is a short highlight. When a paper changes status, update it both there and in `research.html`.

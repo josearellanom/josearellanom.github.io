@@ -39,22 +39,13 @@
 
   <main>
     <div class="wrap">
-      <section class="intro">
-
-        <!-- PHOTO: save your photo as images/profile.jpg (a portrait-shaped photo works best).
-             Until that file exists, your initials are shown instead. -->
-        <div class="portrait">
-          <div class="portrait-fallback" aria-hidden="true">JA</div>
-          <img src="images/profile.jpg" alt="Portrait of Jose Arellano Martorellet" onerror="this.remove()">
-        </div>
-
-        <div>
-          <h1><span>Jose</span> <span>Arellano Martorellet</span></h1>
+      <section class="hero">
+        <div class="hero-text">
+          <h1><span>Jose</span> <span>Arellano&nbsp;Martorellet</span></h1>
 
           <p class="position">
             <strong>PhD Candidate, Behavioral Decision Research</strong><br>
-            Department of Social and Decision Sciences<br>
-            Carnegie Mellon University
+            Department of Social and Decision Sciences, Carnegie Mellon University
           </p>
 
           <!-- BIO: edit these paragraphs freely -->
@@ -63,30 +54,51 @@
             <p>My research examines how people engage with information, form judgments, and make decisions, particularly in health. I use field experiments, online experiments, and administrative data to study how communication and behavioral interventions shape what people do.</p>
             <p>Before my doctoral studies, I worked extensively on applied research and behavioral interventions with public and private organizations in Peru and across Latin America.</p>
           </div>
+
+          <!-- CONTACT LINKS -->
+          <ul class="links" aria-label="Contact and profiles">
+            <li><a href="mailto:josearel@andrew.cmu.edu">Email</a></li>
+            <li><a href="https://scholar.google.com/citations?user=qfkP73gAAAAJ">Google Scholar</a></li>
+            <li><a href="https://orcid.org/0000-0002-6596-2134">ORCID</a></li>
+            <li><a href="https://www.linkedin.com/in/jose-arellano-martorellet/">LinkedIn</a></li>
+            <li><a href="https://www.cmu.edu/dietrich/sds/people/phdstudents/jose-arellano.html">CMU profile</a></li>
+          </ul>
+        </div>
+
+        <!-- PHOTO: images/portrait.webp is your photo with the background removed.
+             To change it, replace that file with another cut-out image of the same name. -->
+        <figure class="figure">
+          <img src="images/portrait.webp" alt="Jose Arellano Martorellet" width="596" height="850">
+        </figure>
+      </section>
+
+      <!-- RESEARCH THEMES: each theme has a color (amber, teal, coral) that is
+           reused for the dots next to papers below. -->
+      <section class="themes" aria-label="Research themes">
+        <div class="theme" style="--dot: var(--amber)">
+          <h2><span class="dot"></span>Health communication</h2>
+          <p>When patient messages get read, and when they backfire. Field trials with health systems.</p>
+        </div>
+        <div class="theme" style="--dot: var(--teal)">
+          <h2><span class="dot"></span>Norms, trust, and credibility</h2>
+          <p>How norm messages and expertise cues shape belief and vaccination intentions.</p>
+        </div>
+        <div class="theme" style="--dot: var(--coral)">
+          <h2><span class="dot"></span>Latin American interventions</h2>
+          <p>Low-cost programs for families in Peru, delivered through channels like WhatsApp.</p>
         </div>
       </section>
 
-      <section class="interests" aria-labelledby="interests-heading">
-        <h2 id="interests-heading">Research interests</h2>
-        <ul class="tags">
-          <li>Behavioral decision research</li>
-          <li>Behavioral economics</li>
-          <li>Health decision-making</li>
-          <li>Information processing</li>
-          <li>Behavioral interventions</li>
-          <li>Social norms</li>
+      <!-- CURRENT WORK: a short highlight list. The full list lives on research.html.
+           Set the dot color with --dot: var(--amber) / var(--teal) / var(--coral). -->
+      <section class="current" aria-labelledby="current-heading">
+        <h2 id="current-heading">Current work</h2>
+        <ul class="work">
+          <li style="--dot: var(--teal)"><span class="dot"></span><div><h3>Believability of Social Norm Messages and Vaccination Intentions</h3><span class="meta">Under review</span></div></li>
+          <li style="--dot: var(--amber)"><span class="dot"></span><div><h3>Behaviorally Enhanced Patient Tickler Email for Preventive Care Engagement: A Randomized Clinical Trial</h3><span class="meta">Working paper, 2026, with UCLA Health</span></div></li>
+          <li style="--dot: var(--amber)"><span class="dot"></span><div><h3>Selective (In)attention: Evidence from Healthcare</h3><span class="meta">Working paper, 2026</span></div></li>
         </ul>
-      </section>
-
-      <section class="contact" aria-labelledby="contact-heading">
-        <h2 id="contact-heading">Contact and profiles</h2>
-        <ul class="links">
-          <li><a href="mailto:josearel@andrew.cmu.edu">josearel@andrew.cmu.edu</a></li>
-          <li><a href="https://scholar.google.com/citations?user=qfkP73gAAAAJ">Google Scholar</a></li>
-          <li><a href="https://orcid.org/0000-0002-6596-2134">ORCID</a></li>
-          <li><a href="https://www.linkedin.com/in/jose-arellano-martorellet/">LinkedIn</a></li>
-          <li><a href="https://www.cmu.edu/dietrich/sds/people/phdstudents/jose-arellano.html">CMU profile</a></li>
-        </ul>
+        <p class="see-all"><a href="research.html">See all research</a></p>
       </section>
     </div>
   </main>
