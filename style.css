@@ -16,7 +16,8 @@
   --serif: "Newsreader", Georgia, "Times New Roman", serif;
   --sans:  "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  --measure: 44rem;    /* max width of the content column */
+  --measure: 60rem;    /* max width of the content area (60rem = 960px) */
+  --text:    42rem;    /* max width of paragraphs, so lines stay readable */
 }
 
 /* Dark mode: follows the visitor's system setting */
@@ -70,9 +71,9 @@ h1, h2, h3 {
 p { margin: 0 0 1em; }
 
 .wrap {
-  max-width: var(--measure);
+  max-width: calc(var(--measure) + 4rem);
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 2rem;   /* side space on large screens; smaller on phones (see bottom) */
 }
 
 /* ---------- Header & navigation ---------- */
@@ -123,13 +124,13 @@ main { padding: 3.5rem 0 4rem; }
 
 .intro {
   display: grid;
-  grid-template-columns: 11.5rem 1fr;
-  gap: 2.5rem;
+  grid-template-columns: 13rem 1fr;
+  gap: 3rem;
   align-items: start;
 }
 
 .portrait {
-  width: 11.5rem;
+  width: 13rem;
   aspect-ratio: 4 / 5;
   border-radius: 6px;
   overflow: hidden;
@@ -156,12 +157,17 @@ main { padding: 3.5rem 0 4rem; }
 }
 
 .intro h1 {
-  font-size: clamp(2.3rem, 6vw, 3.25rem);
+  font-size: clamp(2rem, 5.2vw, 3rem);
   letter-spacing: -0.015em;
   line-height: 1.05;
   margin-bottom: 1rem;
 }
 .intro h1 span { display: block; }
+/* Keeps "Arellano Martorellet" on one line on laptops and desktops.
+   On narrow phones it can still wrap so nothing gets cut off. */
+@media (min-width: 900px) {
+  .intro h1 span { white-space: nowrap; }
+}
 
 .position {
   color: var(--muted);
@@ -170,7 +176,7 @@ main { padding: 3.5rem 0 4rem; }
 }
 .position strong { color: var(--ink); font-weight: 500; }
 
-.bio p { max-width: 38rem; }
+.bio p { max-width: var(--text); }
 
 .interests {
   margin: 2rem 0 0;
@@ -222,7 +228,7 @@ main { padding: 3.5rem 0 4rem; }
 .page-lede {
   color: var(--muted);
   margin-bottom: 0;
-  max-width: 36rem;
+  max-width: var(--text);
 }
 
 .section { margin-top: 3.25rem; }
@@ -248,7 +254,7 @@ main { padding: 3.5rem 0 4rem; }
 }
 .entry .summary {
   margin: 0.3rem 0 0.4rem;
-  max-width: 40rem;
+  max-width: var(--text);
 }
 .status {
   display: inline-block;
@@ -327,6 +333,7 @@ main { padding: 3.5rem 0 4rem; }
 /* ---------- Small screens ---------- */
 
 @media (max-width: 640px) {
+  .wrap { padding: 0 1.25rem; }
   main { padding: 2.25rem 0 3rem; }
   .intro {
     grid-template-columns: 1fr;
