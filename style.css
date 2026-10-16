@@ -192,7 +192,7 @@ main { padding: 3.5rem 0 4rem; }
 .figure {
   position: relative;
   margin: 0;
-  height: 26.5rem;
+  height: 23.85rem;           /* photo height (10% smaller than the original 26.5rem) */
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -204,11 +204,11 @@ main { padding: 3.5rem 0 4rem; }
   z-index: 0;
 }
 .figure::before {            /* soft circle */
-  width: 17.5rem;
-  height: 17.5rem;
+  width: 15.75rem;
+  height: 15.75rem;
   background: var(--accent-soft);
   left: 50%;
-  top: 3.75rem;
+  top: 3.4rem;
   transform: translateX(-50%);
 }
 .ball {                      /* small gold dot: secretly a link to the tennis game */
@@ -465,13 +465,13 @@ main { padding: 3.5rem 0 4rem; }
   }
   .figure {                  /* photo moves above the name */
     order: -1;
-    height: 17rem;
+    height: 15.3rem;
     justify-content: flex-start;
     border-bottom: 1px solid var(--rule);
     margin-bottom: 1.75rem;
   }
-  .figure::before { width: 12rem; height: 12rem; top: 2.5rem; left: 6rem; }
-  .ball { width: 1.9rem; height: 1.9rem; top: 1.5rem; right: auto; left: 11.5rem; }
+  .figure::before { width: 10.8rem; height: 10.8rem; top: 2.25rem; left: 5.4rem; }
+  .ball { width: 1.9rem; height: 1.9rem; top: 1.3rem; right: auto; left: 10.4rem; }
   .hero-text { padding-bottom: 2.25rem; }
   .themes { grid-template-columns: 1fr; }
   .theme,
