@@ -214,8 +214,8 @@ main { padding: 3.5rem 0 4rem; }
 .ball {                      /* small gold dot: secretly a link to the tennis game */
   position: absolute;
   z-index: 2;
-  width: 3rem;
-  height: 3rem;
+  width: 2.85rem;               /* 5% smaller than the original 3rem */
+  height: 2.85rem;
   border-radius: 50%;
   background-color: var(--amber-soft);
   /* the two white seam lines of a tennis ball */
@@ -224,8 +224,17 @@ main { padding: 3.5rem 0 4rem; }
   right: 0;
   top: 2.5rem;
   transition: transform 0.2s ease;
+  animation: ball-float 4s ease-in-out infinite;   /* slow, gentle bob */
 }
 .ball:hover { transform: scale(1.12) rotate(20deg); }
+@keyframes ball-float {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -6px; }
+}
+/* No floating for visitors who have asked their device to reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .ball { animation: none; }
+}
 .figure img {
   position: relative;
   z-index: 1;
@@ -462,7 +471,7 @@ main { padding: 3.5rem 0 4rem; }
     margin-bottom: 1.75rem;
   }
   .figure::before { width: 12rem; height: 12rem; top: 2.5rem; left: 6rem; }
-  .ball { width: 2rem; height: 2rem; top: 1.5rem; right: auto; left: 11.5rem; }
+  .ball { width: 1.9rem; height: 1.9rem; top: 1.5rem; right: auto; left: 11.5rem; }
   .hero-text { padding-bottom: 2.25rem; }
   .themes { grid-template-columns: 1fr; }
   .theme,
