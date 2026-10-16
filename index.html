@@ -33,7 +33,7 @@
       document.documentElement.setAttribute('data-theme', t);
     })();
   </script>
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 
@@ -92,7 +92,8 @@
 
       <!-- RESEARCH THEMES: each theme lists the questions its papers address.
            To edit a question, change the text inside <li>…</li>. -->
-      <section class="themes" aria-label="Research themes">
+      <h2 class="themes-title" id="themes-title">Questions that drive my work</h2>
+      <section class="themes" aria-labelledby="themes-title">
         <div class="theme" style="--dot: var(--amber)">
           <h2><span class="dot"></span>Attention and engagement</h2>
           <ul class="questions">

@@ -302,8 +302,12 @@ main { padding: 3.5rem 0 4rem; }
 .themes {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
+}
+.hero { border-bottom: 1px solid var(--rule); }   /* the line the photo stands on */
+.themes-title {                /* "Questions that drive my work" */
+  font-size: 1.5rem;
+  margin: 2.5rem 0 0.25rem;
 }
 .theme { padding: 1.6rem 1.6rem 1.6rem 0; }
 .theme + .theme {
