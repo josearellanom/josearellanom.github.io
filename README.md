@@ -58,6 +58,7 @@ You can preview the site anytime by double-clicking `index.html`.
 - To add a paper, copy an `<article class="entry"> … </article>` block in `research.html` and edit it. Comments in the files mark where things go.
 - Each paper's colored dot comes from `style="--dot: var(--amber)"` on its `<article>` (use `--amber`, `--teal`, or `--coral` for the three research themes).
 - The header and footer are repeated on each page. If you change one (for example, adding a nav link), change it on all three.
+- The moon/sun button next to the name switches light and dark mode and remembers each visitor's choice. Dark-mode colors are defined twice near the top of `style.css` (once for the device setting, once for the button); change both when editing them.
 - To change colors, edit the variables at the top of `style.css`. The three research-theme colors are `--amber`, `--teal`, and `--coral`.
 - The "Current work" list on the About page is a short highlight. When a paper changes status, update it both there and in `research.html`.
 
