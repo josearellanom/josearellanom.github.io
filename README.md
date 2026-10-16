@@ -7,8 +7,8 @@ Personal academic website of Jose Arellano Martorellet. Plain HTML and CSS, no b
 | File | What it is |
 |---|---|
 | `index.html` | About page (photo, bio, contact links, research themes, link to the Research page) |
-| `research.html` | Publications, working papers, presentations |
-| `cv.html` | Education, experience, awards and grants, teaching, public writing, skills |
+| `research.html` | Publications and working papers |
+| `cv.html` | Education, experience, awards and grants, presentations, teaching, public writing, skills |
 | `tennis.html` | Hidden tennis game (opened by clicking the small gold dot next to the photo) with a top-5 leaderboard stored in Firebase |
 | `style.css` | All colors, fonts, and spacing (colors are at the top) |
 | `images/` | `portrait.webp` (cut-out photo on the About page), `profile.jpg` (photo shown when the site is shared on social media), `favicon.png`, `favicon-32.png` and `apple-touch-icon.png` (browser-tab and phone home-screen icon: the scientist emoji from Noto Emoji, Apache License 2.0), `favicon-tennis.svg` (tab icon on the tennis page), `face.png` (face on the computer's paddle in the game) |
