@@ -355,7 +355,7 @@
     // CPU_ERROR: how far off (in pixels) its guess of where the ball will arrive can be.
     //            Smaller = harder. Raise it to make the computer easier to beat.
     const CPU_SPEED_START = 480, CPU_SPEED_GROWTH = 10, CPU_SPEED_MAX = 700;
-    const CPU_ERROR = 34;
+    const CPU_ERROR = 40;
     let cpuAim = 0;                     // this rally's random error, picked each time the ball heads its way
     function cpuSpeed() { return Math.min(CPU_SPEED_START + score * CPU_SPEED_GROWTH, CPU_SPEED_MAX); }
     function newCpuAim() {             // roughly bell-shaped random error
