@@ -327,6 +327,7 @@
       const angle = (Math.random() * 50 - 25) * Math.PI / 180;
       ball.vx = ball.dir * speed * Math.cos(angle);
       ball.vy = speed * Math.sin(angle);
+      if (ball.dir > 0) newCpuAim();
     }
 
     function newGame() {
@@ -349,7 +350,27 @@
       livesEl.setAttribute('aria-label', lives + (lives === 1 ? ' life' : ' lives') + ' left');
     }
 
-    function cpuSpeed() { return Math.min(230 + score * 14, 520); }  // the computer improves as you score
+    // ---- Computer opponent difficulty ----
+    // CPU_SPEED: how fast the computer's paddle moves (pixels per second), growing as you score.
+    // CPU_ERROR: how far off (in pixels) its guess of where the ball will arrive can be.
+    //            Smaller = harder. Raise it to make the computer easier to beat.
+    const CPU_SPEED_START = 480, CPU_SPEED_GROWTH = 10, CPU_SPEED_MAX = 700;
+    const CPU_ERROR = 34;
+    let cpuAim = 0;                     // this rally's random error, picked each time the ball heads its way
+    function cpuSpeed() { return Math.min(CPU_SPEED_START + score * CPU_SPEED_GROWTH, CPU_SPEED_MAX); }
+    function newCpuAim() {             // roughly bell-shaped random error
+      cpuAim = (Math.random() + Math.random() + Math.random() - 1.5) * CPU_ERROR * 1.4;
+    }
+    // Where the ball will cross the computer's paddle, counting bounces off the top and bottom walls
+    function predictY() {
+      const xHit = W - CPU_EDGE - PAD_W - BALL_R;
+      const t = (xHit - ball.x) / ball.vx;
+      const span = H - 2 * BALL_R;
+      let y = (ball.y - BALL_R + ball.vy * t) % (2 * span);
+      if (y < 0) y += 2 * span;
+      if (y > span) y = 2 * span - y;
+      return y + BALL_R;
+    }
 
     function step(dt) {
       // Player: keyboard or pointer
@@ -359,8 +380,8 @@
       if (pointerY !== null) playerY += (pointerY - PAD_H / 2 - playerY) * Math.min(1, dt * 18);
       playerY = Math.max(0, Math.min(H - PAD_H, playerY));
 
-      // Computer: follows the ball with limited speed
-      const target = (ball.vx > 0 ? ball.y : H / 2) - PAD_H / 2;
+      // Computer: moves toward where it predicts the ball will arrive (with a small error)
+      const target = (ball.vx > 0 ? predictY() + cpuAim : H / 2) - PAD_H / 2;
       const diff = target - cpuY;
       cpuY += Math.sign(diff) * Math.min(Math.abs(diff), cpuSpeed() * dt);
       cpuY = Math.max(0, Math.min(H - PAD_H, cpuY));
@@ -380,6 +401,7 @@
       if (ball.vx < 0 && ball.x - BALL_R <= EDGE + PAD_W && ball.x > EDGE &&
           ball.y >= playerY - BALL_R && ball.y <= playerY + PAD_H + BALL_R) {
         bounce(playerY, 1, 1.05);
+        newCpuAim();
         ball.x = EDGE + PAD_W + BALL_R;
       }
       // Computer paddle
