@@ -59,7 +59,7 @@ You can preview the site anytime by double-clicking `index.html`.
 - Each paper's colored dot comes from `style="--dot: var(--amber)"` on its `<article>` (use `--amber`, `--teal`, or `--coral` for the three research themes).
 - The header and footer are repeated on each page. If you change one (for example, adding a nav link), change it on all three.
 - The moon/sun button next to the name switches light and dark mode and remembers each visitor's choice. Dark-mode colors are defined twice near the top of `style.css` (once for the device setting, once for the button); change both when editing them.
-- After editing `style.css`, bump the number in `style.css?v=3` (to `v=4`, and so on) in the four HTML files, so visitors' browsers load the new version instead of an old cached copy.
+- After editing `style.css`, bump the number in `style.css?v=4` (to `v=5`, and so on) in the four HTML files, so visitors' browsers load the new version instead of an old cached copy.
 - To change colors, edit the variables at the top of `style.css`. The three research-theme colors are `--amber` (attention and engagement), `--teal` (credibility and beliefs), and `--coral` (from intention to action). A paper that belongs to two themes gets two dots.
 
 ## Tennis leaderboard
