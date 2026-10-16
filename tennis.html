@@ -95,6 +95,8 @@
       color: #1b2330;
     }
     .form-msg { min-height: 1.2em; font-size: 0.9rem; }
+    .attempts { font-size: 0.85rem; color: rgba(255, 255, 255, 0.75); min-height: 1.2em; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }
     .hint { font-size: 0.88rem; color: var(--muted); margin: 0.75rem 0 0; }
 
     .board h2 { font-size: 1.4rem; margin-bottom: 0.75rem; }
@@ -180,6 +182,7 @@
               </form>
               <p class="form-msg" id="form-msg" aria-live="polite"></p>
               <button class="btn" id="start-btn" type="button">Start</button>
+              <p class="attempts" id="attempts" aria-live="polite"></p>
             </div>
           </div>
           <p class="hint">Tip: hitting the ball with the edge of your paddle sends it at a sharper angle.</p>
@@ -487,8 +490,37 @@
       requestAnimationFrame(loop);
     }
 
+    // ---- Daily attempt limit (per browser, resets at the visitor's local midnight) ----
+    const DAILY_ATTEMPTS = 15;
+    const attemptsEl = document.getElementById('attempts');
+    function todayKey() {
+      const d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+    function attemptsUsed() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('tennisAttempts') || 'null');
+        return saved && saved.day === todayKey() ? saved.count : 0;
+      } catch (e) { return 0; }     // if the browser blocks storage, don't block the game
+    }
+    function useAttempt() {
+      try { localStorage.setItem('tennisAttempts', JSON.stringify({ day: todayKey(), count: attemptsUsed() + 1 })); } catch (e) {}
+    }
+    function attemptsLeft() { return Math.max(0, DAILY_ATTEMPTS - attemptsUsed()); }
+    function showAttempts() {
+      const left = attemptsLeft();
+      if (left === 0) {
+        attemptsEl.textContent = 'You\u2019ve used today\u2019s ' + DAILY_ATTEMPTS + ' attempts. Come back tomorrow!';
+        startBtn.disabled = true;
+      } else {
+        attemptsEl.textContent = left === 1 ? '1 attempt left today' : left + ' attempts left today';
+        startBtn.disabled = false;
+      }
+    }
+
     function gameOver() {
       running = false;
+      showAttempts();
       draw();
       ovTitle.textContent = score === 1 ? 'Game over: 1 point' : `Game over: ${score} points`;
       formMsg.textContent = '';
@@ -526,7 +558,13 @@
       }
     });
 
-    startBtn.addEventListener('click', () => { nameForm.hidden = true; newGame(); });
+    startBtn.addEventListener('click', () => {
+      if (attemptsLeft() === 0) { showAttempts(); return; }
+      useAttempt();
+      nameForm.hidden = true;
+      newGame();
+    });
+    showAttempts();
 
     // Controls
     const KEYS_UP = ['ArrowUp', 'w', 'W'], KEYS_DOWN = ['ArrowDown', 's', 'S'];
