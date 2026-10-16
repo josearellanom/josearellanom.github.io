@@ -323,7 +323,7 @@
     }
 
     function serve() {
-      const speed = 400 + score * 9;            // pixels per second; grows as you score
+      const speed = 460 + score * 9;            // pixels per second; grows as you score
       const angle = (Math.random() * 50 - 25) * Math.PI / 180;
       ball.vx = ball.dir * speed * Math.cos(angle);
       ball.vy = speed * Math.sin(angle);
