@@ -12,6 +12,7 @@ Personal academic website of Jose Arellano Martorellet. Plain HTML and CSS, no b
 | `tennis.html` | Hidden tennis game (opened by clicking the small gold dot next to the photo) with a top-5 leaderboard stored in Firebase |
 | `style.css` | All colors, fonts, and spacing (colors are at the top) |
 | `images/` | `portrait.webp` (cut-out photo on the About page), `profile.jpg` (photo shown when the site is shared on social media), `favicon.png`, `favicon-32.png` and `apple-touch-icon.png` (browser-tab and phone home-screen icon: the scientist emoji from Noto Emoji, Apache License 2.0), `favicon-tennis.svg` (tab icon on the tennis page), `face.png` (face on the computer's paddle in the game) |
+| `sitemap.xml`, `robots.txt` | Tell search engines which pages to index. If you add a new page, add its address to `sitemap.xml` |
 | `CNAME` | Tells GitHub Pages to serve the site at josearellanom.com. Don't delete it |
 
 ## Before you publish
