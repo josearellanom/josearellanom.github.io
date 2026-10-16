@@ -6,7 +6,7 @@ Personal academic website of Jose Arellano Martorellet. Plain HTML and CSS, no b
 
 | File | What it is |
 |---|---|
-| `index.html` | About page (photo, bio, research themes, current work, contact links) |
+| `index.html` | About page (photo, bio, contact links, research themes, link to the Research page) |
 | `research.html` | Publications, working papers, presentations |
 | `cv.html` | Education, experience, awards and grants, teaching, public writing, skills |
 | `tennis.html` | Hidden tennis game (opened by clicking the small gold dot next to the photo) with a top-5 leaderboard stored in Firebase |
@@ -60,7 +60,6 @@ You can preview the site anytime by double-clicking `index.html`.
 - The header and footer are repeated on each page. If you change one (for example, adding a nav link), change it on all three.
 - The moon/sun button next to the name switches light and dark mode and remembers each visitor's choice. Dark-mode colors are defined twice near the top of `style.css` (once for the device setting, once for the button); change both when editing them.
 - To change colors, edit the variables at the top of `style.css`. The three research-theme colors are `--amber` (attention and engagement), `--teal` (credibility and beliefs), and `--coral` (from intention to action). A paper that belongs to two themes gets two dots.
-- The "Current work" list on the About page is a short highlight. When a paper changes status, update it both there and in `research.html`.
 
 ## Tennis leaderboard
 

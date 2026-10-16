@@ -323,6 +323,24 @@ main { padding: 3.5rem 0 4rem; }
   font-size: 0.95rem;
 }
 
+/* "See my research" button under the three themes */
+.research-link { margin: 2rem 0 0; }
+.button-link {
+  display: inline-block;
+  padding: 0.6rem 1.25rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: background-color 0.15s, color 0.15s;
+}
+.button-link:hover {
+  background: var(--accent);
+  color: var(--paper);
+}
+
 /* Current work list */
 .current { margin-top: 2.75rem; }
 .current > h2 {
