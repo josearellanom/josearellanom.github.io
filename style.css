@@ -322,6 +322,15 @@ main { padding: 3.5rem 0 4rem; }
   color: var(--muted);
   font-size: 0.95rem;
 }
+.theme .questions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.theme .questions li + li { margin-top: 0.55rem; }
 
 /* "See my research" button under the three themes */
 .research-link { margin: 2rem 0 0; }
