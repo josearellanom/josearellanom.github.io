@@ -23,7 +23,7 @@
   --sans:  "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --measure: 60rem;    /* max width of the content area (60rem = 960px) */
-  --text:    42rem;    /* max width of paragraphs, so lines stay readable */
+  --text:    48rem;    /* max width of paragraphs, so lines stay readable */
 }
 
 /* Dark mode: follows the visitor's system setting */
