@@ -74,7 +74,7 @@ You can preview the site anytime by double-clicking `index.html`.
 
 `guess.html` uses the same Firebase project as the tennis leaderboard, in a collection called `guesses`. Each guess stores the round (for example `2026-11`), the number, an optional name, and the time.
 
-- **Rounds** are calendar months, Eastern time. The first round runs from launch to November 30, 2026 (`FIRST_ROUND` near the top of the script). Each browser gets one guess per round.
+- **Rounds** are calendar months, Eastern time. The first round runs from launch to October 31, 2026 (`FIRST_ROUND` near the top of the script). Each browser gets one guess per round.
 - **Winners** are worked out when the page loads: the guess closest to two-thirds of that round's average wins (ties go to whoever guessed first). Guesses sent after a round closed are ignored.
 - **Removing a guess:** in the Firebase console, open Firestore Database → `guesses` and delete the document.
 - **Firestore rules:** the `guesses` block below must be inside your rules, next to the `scores` block:

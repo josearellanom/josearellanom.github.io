@@ -199,8 +199,8 @@
       messagingSenderId: "300754349668",
       appId: "1:300754349668:web:7289dfe8fcb24671747971"
     };
-    // Rounds are calendar months (Eastern time). The first round runs from launch to November 30, 2026.
-    const FIRST_ROUND = '2026-11';
+    // Rounds are calendar months (Eastern time). The first round runs from launch to October 31, 2026.
+    const FIRST_ROUND = '2026-10';
     const PAST_ROUNDS_SHOWN = 12;
     const NAME_MAX = 16;          // must match the limit in the Firestore rules
 
@@ -422,7 +422,7 @@
     function renderWinners() {
       const tb = $('winners'); tb.textContent = '';
       const ids = Object.keys(byRound).sort().reverse();
-      $('winners-note').textContent = ids.length ? '' : 'The first round closes on November 30. Its winner will appear here.';
+      $('winners-note').textContent = ids.length ? '' : 'The first round closes on ' + MONTHS[+FIRST_ROUND.slice(5) - 1] + ' ' + new Date(roundClose(FIRST_ROUND) - 86400e3).getUTCDate() + '. Its winner will appear here.';
       for (const id of ids) {
         const s = summarize(byRound[id]);
         const tr = document.createElement('tr');
