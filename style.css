@@ -274,13 +274,35 @@ main { padding: 3.5rem 0 4rem; }
   animation: ball-float 4s ease-in-out infinite;   /* slow, gentle bob */
 }
 .ball:hover { transform: scale(1.12) rotate(20deg); }
+.egg-guess {                 /* small teal "2/3" token: secretly a link to the guessing game */
+  position: absolute;
+  z-index: 2;
+  left: 0.9rem;
+  top: 6.2rem;
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--teal);
+  color: #fff;
+  font-family: var(--serif);
+  font-size: 1.65rem;
+  line-height: 1;
+  text-decoration: none;
+  animation: ball-float 4s ease-in-out infinite;
+  animation-delay: -2s;      /* floats out of step with the tennis ball */
+  transition: transform 0.2s ease;
+}
+.egg-guess:hover { transform: scale(1.12); color: #fff; text-decoration: none; }
+.egg-guess:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 @keyframes ball-float {
   0%, 100% { translate: 0 0; }
   50%      { translate: 0 -8px; }
 }
 /* No floating for visitors who have asked their device to reduce motion */
 @media (prefers-reduced-motion: reduce) {
-  .ball { animation: none; }
+  .ball, .egg-guess { animation: none; }
 }
 .figure img {
   position: relative;
@@ -587,6 +609,7 @@ main { padding: 3.5rem 0 4rem; }
   }
   .figure::before { width: 10.8rem; height: 10.8rem; top: 2.25rem; left: 5.4rem; }
   .ball { width: 1.9rem; height: 1.9rem; top: 1.3rem; right: auto; left: 10.4rem; }
+  .egg-guess { width: 1.8rem; height: 1.8rem; font-size: 1.1rem; top: 5.6rem; left: 12.4rem; }
   .hero-text { padding-bottom: 2.25rem; }
   .themes { grid-template-columns: 1fr; }
   .theme,

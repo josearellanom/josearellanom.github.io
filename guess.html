@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Can you outguess everyone? | Jose Arellano Martorellet</title>
+  <meta name="description" content="A monthly guess-two-thirds-of-the-average game hidden on Jose Arellano Martorellet's website.">
+  <meta name="robots" content="noindex">
+
+  <link rel="icon" href="images/favicon-guess.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Light/dark mode: applies the saved choice (or the device setting) before the page draws -->
+  <script>
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem('theme'); } catch (e) {}
+      if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="stylesheet" href="style.css?v=6">
+  <style>
+    [hidden] { display: none !important; }
+    .game { max-width: 42rem; display: grid; gap: 2.5rem; }
+    .game-intro { color: var(--muted); margin: 0; }
+    .round-line { font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; margin: 0.5rem 0 0; }
+
+    .card { border: 1px solid var(--rule); border-radius: 10px; padding: 1.5rem; display: grid; gap: 1.25rem; }
+    .pick { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 1.25rem; }
+    .big {
+      font-family: var(--serif); font-size: 4.5rem; line-height: 1; width: 3.2ch; text-align: center;
+      font-variant-numeric: tabular-nums; color: var(--accent); border: 0; background: transparent; padding: 0;
+      -moz-appearance: textfield;
+    }
+    .big::-webkit-outer-spin-button, .big::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .big:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+    .slider-box { display: grid; gap: 0.3rem; min-width: 0; }
+    .slider-box input { width: 100%; accent-color: var(--accent); }
+    .ticks { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .field { font-size: 0.85rem; color: var(--muted); display: grid; gap: 0.3rem; }
+    .field input {
+      font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper); border: 1px solid var(--rule);
+      border-radius: 6px; padding: 0.5rem 0.7rem; width: 100%; max-width: 18rem;
+    }
+    .field input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      font: inherit; font-weight: 600; color: var(--paper); background: var(--accent); border: 0;
+      border-radius: 999px; padding: 0.65rem 1.4rem; cursor: pointer;
+    }
+    .btn:hover { filter: brightness(1.08); }
+    .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+    .btn:disabled { opacity: 0.55; cursor: wait; filter: none; }
+    .small { font-size: 0.85rem; color: var(--muted); margin: 0; }
+    .error { font-size: 0.9rem; color: var(--coral); margin: 0; min-height: 1.2em; }
+
+    .locked { display: flex; align-items: baseline; gap: 0.9rem; flex-wrap: wrap; }
+    .locked .big { width: auto; }
+    .locked p { margin: 0; color: var(--muted); flex: 1 1 14rem; }
+
+    .results, .explain { display: grid; gap: 1rem; }
+    .results h2, .explain h2 { font-size: 1.5rem; margin: 0; }
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.75rem; }
+    .stat { border-top: 2px solid var(--rule); padding-top: 0.45rem; }
+    .stat b { display: block; font-family: var(--serif); font-weight: 500; font-size: 1.6rem; line-height: 1.2; font-variant-numeric: tabular-nums; }
+    .stat span { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.02em; }
+    .stat.target { border-color: var(--coral); }
+    .stat.you { border-color: var(--accent); }
+    .chart { width: 100%; height: auto; display: block; overflow: visible; }
+    .explain p, .results p { margin: 0; }
+    .cite { font-size: 0.82rem; color: var(--muted); }
+
+    .winners { width: 100%; border-collapse: collapse; font-size: 0.92rem; font-variant-numeric: tabular-nums; }
+    .winners th { text-align: left; font-weight: 500; color: var(--muted); font-size: 0.78rem; letter-spacing: 0.02em; padding: 0 0.5rem 0.4rem 0; border-bottom: 1px solid var(--rule); }
+    .winners td { padding: 0.45rem 0.5rem 0.45rem 0; border-bottom: 1px solid var(--rule); }
+    .winners .num { text-align: right; }
+
+    @media (max-width: 560px) {
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .pick { grid-template-columns: 1fr; gap: 0.5rem; }
+      .big { width: 100%; }
+      .card { padding: 1.15rem; }
+    }
+    @media (prefers-reduced-motion: reduce) { .chart rect { transition: none !important; } }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <div class="brand">
+        <a class="site-name" href="index.html">Jose Arellano Martorellet</a>
+        <button class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch light/dark mode">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+      </div>
+      <nav class="site-nav" aria-label="Main">
+        <ul>
+          <li><a href="index.html">About</a></li>
+          <li><a href="research.html">Research</a></li>
+          <li><a href="cv.html">CV</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="game">
+        <div>
+          <h1 class="page-title">Can you outguess everyone?</h1>
+          <p class="game-intro">Pick a whole number from 0 to 100. Whoever comes closest to two-thirds of the average of all guesses this round wins. One guess per round.</p>
+          <p class="round-line" id="round-line"></p>
+        </div>
+
+        <!-- Before guessing -->
+        <section class="card" id="play" aria-label="Your guess">
+          <div class="pick">
+            <input class="big" id="num" type="number" min="0" max="100" step="1" value="50" inputmode="numeric" aria-label="Your guess, from 0 to 100">
+            <div class="slider-box">
+              <input type="range" id="slider" min="0" max="100" step="1" value="50" aria-label="Your guess">
+              <div class="ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+            </div>
+          </div>
+          <label class="field" for="name">Name for the winners list (optional)
+            <input id="name" type="text" maxlength="16" placeholder="Anonymous" autocomplete="off">
+          </label>
+          <div class="actions">
+            <button class="btn" id="lock" type="button">Lock in my guess</button>
+            <p class="small">You can't change it afterwards.</p>
+          </div>
+          <p class="error" id="error" aria-live="polite"></p>
+        </section>
+
+        <!-- After guessing -->
+        <section class="card" id="mine" hidden aria-label="Your guess">
+          <div class="locked">
+            <span class="big" id="mine-num"></span>
+            <p id="mine-text"></p>
+          </div>
+        </section>
+
+        <section class="results" aria-live="polite">
+          <h2>This round so far</h2>
+          <div class="stats">
+            <div class="stat"><b id="s-n">–</b><span>guesses</span></div>
+            <div class="stat"><b id="s-avg">?</b><span>average</span></div>
+            <div class="stat target"><b id="s-target">?</b><span>target (⅔ of average)</span></div>
+            <div class="stat you"><b id="s-you">?</b><span>your distance</span></div>
+          </div>
+          <svg class="chart" id="hist" viewBox="0 0 640 230" role="img" aria-label="Histogram of this round's guesses"></svg>
+          <p class="small" id="hist-cap">Loading guesses…</p>
+          <p id="verdict" hidden></p>
+        </section>
+
+        <section class="explain">
+          <h2>How many steps do people think ahead?</h2>
+          <svg class="chart" id="ladder" viewBox="0 0 640 110" role="img" aria-label="Steps of reasoning: 50, 33, 22, 15, and so on down to 0"></svg>
+          <p>If everyone guessed at random, the average would be about 50, so a reasonable guess is 33. But if everyone reasons that way, the target drops to 22. One more step gives 15, then 10, and so on down to 0. Zero is the equilibrium: the answer if everyone reasons all the way and expects everyone else to do the same.</p>
+          <p>People rarely go that far. In Rosemarie Nagel's experiments, first-round guesses averaged around 36. When the Danish newspaper <i>Politiken</i> ran the game in 2005 with 19,196 readers, the average was about 33, which put the winning number near 22. Behavioral economists call this level-k reasoning. The winning guess depends on how many steps other people take, so the game rewards predicting others as much as logic.</p>
+          <p class="cite">Nagel, R. (1995). Unraveling in guessing games: An experimental study. <i>American Economic Review, 85</i>(5), 1313–1326. Politiken figures as reported on <a href="https://en.wikipedia.org/wiki/Guess_2/3_of_the_average" target="_blank" rel="noopener">Wikipedia</a>.</p>
+        </section>
+
+        <section class="explain">
+          <h2>Past winners</h2>
+          <div style="overflow-x:auto">
+            <table class="winners">
+              <thead><tr><th>Round</th><th>Winner</th><th class="num">Guess</th><th class="num">Target</th><th class="num">Players</th></tr></thead>
+              <tbody id="winners"></tbody>
+            </table>
+          </div>
+          <p class="small" id="winners-note"></p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>Jose Arellano Martorellet</span>
+      <span><a href="index.html">Back to the site</a></span>
+    </div>
+  </footer>
+
+  <script type="module">
+    // ============================================================
+    // SETTINGS
+    // Same Firebase project as the tennis leaderboard. Guesses are stored
+    // in the "guesses" collection (see the Firestore rules in README.md).
+    // ============================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyCilMsKrX7nEbJR-i55TqqTV_M6qsiJTag",
+      authDomain: "josearellanom-tennis.firebaseapp.com",
+      projectId: "josearellanom-tennis",
+      storageBucket: "josearellanom-tennis.firebasestorage.app",
+      messagingSenderId: "300754349668",
+      appId: "1:300754349668:web:7289dfe8fcb24671747971"
+    };
+    // Rounds are calendar months (Eastern time). The first round runs from launch to November 30, 2026.
+    const FIRST_ROUND = '2026-11';
+    const PAST_ROUNDS_SHOWN = 12;
+    const NAME_MAX = 16;          // must match the limit in the Firestore rules
+
+    // ---------------- Rounds ----------------
+    const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const ET_OFFSET_H = 5;        // midnight Eastern (standard time) = 05:00 UTC
+    function roundId(date) {
+      const d = new Date(date.getTime() - ET_OFFSET_H * 3600e3);
+      const id = d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0');
+      return id < FIRST_ROUND ? FIRST_ROUND : id;
+    }
+    function roundClose(id) {           // when a round ends, as a Date
+      const [y, m] = id.split('-').map(Number);
+      return new Date(Date.UTC(y, m, 1, ET_OFFSET_H));   // first day of the next month
+    }
+    function shiftRound(id, k) {
+      const [y, m] = id.split('-').map(Number);
+      const d = new Date(Date.UTC(y, m - 1 + k, 1));
+      return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0');
+    }
+    function roundName(id) {
+      const [y, m] = id.split('-').map(Number);
+      return id === FIRST_ROUND ? 'First round' : MONTHS[m - 1] + ' ' + y;
+    }
+    const CUR = roundId(new Date());
+
+    // ---------------- This browser's guess ----------------
+    const KEY = 'twoThirdsGuess';
+    function loadMine() { try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); return s && s.round === CUR ? s : null; } catch (e) { return null; } }
+    function saveMine(m) { try { localStorage.setItem(KEY, JSON.stringify(m)); } catch (e) {} }
+    let mine = loadMine();
+
+    // ---------------- Elements ----------------
+    const $ = id => document.getElementById(id);
+    const num = $('num'), slider = $('slider');
+    const clamp = v => Math.max(0, Math.min(100, Math.round(v)));
+    function setVal(v) { v = clamp(isNaN(v) ? 0 : v); num.value = v; slider.value = v; }
+    slider.addEventListener('input', () => setVal(+slider.value));
+    num.addEventListener('input', () => { if (num.value !== '') slider.value = clamp(+num.value); });
+    num.addEventListener('change', () => setVal(+num.value));
+
+    function tick() {
+      const close = roundClose(CUR), ms = close - new Date();
+      const last = new Date(close.getTime() - 86400e3);
+      const ends = MONTHS[last.getUTCMonth()].slice(0, 3) + ' ' + last.getUTCDate();
+      let left;
+      if (ms > 2 * 86400e3) left = Math.floor(ms / 86400e3) + ' days left';
+      else { const m = Math.max(0, Math.round(ms / 60000)); left = Math.floor(m / 60) + 'h ' + (m % 60) + 'm left'; }
+      $('round-line').textContent = roundName(CUR) + ' · ends ' + ends + ', Eastern time · ' + left;
+    }
+    tick(); setInterval(tick, 60000);
+
+    // ---------------- Name filter (same list as the tennis game) ----------------
+    const BLOCKED = ['fuck', 'shit', 'bitch', 'cunt', 'nigg', 'fag', 'whore', 'dick', 'cock', 'pussy', 'asshole',
+      'puta', 'puto', 'mierda', 'pendej', 'cabron', 'verga', 'pinga', 'culo', 'coño', 'cono', 'maricon',
+      'concha', 'chucha', 'huevon', 'cojud', 'carajo', 'hitler', 'nazi'];
+    function cleanName(raw) {
+      const name = raw.replace(/\s+/g, ' ').trim().slice(0, NAME_MAX);
+      const flat = name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/[0@]/g, 'o').replace(/[1!]/g, 'i').replace(/3/g, 'e').replace(/[4]/g, 'a')
+        .replace(/[^a-zñ]/g, '');
+      if (BLOCKED.some(w => flat.includes(w))) return { ok: false };
+      return { ok: true, name };
+    }
+
+    // ---------------- Data ----------------
+    let db = null, fs = null;
+    let current = [];              // guesses in this round
+    let byRound = {};              // past rounds: id -> [{guess, name, t}]
+
+    async function initDb() {
+      const app = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+      fs = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+      db = fs.getFirestore(app.initializeApp(firebaseConfig));
+    }
+
+    async function loadGuesses() {
+      const ids = [CUR];
+      for (let k = 1; k <= PAST_ROUNDS_SHOWN; k++) {
+        const id = shiftRound(CUR, -k);
+        if (id < FIRST_ROUND) break;
+        ids.push(id);
+      }
+      const snap = await fs.getDocs(fs.query(fs.collection(db, 'guesses'), fs.where('round', 'in', ids)));
+      current = []; byRound = {};
+      snap.forEach(doc => {
+        const d = doc.data();
+        if (!Number.isInteger(d.guess) || d.guess < 0 || d.guess > 100) return;
+        const t = d.createdAt && d.createdAt.toMillis ? d.createdAt.toMillis() : Date.now();
+        if (t >= roundClose(d.round).getTime()) return;        // ignore anything sent after a round closed
+        const g = { guess: d.guess, name: (d.name || '').trim(), t };
+        if (d.round === CUR) current.push(g);
+        else (byRound[d.round] = byRound[d.round] || []).push(g);
+      });
+    }
+
+    async function saveGuess(guess, name) {
+      await fs.addDoc(fs.collection(db, 'guesses'), { round: CUR, guess, name, createdAt: fs.serverTimestamp() });
+    }
+
+    function summarize(list) {
+      const avg = list.reduce((a, g) => a + g.guess, 0) / list.length;
+      const target = avg * 2 / 3;
+      const winner = list.slice().sort((a, b) => Math.abs(a.guess - target) - Math.abs(b.guess - target) || a.t - b.t)[0];
+      return { avg, target, winner, n: list.length };
+    }
+
+    // ---------------- Drawing ----------------
+    const NS = 'http://www.w3.org/2000/svg';
+    const F = 'Public Sans, system-ui, sans-serif';
+    function tok(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+    function el(tag, attrs, text) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; return e; }
+    function fit(svg, h) { const w = Math.round(Math.max(300, Math.min(640, svg.getBoundingClientRect().width || 640))); svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h); return w; }
+
+    function drawHist(values, you, target, animate) {
+      const svg = $('hist'); svg.textContent = '';
+      const H = 230, L = 8, R = 8, T = 34, B = 30, BIN = 2, NB = 51;
+      const W = fit(svg, H);
+      const x = v => L + (v / 100) * (W - L - R);
+      const muted = tok('--muted'), rule = tok('--rule'), acc = tok('--accent'), coral = tok('--coral');
+      const bar = document.documentElement.getAttribute('data-theme') === 'dark' ? '#3a4652' : '#c5d0d5';
+      svg.appendChild(el('line', { x1: L, x2: W - R, y1: H - B, y2: H - B, stroke: rule }));
+      [0, 25, 50, 75, 100].forEach(v => {
+        svg.appendChild(el('line', { x1: x(v), x2: x(v), y1: H - B, y2: H - B + 5, stroke: rule }));
+        svg.appendChild(el('text', { x: x(v), y: H - B + 19, fill: muted, 'font-size': 12, 'font-family': F, 'text-anchor': v === 0 ? 'start' : v === 100 ? 'end' : 'middle' }, v));
+      });
+      if (!values.length) return;
+      const counts = new Array(NB).fill(0);
+      values.forEach(v => counts[Math.min(NB - 1, Math.floor(v / BIN))]++);
+      const maxC = Math.max(...counts), bw = (W - L - R) / NB;
+      const youBin = you == null ? -1 : Math.min(NB - 1, Math.floor(you / BIN));
+      const motion = animate && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      counts.forEach((c, i) => {
+        if (!c) return;
+        const h = (c / maxC) * (H - B - T);
+        const r = el('rect', { x: L + i * bw + 1, width: Math.max(1, bw - 2), y: H - B - h, height: h, rx: 1.5, fill: i === youBin ? acc : bar });
+        if (motion) {
+          r.setAttribute('y', H - B); r.setAttribute('height', 0); r.style.transition = 'y .6s ease, height .6s ease';
+          requestAnimationFrame(() => requestAnimationFrame(() => { r.setAttribute('y', H - B - h); r.setAttribute('height', h); }));
+        }
+        svg.appendChild(r);
+      });
+      if (target == null) return;
+      const tx = x(target), tLeft = tx > W - 100;
+      svg.appendChild(el('line', { x1: tx, x2: tx, y1: T - 8, y2: H - B, stroke: coral, 'stroke-width': 2, 'stroke-dasharray': '4 3' }));
+      svg.appendChild(el('text', { x: tLeft ? tx - 6 : tx + 6, y: T - 12, 'text-anchor': tLeft ? 'end' : 'start', fill: coral, 'font-size': 13, 'font-weight': 600, 'font-family': F }, 'Target ' + target.toFixed(1)));
+      if (you != null) {
+        const yx = L + youBin * bw + bw / 2;
+        const left = Math.abs(yx - tx) < 70 ? yx < tx : yx > W - 90;
+        svg.appendChild(el('line', { x1: yx, x2: yx, y1: T, y2: H - B, stroke: acc, opacity: 0.5 }));
+        svg.appendChild(el('text', { x: left ? yx - 6 : yx + 6, y: T + 8, 'text-anchor': left ? 'end' : 'start', fill: acc, 'font-size': 13, 'font-weight': 600, 'font-family': F }, 'You: ' + you));
+      }
+    }
+
+    function drawLadder() {
+      const svg = $('ladder'); svg.textContent = '';
+      const w = fit(svg, 110);
+      const muted = tok('--muted'), rule = tok('--rule'), amber = tok('--amber'), ink = tok('--ink'), paper = tok('--paper');
+      const lx = v => 14 + (v / 100) * (w - 28), y = 58;
+      svg.appendChild(el('line', { x1: lx(0), x2: lx(100), y1: y, y2: y, stroke: rule, 'stroke-width': 2 }));
+      svg.appendChild(el('text', { x: lx(100), y: y + 24, fill: muted, 'font-size': 12, 'text-anchor': 'end', 'font-family': F }, '100'));
+      const steps = [50, 33.3, 22.2, 14.8, 0];
+      for (let i = 0; i < 4; i++) {
+        const a = lx(steps[i]) - 7, b = lx(steps[i + 1]) + 7;
+        svg.appendChild(el('path', { d: `M${a} ${y - 6} Q ${(a + b) / 2} ${y - 24} ${b} ${y - 6}`, fill: 'none', stroke: amber, 'stroke-width': 1.5, opacity: 0.8, 'stroke-dasharray': i === 3 ? '3 3' : 'none' }));
+      }
+      steps.forEach((v, i) => {
+        svg.appendChild(el('circle', { cx: lx(v), cy: y, r: 6, fill: i === 4 ? paper : amber, stroke: amber, 'stroke-width': 2 }));
+        svg.appendChild(el('text', { x: lx(v), y: y - 28, fill: ink, 'font-size': 13, 'font-weight': 600, 'text-anchor': 'middle', 'font-family': F }, Math.round(v)));
+      });
+      svg.appendChild(el('text', { x: lx(50), y: y + 24, fill: muted, 'font-size': 12, 'text-anchor': 'middle', 'font-family': F }, 'random'));
+      svg.appendChild(el('text', { x: lx(0) - 4, y: y + 24, fill: muted, 'font-size': 12, 'text-anchor': 'start', 'font-family': F }, 'equilibrium'));
+      if (w >= 480) svg.appendChild(el('text', { x: (lx(33.3) + lx(14.8)) / 2, y: y + 24, fill: muted, 'font-size': 12, 'text-anchor': 'middle', 'font-family': F }, '← each step'));
+    }
+
+    // ---------------- Rendering ----------------
+    let loaded = false;
+    function render(animate) {
+      $('play').hidden = !!mine;
+      $('mine').hidden = !mine;
+      $('s-n').textContent = loaded ? current.length : '–';
+      ['s-avg', 's-target', 's-you'].forEach(id => $(id).textContent = '?');
+      $('verdict').hidden = true;
+      const hist = $('hist');
+      hist.style.filter = ''; hist.style.opacity = '';
+
+      if (mine) {
+        $('mine-num').textContent = mine.guess;
+        $('mine-text').textContent = 'is your guess for this round' + (mine.name ? ', ' + mine.name : '') + '. The winner is announced here when the round closes.';
+      }
+      if (!loaded) { drawHist([], null, null); return; }
+
+      if (!current.length) {
+        drawHist([], null, null);
+        $('hist-cap').textContent = 'No guesses yet this round. Be the first.';
+        return;
+      }
+      const s = summarize(current);
+      if (!mine) {
+        drawHist(current.map(g => g.guess), null, null);
+        hist.style.filter = 'blur(6px)'; hist.style.opacity = '0.55';
+        $('hist-cap').textContent = 'The averages and the distribution of guesses appear after you lock in yours.';
+        return;
+      }
+      $('s-avg').textContent = s.avg.toFixed(1);
+      $('s-target').textContent = s.target.toFixed(1);
+      const dist = Math.abs(mine.guess - s.target);
+      $('s-you').textContent = dist.toFixed(1);
+      drawHist(current.map(g => g.guess), mine.guess, s.target, animate);
+      $('hist-cap').textContent = 'Distribution of this round’s guesses, in bins of 2. The target keeps moving until the round closes.';
+      const rank = 1 + current.filter(g => Math.abs(g.guess - s.target) < dist).length;
+      const v = $('verdict'); v.hidden = false;
+      if (current.length === 1) v.textContent = 'You are the first player this round. Your guess sets the average for now.';
+      else if (rank === 1) v.textContent = 'If the round closed now, you would win.';
+      else v.textContent = 'If the round closed now, you would place ' + rank + ' of ' + current.length + '. ' +
+        (mine.guess > s.target ? 'Most people are guessing lower than you.' : 'You are guessing lower than the crowd.');
+    }
+
+    function renderWinners() {
+      const tb = $('winners'); tb.textContent = '';
+      const ids = Object.keys(byRound).sort().reverse();
+      $('winners-note').textContent = ids.length ? '' : 'The first round closes on November 30. Its winner will appear here.';
+      for (const id of ids) {
+        const s = summarize(byRound[id]);
+        const tr = document.createElement('tr');
+        [roundName(id), s.winner.name || 'Anonymous', s.winner.guess, s.target.toFixed(1), s.n].forEach((val, i) => {
+          const td = document.createElement('td');
+          td.textContent = val;                 // textContent, so names can't inject HTML
+          if (i >= 2) td.className = 'num';
+          tr.appendChild(td);
+        });
+        tb.appendChild(tr);
+      }
+    }
+
+    // ---------------- Lock in ----------------
+    $('lock').addEventListener('click', async () => {
+      const err = $('error'); err.textContent = '';
+      if (num.value === '') { num.focus(); return; }
+      const guess = clamp(+num.value);
+      const n = cleanName($('name').value);
+      if (!n.ok) { err.textContent = 'Please choose a different name, or leave it blank.'; return; }
+      if (!db) { err.textContent = 'The game can’t connect right now. Please try again later.'; return; }
+      const btn = $('lock'); btn.disabled = true; btn.textContent = 'Saving…';
+      try {
+        await saveGuess(guess, n.name);
+        mine = { round: CUR, guess, name: n.name };
+        saveMine(mine);
+        try { await loadGuesses(); } catch (e) { current.push({ guess, name: n.name, t: Date.now() }); }
+        render(true);
+        renderWinners();
+      } catch (e) {
+        console.error(e);
+        err.textContent = 'Your guess couldn’t be saved. Check your connection and try again.';
+      } finally {
+        btn.disabled = false; btn.textContent = 'Lock in my guess';
+      }
+    });
+
+    // ---------------- Start ----------------
+    drawLadder();
+    render(false);
+    (async () => {
+      try {
+        await initDb();
+        await loadGuesses();
+        loaded = true;
+        render(false);
+        renderWinners();
+      } catch (e) {
+        console.error(e);
+        $('hist-cap').textContent = 'The game can’t load guesses right now. Please try again later.';
+      }
+    })();
+    let rz;
+    addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { drawLadder(); render(false); }, 150); });
+    new MutationObserver(() => { drawLadder(); render(false); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  </script>
+  <!-- Light/dark mode button: switches the theme and remembers the choice -->
+  <script>
+    (function () {
+      var btn = document.querySelector('.theme-toggle');
+      if (!btn) return;
+      function label() {
+        var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+        btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+      }
+      label();
+      btn.addEventListener('click', function () {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        label();
+      });
+    })();
+  </script>
+</body>
+</html>
