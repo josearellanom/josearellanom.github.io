@@ -10,7 +10,7 @@ Personal academic website of Jose Arellano Martorellet. Plain HTML and CSS, no b
 | `research.html` | Publications and working papers |
 | `cv.html` | Education, experience, awards and grants, presentations, teaching, public writing, skills |
 | `tennis.html` | Hidden tennis game (opened by clicking the small gold dot next to the photo) with a top-5 leaderboard stored in Firebase |
-| `guess.html` | Hidden guessing game (opened by clicking the small teal ⅔ next to the photo): guess two-thirds of the average, one guess per visitor per monthly round, guesses stored in Firebase |
+| `_paused/guess.html` | **Paused.** Hidden guessing game (opened by clicking a small teal ⅔ next to the photo): guess two-thirds of the average, one guess per visitor per monthly round, guesses stored in Firebase |
 | `style.css` | All colors, fonts, and spacing (colors are at the top) |
 | `images/` | `portrait.webp` (cut-out photo on the About page), `profile.jpg` (photo shown when the site is shared on social media), `favicon.png`, `favicon-32.png` and `apple-touch-icon.png` (browser-tab and phone home-screen icon: the scientist emoji from Noto Emoji, Apache License 2.0), `favicon-tennis.svg` (tab icon on the tennis page), `favicon-guess.svg` (tab icon on the guessing game), `face.png` (face on the computer's paddle in the game) |
 | `sitemap.xml`, `robots.txt` | Tell search engines which pages to index. If you add a new page, add its address to `sitemap.xml` |
@@ -70,7 +70,9 @@ You can preview the site anytime by double-clicking `index.html`.
 - The connection settings are the `firebaseConfig` block near the top of the script in `tennis.html`. While `apiKey` is empty, the game still works but scores are not saved.
 - To remove an unwanted entry, open the Firebase console → Firestore Database → `scores`, and delete the document. Visitors cannot edit or delete scores.
 
-## Guessing game
+## Guessing game (paused)
+
+The game is switched off: the page lives in `_paused/`, which GitHub Pages does not publish, and the ⅔ link in `index.html` is commented out. To turn it back on, move `_paused/guess.html` to the main folder, uncomment the link, and check `FIRST_ROUND` near the top of its script.
 
 `guess.html` uses the same Firebase project as the tennis leaderboard, in a collection called `guesses`. Each guess stores the round (for example `2026-11`), the number, an optional name, and the time.
 
