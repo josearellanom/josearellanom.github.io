@@ -187,17 +187,27 @@ main { padding: 3.5rem 0 4rem; }
 }
 .hero-text { padding-bottom: 3rem; }
 
-.hero h1 {
-  font-size: clamp(2rem, 4.4vw, 2.75rem);   /* name size: min, scales with screen, max */
-  letter-spacing: -0.015em;
-  line-height: 1.04;
-  margin-bottom: 1rem;
+.hero h1.hello {               /* the big "Hello!" */
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(2.6rem, 5vw, 3.4rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 1.4rem;
 }
-.hero h1 span { display: block; }
-/* Keeps "Arellano Martorellet" on one line on laptops and desktops */
-@media (min-width: 900px) {
-  .hero h1 span { white-space: nowrap; }
+
+/* Photo with the name and title underneath */
+.portrait { display: flex; flex-direction: column; align-items: center; }
+.namecard { margin: 0; padding: 0.9rem 0 1.1rem; text-align: center; }
+.namecard-name {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 1.3rem;
+  line-height: 1.3;
+  color: var(--ink);
 }
+.namecard-title { display: block; font-size: 0.85rem; color: var(--muted); margin-top: 0.1rem; }
 
 .position {
   color: var(--muted);
@@ -600,12 +610,16 @@ main { padding: 3.5rem 0 4rem; }
     grid-template-columns: 1fr;
     gap: 0;
   }
-  .figure {                  /* photo moves above the name */
+  .portrait {                /* photo and name move above "Hello!" */
     order: -1;
-    height: 15.3rem;
-    justify-content: flex-start;
+    align-items: flex-start;
     border-bottom: 1px solid var(--rule);
     margin-bottom: 1.75rem;
+  }
+  .namecard { text-align: left; }
+  .figure {
+    height: 15.3rem;
+    justify-content: flex-start;
   }
   .figure::before { width: 10.8rem; height: 10.8rem; top: 2.25rem; left: 5.4rem; }
   .ball { width: 1.9rem; height: 1.9rem; top: 1.3rem; right: auto; left: 10.4rem; }

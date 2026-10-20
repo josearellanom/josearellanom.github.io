@@ -22,7 +22,7 @@
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Icon library for the contact links (Font Awesome) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <!-- Light/dark mode: applies the saved choice (or the device setting) before the page draws -->
@@ -34,7 +34,7 @@
       document.documentElement.setAttribute('data-theme', t);
     })();
   </script>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
 
@@ -62,11 +62,11 @@
     <div class="wrap">
       <section class="hero">
         <div class="hero-text">
-          <h1><span>Jose</span> <span>Arellano&nbsp;Martorellet</span></h1>
+          <h1 class="hello">Hello!</h1>
 
           <!-- BIO: edit these paragraphs freely -->
           <div class="bio">
-            <p>Welcome! I am a PhD candidate in Behavioral Decision Research in the Department of Social and Decision Sciences at Carnegie Mellon University, advised by Gretchen B. Chapman and Silvia Saccardo.</p>
+            <p>I am a PhD candidate in Behavioral Decision Research in the Department of Social and Decision Sciences at Carnegie Mellon University, advised by Gretchen B. Chapman and Silvia Saccardo.</p>
             <p>I'm drawn to behavioral research that can inform policy. My work uses field and online experiments, along with administrative data, to examine how people engage with information, form judgments and make decisions, particularly in health.</p>
             <p>Before my doctoral studies, I worked extensively on applied research and behavioral interventions with public and private organizations in Peru and across Latin America.</p>
           </div>
@@ -82,17 +82,21 @@
           </ul>
         </div>
 
-        <!-- PHOTO: images/portrait.webp is your photo with the background removed.
-             To change it, replace that file with another cut-out image of the same name. -->
-        <figure class="figure">
-          <img src="images/portrait.webp" alt="Jose Arellano Martorellet" width="596" height="850">
-          <!-- EASTER EGG: the small gold dot next to the photo opens the tennis game. -->
-          <a class="ball" href="tennis.html" aria-label="Take a break: play tennis" title="Take a break"></a>
-          <!-- EASTER EGG 2 (paused): to bring back the guessing game, move _paused/guess.html back to the main folder
-               and remove the comment markers around the next line.
-          <a class="egg-guess" href="guess.html" aria-label="Play a guessing game" title="Can you outguess everyone?">⅔</a>
-          -->
-        </figure>
+        <!-- PHOTO AND NAME: the name and title under the photo are in the <p class="namecard"> below. -->
+        <div class="portrait">
+          <!-- PHOTO: images/portrait.webp is your photo with the background removed.
+               To change it, replace that file with another cut-out image of the same name. -->
+          <figure class="figure">
+            <img src="images/portrait.webp" alt="Jose Arellano Martorellet" width="596" height="850">
+            <!-- EASTER EGG: the small gold dot next to the photo opens the tennis game. -->
+            <a class="ball" href="tennis.html" aria-label="Take a break: play tennis" title="Take a break"></a>
+            <!-- EASTER EGG 2 (paused): to bring back the guessing game, move _paused/guess.html back to the main folder
+                 and remove the comment markers around the next line.
+            <a class="egg-guess" href="guess.html" aria-label="Play a guessing game" title="Can you outguess everyone?">⅔</a>
+            -->
+          </figure>
+          <p class="namecard"><span class="namecard-name">Jose Arellano Martorellet</span><span class="namecard-title">PhD Candidate · Carnegie Mellon University</span></p>
+        </div>
       </section>
 
       <!-- RESEARCH THEMES: each theme lists the questions its papers address.
