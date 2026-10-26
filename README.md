@@ -98,20 +98,6 @@ match /guesses/{id} {
 }
 ```
 
-## "Was this useful?" button
-
-`experiments.html` and `experiments-es.html` share one vote count, stored in Firebase in the `likes` collection (one document per vote). The count appears on the page once it reaches 10 (`SHOW_FROM` in the script at the bottom of each page). Each browser can vote once. Firestore rules for it:
-
-```
-match /likes/{id} {
-  allow read: if true;
-  allow create: if request.resource.data.keys().hasOnly(['page', 'createdAt'])
-    && request.resource.data.page == 'experiments'
-    && request.resource.data.createdAt == request.time;
-  allow update, delete: if false;
-}
-```
-
 ## "Have another question?" box
 
 At the end of both Experiments 101 pages. Questions are saved in Firebase in the `questions` collection (fields: `lang`, `text`, optional `email`, `createdAt`). Nobody can read them from the website; open Firebase console → Firestore Database → Data → `questions` to see them. Each browser can send up to 5 per day. Firestore rules for it:

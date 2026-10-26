@@ -65,16 +65,6 @@ html { scroll-behavior: smooth; }
 .ask-msg { font-size: 0.9rem; color: var(--muted); }
 .ask-msg.ok { color: var(--accent); font-weight: 600; }
 .ask-msg.err { color: var(--coral); }
-.useful { margin-top: 2.5rem; display: flex; align-items: center; gap: 0.9rem 1.25rem; flex-wrap: wrap; }
-.useful p { margin: 0; font-family: var(--serif); font-size: 1.2rem; }
-.like-btn { font: inherit; font-size: 0.95rem; font-weight: 600; color: var(--accent); background: transparent; border: 1px solid var(--accent); border-radius: 999px; padding: 0.5rem 1.1rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; }
-.like-btn svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.like-btn:hover:not(:disabled) { background: var(--accent-soft); }
-.like-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-.like-btn:disabled { cursor: default; }
-.like-btn.done { color: var(--paper); background: var(--accent); }
-.like-btn.done svg { fill: currentColor; stroke: none; }
-.like-count, .like-msg { font-size: 0.9rem; color: var(--muted); }
 .lang-switch { margin: 0.7rem 0 0; font-size: 0.92rem; }
 .toc { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.6rem 0 0; padding: 0; list-style: none; }
 .toc a { display: inline-block; font-size: 0.88rem; color: var(--accent); text-decoration: none; border: 1px solid var(--rule); border-radius: 999px; padding: 0.3rem 0.8rem; }
@@ -422,15 +412,7 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
       <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg></span><span class="n">5</span></div><b>A way to link outcomes to groups</b><p>A record of who was assigned to which group, and an ID that connects each person to their outcome data.</p></div>
     </div>
   </section>
-
-  <div class="useful" aria-live="polite">
-    <p>Was this page useful?</p>
-    <button class="like-btn" id="likeBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg><span id="likeLabel">Yes, it helped</span></button>
-    <span class="like-count" id="likeCount" hidden></span>
-    <span class="like-msg" id="likeMsg" hidden></span>
-  </div>
-
-<form class="ask" id="askForm" novalidate>
+  <form class="ask" id="askForm" novalidate>
     <h2>Have another question?</h2>
     <p>Ask it here. I read every question and may add it to these FAQs.</p>
     <label for="askText">Your question
@@ -798,8 +780,7 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
       });
     })();
   </script>
-  <!-- "Was this useful?" button. One vote per browser; the count (shared by the English and Spanish pages)
-       is stored in Firebase (collection "likes") and shown once it reaches SHOW_FROM. -->
+  <!-- Firebase connection for the "Have another question?" box below -->
   <script type="module">
     const firebaseConfig = {
       apiKey: "AIzaSyCilMsKrX7nEbJR-i55TqqTV_M6qsiJTag",
@@ -810,47 +791,14 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
       appId: "1:300754349668:web:7289dfe8fcb24671747971"
     };
     const PAGE = 'experiments';
-    const SHOW_FROM = 10;
-    const KEY = 'likedExperiments';
-    const btn = document.getElementById('likeBtn'), label = document.getElementById('likeLabel');
-    const countEl = document.getElementById('likeCount'), msg = document.getElementById('likeMsg');
-    let liked = false;
-    try { liked = localStorage.getItem(KEY) === '1'; } catch (e) {}
-    function markDone() { btn.disabled = true; btn.classList.add('done'); label.textContent = 'Thanks!'; }
-    if (liked) markDone();
     let fs = null, db = null;
-    async function showCount() {
-      try {
-        const snap = await fs.getCountFromServer(fs.query(fs.collection(db, 'likes'), fs.where('page', '==', PAGE)));
-        const n = snap.data().count;
-        if (n >= SHOW_FROM) { countEl.textContent = '' + n.toLocaleString('en-US') + ' people found this useful'; countEl.hidden = false; }
-      } catch (e) { console.error(e); }
-    }
     (async () => {
       try {
         const app = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
         fs = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
         db = fs.getFirestore(app.initializeApp(firebaseConfig));
-        showCount();
       } catch (e) { console.error(e); }
     })();
-    btn.addEventListener('click', async () => {
-      if (liked) return;
-      msg.hidden = true;
-      if (!db) { msg.textContent = 'Couldn\u2019t save your vote. Please try again.'; msg.hidden = false; return; }
-      btn.disabled = true;
-      try {
-        await fs.addDoc(fs.collection(db, 'likes'), { page: PAGE, createdAt: fs.serverTimestamp() });
-        liked = true;
-        try { localStorage.setItem(KEY, '1'); } catch (e) {}
-        markDone();
-        showCount();
-      } catch (e) {
-        console.error(e);
-        btn.disabled = false;
-        msg.textContent = 'Couldn\u2019t save your vote. Please try again.'; msg.hidden = false;
-      }
-    });
 
     // ---------- "Have another question?" form: questions go to Firebase (collection "questions"), readable only in the console ----------
     const askForm = document.getElementById('askForm'), askText = document.getElementById('askText'), askEmail = document.getElementById('askEmail');
