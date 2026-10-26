@@ -51,6 +51,20 @@ html { scroll-behavior: smooth; }
 .col { max-width: 42rem; }
 :where(.guide) h1 { font-family: var(--sans); font-weight: 700; font-size: clamp(2.3rem, 6vw, 3.2rem); letter-spacing: -0.03em; line-height: 1.02; margin: 0 0 0.8rem; }
 .lede { font-size: 1.15rem; color: var(--muted); margin: 0; max-width: 40rem; }
+.ask { margin-top: 1.5rem; border: 1px solid var(--rule); border-radius: 14px; padding: 1.25rem; display: grid; gap: 0.8rem; max-width: 46rem; }
+.ask h2 { font-family: var(--serif); font-weight: 500; font-size: 1.3rem; margin: 0; }
+.ask p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+.ask textarea, .ask input { font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 8px; padding: 0.6rem 0.75rem; width: 100%; }
+.ask textarea { min-height: 6rem; resize: vertical; }
+.ask textarea:focus-visible, .ask input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.ask label { font-size: 0.85rem; color: var(--muted); display: grid; gap: 0.3rem; }
+.ask-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.ask-send { font: inherit; font-size: 0.95rem; font-weight: 600; color: var(--paper); background: var(--accent); border: 0; border-radius: 999px; padding: 0.55rem 1.3rem; cursor: pointer; }
+.ask-send:disabled { opacity: 0.55; cursor: default; }
+.ask-send:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.ask-msg { font-size: 0.9rem; color: var(--muted); }
+.ask-msg.ok { color: var(--accent); font-weight: 600; }
+.ask-msg.err { color: var(--coral); }
 .useful { margin-top: 2.5rem; display: flex; align-items: center; gap: 0.9rem 1.25rem; flex-wrap: wrap; }
 .useful p { margin: 0; font-family: var(--serif); font-size: 1.2rem; }
 .like-btn { font: inherit; font-size: 0.95rem; font-weight: 600; color: var(--accent); background: transparent; border: 1px solid var(--accent); border-radius: 999px; padding: 0.5rem 1.1rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; }
@@ -417,7 +431,22 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
     <span class="like-msg" id="likeMsg" hidden></span>
   </div>
 
-<section class="s" id="sources">
+<form class="ask" id="askForm" novalidate>
+    <h2>¿Tienes otra pregunta?</h2>
+    <p>Escríbela aquí. Leo todas las preguntas y quizás la agregue a estas preguntas frecuentes.</p>
+    <label for="askText">Tu pregunta
+      <textarea id="askText" maxlength="1000" placeholder="¿Qué te gustaría saber sobre experimentos?"></textarea>
+    </label>
+    <label for="askEmail">Tu correo (opcional, si quieres una respuesta)
+      <input id="askEmail" type="email" maxlength="120" autocomplete="email">
+    </label>
+    <div class="ask-row">
+      <button class="ask-send" id="askSend" type="submit">Enviar pregunta</button>
+      <span class="ask-msg" id="askMsg" aria-live="polite"></span>
+    </div>
+  </form>
+
+  <section class="s" id="sources">
     <h2>Fuentes</h2>
     <ol class="refs">
       <li>Azad, M. B., et al. (2017). Nonnutritive sweeteners and cardiometabolic health: A systematic review and meta-analysis of randomized controlled trials and prospective cohort studies. <i>CMAJ, 189</i>(28), E929–E939.</li>
@@ -821,6 +850,34 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
         console.error(e);
         btn.disabled = false;
         msg.textContent = 'No se pudo guardar tu voto. Inténtalo de nuevo.'; msg.hidden = false;
+      }
+    });
+
+    // ---------- "Have another question?" form: questions go to Firebase (collection "questions"), readable only in the console ----------
+    const askForm = document.getElementById('askForm'), askText = document.getElementById('askText'), askEmail = document.getElementById('askEmail');
+    const askSend = document.getElementById('askSend'), askMsg = document.getElementById('askMsg');
+    const ASK_KEY = 'askedExperiments', ASK_MAX_PER_DAY = 5;
+    const today = new Date().toISOString().slice(0, 10);
+    function askedToday() { try { const v = JSON.parse(localStorage.getItem(ASK_KEY) || 'null'); return v && v.day === today ? v.n : 0; } catch (e) { return 0; } }
+    function say(text, cls) { askMsg.textContent = text; askMsg.className = 'ask-msg' + (cls ? ' ' + cls : ''); }
+    askForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = askText.value.trim(), email = askEmail.value.trim();
+      if (text.length < 5) { say('Escribe una pregunta un poco más larga, por favor.', 'err'); askText.focus(); return; }
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { say('Ese correo no parece correcto.', 'err'); askEmail.focus(); return; }
+      if (askedToday() >= ASK_MAX_PER_DAY) { say('Ya enviaste varias preguntas hoy. ¡Gracias! Inténtalo de nuevo mañana.', 'err'); return; }
+      if (!db) { say('No se pudo enviar tu pregunta. Inténtalo de nuevo.', 'err'); return; }
+      askSend.disabled = true; askSend.textContent = 'Enviando…'; say('');
+      try {
+        await fs.addDoc(fs.collection(db, 'questions'), { page: PAGE, lang: 'es', text: text.slice(0, 1000), email: email.slice(0, 120), createdAt: fs.serverTimestamp() });
+        try { localStorage.setItem(ASK_KEY, JSON.stringify({ day: today, n: askedToday() + 1 })); } catch (e2) {}
+        askText.value = ''; askEmail.value = '';
+        say('¡Gracias! Tu pregunta fue enviada.', 'ok');
+      } catch (err) {
+        console.error(err);
+        say('No se pudo enviar tu pregunta. Inténtalo de nuevo.', 'err');
+      } finally {
+        askSend.disabled = false; askSend.textContent = 'Enviar pregunta';
       }
     });
   </script>

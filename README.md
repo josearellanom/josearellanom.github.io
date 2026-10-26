@@ -112,6 +112,24 @@ match /likes/{id} {
 }
 ```
 
+## "Have another question?" box
+
+At the end of both Experiments 101 pages. Questions are saved in Firebase in the `questions` collection (fields: `lang`, `text`, optional `email`, `createdAt`). Nobody can read them from the website; open Firebase console → Firestore Database → Data → `questions` to see them. Each browser can send up to 5 per day. Firestore rules for it:
+
+```
+match /questions/{id} {
+  allow read: if false;
+  allow create: if request.resource.data.keys().hasOnly(['page', 'lang', 'text', 'email', 'createdAt'])
+    && request.resource.data.page == 'experiments'
+    && request.resource.data.lang in ['en', 'es']
+    && request.resource.data.text is string
+    && request.resource.data.text.size() >= 5 && request.resource.data.text.size() <= 1000
+    && request.resource.data.email is string && request.resource.data.email.size() <= 120
+    && request.resource.data.createdAt == request.time;
+  allow update, delete: if false;
+}
+```
+
 ## Visitor stats
 
 Visits are counted with GoatCounter (no cookies). Dashboard: https://josearellanom.goatcounter.com. The snippet is the last `<script>` before `</body>` on index, research, cv, experiments, experiments-es, and tennis. Add the same line to any new page you want counted.
