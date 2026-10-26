@@ -444,40 +444,60 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
     // ---------- 2. What is an experiment ----------
     function drawWhat() {
       const svg = $('whatSvg'); svg.textContent = '';
-      const W = fit(svg, 230), ink = tok('--ink'), muted = tok('--muted'), dot = tok('--dot'), acc = tok('--accent'), rule = tok('--rule');
+      const narrow = (svg.getBoundingClientRect().width || 680) < 560;
+      const W = fit(svg, narrow ? 390 : 230), ink = tok('--ink'), muted = tok('--muted'), dot = tok('--dot'), acc = tok('--accent'), rule = tok('--rule'), amber = tok('--amber');
       arrowDefs(svg, [['wa', muted]]);
-      const narrow = W < 520;
+      const coinAt = (cx, cy) => {
+        const coin = el('g', { transform: `rotate(-22 ${cx} ${cy})` });
+        coin.appendChild(el('ellipse', { cx, cy: cy + 4, rx: 15, ry: 9, fill: '#b9771a' }));
+        coin.appendChild(el('rect', { x: cx - 15, y: cy, width: 30, height: 4, fill: '#b9771a' }));
+        coin.appendChild(el('ellipse', { cx, cy, rx: 15, ry: 9, fill: amber }));
+        coin.appendChild(el('ellipse', { cx, cy, rx: 10.5, ry: 6, fill: 'none', stroke: '#fff3d6', 'stroke-width': 1.3, opacity: 0.9 }));
+        svg.appendChild(coin);
+      };
+      const bars = (bx, base, bh) => {
+        svg.appendChild(el('line', { x1: bx - 50, x2: bx + 50, y1: base, y2: base, stroke: rule }));
+        svg.appendChild(el('rect', { x: bx - 40, y: base - bh * 0.62, width: 32, height: bh * 0.62, rx: 3, fill: acc }));
+        svg.appendChild(el('rect', { x: bx + 8, y: base - bh * 0.5, width: 32, height: bh * 0.5, rx: 3, fill: dot }));
+      };
+      if (narrow) {
+        // Phones: split on top, comparison underneath, labels under each group so nothing overlaps
+        const x0 = 22, gx = W - 22 - 54;
+        for (let i = 0; i < 24; i++) svg.appendChild(el('circle', { cx: x0 + (i % 4) * 18, cy: 48 + Math.floor(i / 4) * 18, r: 5.5, fill: dot }));
+        svg.appendChild(el('text', { x: x0 + 27, y: 24, fill: ink, 'font-size': 13, 'font-weight': 600, 'text-anchor': 'middle', 'font-family': F }, 'Todos'));
+        const ax1 = x0 + 66, ax2 = gx - 14, mid = (ax1 + ax2) / 2;
+        svg.appendChild(el('line', { x1: ax1, y1: 86, x2: ax2, y2: 60, stroke: muted, 'stroke-width': 1.5, 'marker-end': 'url(#wa)' }));
+        svg.appendChild(el('line', { x1: ax1, y1: 106, x2: ax2, y2: 150, stroke: muted, 'stroke-width': 1.5, 'marker-end': 'url(#wa)' }));
+        svg.appendChild(el('text', { x: mid, y: 112, fill: muted, 'font-size': 12, 'text-anchor': 'middle', 'font-family': F }, 'al azar'));
+        coinAt(mid, 46);
+        const grp = (top, color, label) => {
+          for (let i = 0; i < 12; i++) svg.appendChild(el('circle', { cx: gx + (i % 4) * 18, cy: top + Math.floor(i / 4) * 15, r: 5, fill: color }));
+          svg.appendChild(el('text', { x: gx + 27, y: top + 48, fill: ink, 'font-size': 12.5, 'text-anchor': 'middle', 'font-family': F }, label));
+        };
+        grp(44, acc, 'Recordatorio');
+        grp(138, dot, 'Sin recordatorio');
+        svg.appendChild(el('line', { x1: 16, x2: W - 16, y1: 222, y2: 222, stroke: rule }));
+        svg.appendChild(el('text', { x: W / 2, y: 252, fill: ink, 'font-size': 13, 'font-weight': 600, 'text-anchor': 'middle', 'font-family': F }, 'Comparar resultados'));
+        bars(W / 2, 350, 140);
+        svg.appendChild(el('text', { x: W / 2, y: 374, fill: muted, 'font-size': 12, 'text-anchor': 'middle', 'font-family': F }, 'p. ej., % vacunados'));
+        return;
+      }
       const c1 = W * 0.12, c2 = W * 0.42, c3 = W * 0.80;
-      const r = rng(3);
-      // everyone
       for (let i = 0; i < 24; i++) svg.appendChild(el('circle', { cx: c1 - 30 + (i % 4) * 20, cy: 70 + Math.floor(i / 4) * 20, r: 6, fill: dot }));
       svg.appendChild(el('text', { x: c1, y: 40, fill: ink, 'font-size': 13, 'font-weight': 600, 'text-anchor': 'middle', 'font-family': F }, 'Todos'));
-      // arrows to two groups
       svg.appendChild(el('line', { x1: c1 + 48, y1: 110, x2: c2 - 52, y2: 75, stroke: muted, 'stroke-width': 1.5, 'marker-end': 'url(#wa)' }));
       svg.appendChild(el('line', { x1: c1 + 48, y1: 130, x2: c2 - 52, y2: 170, stroke: muted, 'stroke-width': 1.5, 'marker-end': 'url(#wa)' }));
-      svg.appendChild(el('text', { x: (c1 + c2) / 2, y: 128, fill: muted, 'font-size': 12, 'text-anchor': 'middle', 'font-family': F }, narrow ? 'al azar' : 'división al azar'));
-      // coin (tilted, edge visible)
-      const amber = tok('--amber'), cx = (c1 + c2) / 2 + 2, cy = 56;
-      const coin = el('g', { transform: `rotate(-22 ${cx} ${cy})` });
-      coin.appendChild(el('ellipse', { cx, cy: cy + 4, rx: 15, ry: 9, fill: '#b9771a' }));
-      coin.appendChild(el('rect', { x: cx - 15, y: cy, width: 30, height: 4, fill: '#b9771a' }));
-      coin.appendChild(el('ellipse', { cx, cy, rx: 15, ry: 9, fill: amber }));
-      coin.appendChild(el('ellipse', { cx, cy, rx: 10.5, ry: 6, fill: 'none', stroke: '#fff3d6', 'stroke-width': 1.3, opacity: 0.9 }));
-      svg.appendChild(coin);
-      // groups
+      svg.appendChild(el('text', { x: (c1 + c2) / 2, y: 128, fill: muted, 'font-size': 12, 'text-anchor': 'middle', 'font-family': F }, 'división al azar'));
+      coinAt((c1 + c2) / 2 + 2, 56);
       const grp = (cy, color, label) => {
         for (let i = 0; i < 12; i++) svg.appendChild(el('circle', { cx: c2 - 30 + (i % 4) * 20, cy: cy - 15 + Math.floor(i / 4) * 15, r: 5.5, fill: color }));
         svg.appendChild(el('text', { x: c2 + 52, y: cy + 4, fill: ink, 'font-size': 13, 'text-anchor': 'start', 'font-family': F }, label));
       };
-      grp(68, acc, narrow ? 'Recordatorio' : 'Recibe el recordatorio');
-      grp(172, dot, narrow ? 'Sin recordatorio' : 'Sin recordatorio');
-      // compare
-      const bx = c3, bh = 110;
-      svg.appendChild(el('text', { x: bx, y: 40, fill: ink, 'font-size': 13, 'font-weight': 600, 'text-anchor': 'middle', 'font-family': F }, 'Comparar resultados'));
-      svg.appendChild(el('line', { x1: bx - 50, x2: bx + 50, y1: 190, y2: 190, stroke: rule }));
-      svg.appendChild(el('rect', { x: bx - 40, y: 190 - bh * 0.62, width: 32, height: bh * 0.62, rx: 3, fill: acc }));
-      svg.appendChild(el('rect', { x: bx + 8, y: 190 - bh * 0.5, width: 32, height: bh * 0.5, rx: 3, fill: dot }));
-      svg.appendChild(el('text', { x: bx, y: 212, fill: muted, 'font-size': 12, 'text-anchor': 'middle', 'font-family': F }, 'p. ej., % vacunados'));
+      grp(68, acc, 'Recibe el recordatorio');
+      grp(172, dot, 'Sin recordatorio');
+      svg.appendChild(el('text', { x: c3, y: 40, fill: ink, 'font-size': 13, 'font-weight': 600, 'text-anchor': 'middle', 'font-family': F }, 'Comparar resultados'));
+      bars(c3, 190, 110);
+      svg.appendChild(el('text', { x: c3, y: 212, fill: muted, 'font-size': 12, 'text-anchor': 'middle', 'font-family': F }, 'p. ej., % vacunados'));
     }
   
     // ---------- 3. Correlation stepper ----------
