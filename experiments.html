@@ -7,6 +7,8 @@
   <meta name="description" content="Experiments 101 FAQ: short, visual answers for practitioners on why experiments matter, randomization, control groups, and sample size, with a sample size calculator.">
   <meta name="author" content="Jose Arellano Martorellet">
   <link rel="canonical" href="https://josearellanom.com/experiments.html">
+  <link rel="alternate" hreflang="en" href="https://josearellanom.com/experiments.html">
+  <link rel="alternate" hreflang="es" href="https://josearellanom.com/experiments-es.html">
 
   <!-- Tab icon: scientist emoji from Noto Emoji (Apache License 2.0), recolored -->
   <link rel="icon" href="images/favicon-192.png" type="image/png" sizes="192x192">
@@ -39,6 +41,7 @@ html { scroll-behavior: smooth; }
 .col { max-width: 42rem; }
 :where(.guide) h1 { font-family: var(--sans); font-weight: 700; font-size: clamp(2.3rem, 6vw, 3.2rem); letter-spacing: -0.03em; line-height: 1.02; margin: 0 0 0.8rem; }
 .lede { font-size: 1.15rem; color: var(--muted); margin: 0; max-width: 40rem; }
+.lang-switch { margin: 0.7rem 0 0; font-size: 0.92rem; }
 .toc { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.6rem 0 0; padding: 0; list-style: none; }
 .toc a { display: inline-block; font-size: 0.88rem; color: var(--accent); text-decoration: none; border: 1px solid var(--rule); border-radius: 999px; padding: 0.3rem 0.8rem; }
 .toc a:hover { border-color: var(--accent); }
@@ -80,8 +83,8 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
 .small { font-size: 0.85rem; color: var(--muted); }
 :where(.guide) a { color: var(--accent); }
 
-.figure { border: 1px solid var(--rule); border-radius: 12px; padding: 1.25rem; display: grid; gap: 0.9rem; max-width: 46rem; }
-.figure .cap { font-size: 0.85rem; color: var(--muted); }
+.gfig { border: 1px solid var(--rule); border-radius: 12px; padding: 1.25rem; display: grid; gap: 0.9rem; max-width: 46rem; }
+.gfig .cap { font-size: 0.85rem; color: var(--muted); }
 .chart { width: 100%; height: auto; display: block; overflow: visible; }
 .flip { transform-box: fill-box; transform-origin: center; transition: transform 0.9s cubic-bezier(.6,.05,.3,1); }
 .flip.on { transform: rotate(180deg); }
@@ -164,7 +167,7 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
   .criteria li { grid-template-columns: 1fr; gap: 0.1rem; }
   .readout { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .readout b { font-size: 1.3rem; }
-  .figure { padding: 1rem; }
+  .gfig { padding: 1rem; }
 }
 @media (max-width: 960px) and (min-width: 721px) { .ingredients { grid-template-columns: repeat(3, minmax(0, 1fr)); } .ingredients .ing:last-child { grid-column: span 2; } }
 @media (max-width: 420px) { .ingredients { grid-template-columns: 1fr; } }
@@ -197,6 +200,7 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
   <div class="col">
     <h1>Experiments 101 FAQ</h1>
     <p class="lede">Short answers to common questions about testing whether a program, message, or policy works.</p>
+    <p class="lang-switch"><a href="experiments-es.html" hreflang="es" lang="es">Leer en español</a></p>
     <ul class="toc">
       <li><a class="toc-tool" href="#calc">Sample size calculator</a></li>
     </ul>
@@ -217,7 +221,7 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
     <span class="num">1</span>
     <h2>What is an experiment?</h2>
     <p class="col">Broadly, an experiment is a test run under controlled conditions to discover an effect, test a hypothesis, or try out a new idea. In a typical behavioral science experiment, you randomly assign people to groups, give each group a different version of something you control, and compare their outcomes. That something is often a message, a form, a reminder, or a default option. Because chance alone decided who got which version, the groups are alike on average before anything happens. So when their outcomes differ by more than chance alone would produce, the difference can be attributed to the version they received.</p>
-    <div class="figure">
+    <div class="gfig">
       <svg class="chart" id="whatSvg" viewBox="0 0 680 230" role="img" aria-label="Diagram: people are randomly split into two groups, one receives a reminder, then outcomes are compared"></svg>
       <p class="cap">Illustration. The comparison group shows what would have happened without the reminder.</p>
     </div>
@@ -229,7 +233,7 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
     <span class="num">2</span>
     <h2>Why do experiments matter?</h2>
     <p class="col">Two things can move together (a <b>correlation</b>) without one causing the other (<b>causation</b>). Data that simply observe people, without changing anything, often can't tell the difference. Here is a well-documented case.</p>
-    <div class="figure">
+    <div class="gfig">
       <svg class="chart" id="corrSvg" viewBox="0 0 680 300" role="img" aria-label="Correlation example"></svg>
       <p id="corrText"></p>
       <div class="btns">
@@ -256,7 +260,7 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
     <span class="num">3</span>
     <h2>Why can't I just compare before and after?</h2>
     <p class="col">A common way to judge a program is to compare outcomes before and after it starts. The problem is that many things change at the same time. Imagine a clinic sends a flu-shot reminder to its patients on October 1.</p>
-    <div class="figure">
+    <div class="gfig">
       <svg class="chart" id="baSvg" viewBox="0 0 680 290" role="img" aria-label="Line chart of the share of patients vaccinated, before and after a reminder"></svg>
       <p id="baText"></p>
       <div class="btns"><button class="btn" id="baBtn" type="button">Add a randomly chosen comparison group</button></div>
@@ -294,7 +298,7 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
     </ul>
 
     <h3>See how sample size changes what you can learn</h3>
-    <div class="figure">
+    <div class="gfig">
       <div class="controls">
         <div class="ctl"><label for="ciN">People per group <output id="ciNo"></output></label><input type="range" id="ciN" min="0" max="100" step="1" value="45"></div>
         <div class="ctl"><label for="ciP">Baseline rate <output id="ciPo"></output></label><input type="range" id="ciP" min="5" max="80" step="1" value="29"></div>
@@ -310,7 +314,7 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
     </div>
 
     <h3 id="calc" style="scroll-margin-top:1rem">Sample size calculator <span class="muted" style="font-size:0.8em">(two groups, yes-or-no outcome)</span></h3>
-    <div class="figure">
+    <div class="gfig">
       <div class="calc">
         <div class="field"><label for="cP">Baseline rate</label><div class="inp"><input id="cP" type="number" min="1" max="95" step="0.5" value="29" inputmode="decimal"><span>%</span></div></div>
         <div class="field"><label for="cE">Smallest effect worth detecting (increase)</label><div class="inp"><input id="cE" type="number" min="0.5" max="50" step="0.5" value="2" inputmode="decimal"><span>percentage points</span></div></div>
@@ -332,7 +336,7 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
     <div class="col" style="display:grid; gap:0.9rem">
       <p>Both mistakes happen because results bounce around by chance. The two settings in the calculator, significance level and power, control how often each one happens.</p>
     </div>
-    <div class="figure">
+    <div class="gfig">
       <img class="errimg" src="images/type-errors.webp" width="599" height="449" alt="Type I error (false positive): a doctor tells a man he is pregnant. Type II error (false negative): a doctor tells a visibly pregnant woman she is not pregnant.">
     </div>
     <div style="overflow-x:auto; max-width:46rem">

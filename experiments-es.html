@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Experimentos 101: preguntas frecuentes | Jose Arellano Martorellet</title>
+  <meta name="description" content="Experimentos 101: respuestas breves y visuales para profesionales sobre por qué importan los experimentos, la aleatorización, los grupos de control y el tamaño de muestra, con una calculadora de tamaño de muestra.">
+  <meta name="author" content="Jose Arellano Martorellet">
+  <link rel="canonical" href="https://josearellanom.com/experiments-es.html">
+  <link rel="alternate" hreflang="en" href="https://josearellanom.com/experiments.html">
+  <link rel="alternate" hreflang="es" href="https://josearellanom.com/experiments-es.html">
+
+  <!-- Tab icon: scientist emoji from Noto Emoji (Apache License 2.0), recolored -->
+  <link rel="icon" href="images/favicon-192.png" type="image/png" sizes="192x192">
+  <link rel="icon" href="images/favicon.png" type="image/png" sizes="64x64">
+  <link rel="icon" href="images/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Light/dark mode: applies the saved choice (or the device setting) before the page draws -->
+  <script>
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem('theme'); } catch (e) {}
+      if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="stylesheet" href="style.css?v=7">
+  <style>
+/* Colors used only on this page (the rest come from style.css) */
+:root { --dot: #b9c4ca; --panel: #f3f6f7; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --dot: #4a5661; --panel: #182028; } }
+:root[data-theme="dark"] { --dot: #4a5661; --panel: #182028; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+
+.col { max-width: 42rem; }
+:where(.guide) h1 { font-family: var(--sans); font-weight: 700; font-size: clamp(2.3rem, 6vw, 3.2rem); letter-spacing: -0.03em; line-height: 1.02; margin: 0 0 0.8rem; }
+.lede { font-size: 1.15rem; color: var(--muted); margin: 0; max-width: 40rem; }
+.lang-switch { margin: 0.7rem 0 0; font-size: 0.92rem; }
+.toc { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.6rem 0 0; padding: 0; list-style: none; }
+.toc a { display: inline-block; font-size: 0.88rem; color: var(--accent); text-decoration: none; border: 1px solid var(--rule); border-radius: 999px; padding: 0.3rem 0.8rem; }
+.toc a:hover { border-color: var(--accent); }
+.toc a.toc-tool { color: var(--paper); background: var(--accent); border-color: var(--accent); font-weight: 600; }
+.toc a.toc-tool:hover { filter: brightness(1.08); }
+
+section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var(--rule); display: grid; gap: 1.1rem; scroll-margin-top: 1rem; }
+/* Collapsible banners (applied by the script; without it, sections simply show in full) */
+.banners section.s { padding: 0; margin-top: 0.9rem; border: 1px solid var(--rule); border-radius: 14px; display: block; background: var(--paper); transition: border-color .2s ease, box-shadow .2s ease; }
+.banners section.s:first-of-type { margin-top: 2rem; }
+.banners section.s.open { border-color: color-mix(in srgb, var(--accent) 35%, var(--rule)); box-shadow: 0 1px 0 var(--rule); }
+.banner-h { margin: 0; font: inherit; }
+.banner-btn { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1rem; padding: 1.1rem 1.25rem; border-radius: 14px; }
+.banner-btn:hover .banner-title { color: var(--accent); }
+.banner-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.badge { width: 2.4rem; height: 2.4rem; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-family: var(--serif); font-size: 1.25rem; line-height: 1; }
+.banner-text { display: grid; gap: 0.1rem; min-width: 0; }
+.banner-eyebrow { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.banner-title { font-family: var(--serif); font-weight: 500; font-size: clamp(1.25rem, 3vw, 1.5rem); line-height: 1.2; color: var(--ink); transition: color .15s ease; }
+.banner-sum { font-size: 0.9rem; color: var(--muted); }
+.chev { width: 1.9rem; height: 1.9rem; border-radius: 50%; border: 1px solid var(--rule); display: grid; place-items: center; color: var(--muted); transition: transform .3s ease, background .2s ease; }
+.chev svg { width: 0.9rem; height: 0.9rem; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.open .chev { transform: rotate(180deg); background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+.banner-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .38s ease; }
+.open .banner-body { grid-template-rows: 1fr; }
+.banner-clip { overflow: hidden; min-height: 0; }
+.banner-inner { display: grid; gap: 1.1rem; padding: 0.25rem 1.25rem 1.6rem; }
+.banners section#sources { border: 0; border-radius: 0; background: none; box-shadow: none; padding: 2.5rem 0 0; margin-top: 2.5rem; border-top: 1px solid var(--rule); display: grid; gap: 0.8rem; }
+#sources h2 { font-size: 1.25rem; }
+.expand-all { margin: 0.9rem 0 0; }
+.expand-all button { font: inherit; font-size: 0.88rem; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 520px) { .banner-btn { padding: 0.95rem 1rem; gap: 0.75rem; } .banner-inner { padding: 0.25rem 1rem 1.3rem; } .badge { width: 2rem; height: 2rem; font-size: 1.05rem; } .banner-sum { display: none; } }
+@media (prefers-reduced-motion: reduce) { .banner-body, .chev { transition: none; } }
+.num { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+:where(.guide) h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.6rem, 4vw, 2rem); line-height: 1.15; margin: 0; text-wrap: balance; }
+:where(.guide) h3 { font-family: var(--serif); font-weight: 500; font-size: 1.3rem; line-height: 1.25; margin: 0.6rem 0 0; }
+:where(.guide) p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 0.85rem; color: var(--muted); }
+:where(.guide) a { color: var(--accent); }
+
+.gfig { border: 1px solid var(--rule); border-radius: 12px; padding: 1.25rem; display: grid; gap: 0.9rem; max-width: 46rem; }
+.gfig .cap { font-size: 0.85rem; color: var(--muted); }
+.chart { width: 100%; height: auto; display: block; overflow: visible; }
+.flip { transform-box: fill-box; transform-origin: center; transition: transform 0.9s cubic-bezier(.6,.05,.3,1); }
+.flip.on { transform: rotate(180deg); }
+#flipLabel, #flipName { transition: opacity .4s ease; }
+#flipBtn { outline: none; }
+#flipBtn:focus-visible rect { stroke-width: 3; }
+@media (prefers-reduced-motion: reduce) { .flip { transition: none; } }
+.btns { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+.btn { font: inherit; font-size: 0.92rem; font-weight: 600; color: var(--paper); background: var(--accent); border: 0; border-radius: 999px; padding: 0.5rem 1.1rem; cursor: pointer; }
+.btn.ghost { color: var(--accent); background: transparent; border: 1px solid var(--accent); }
+.btn:disabled { opacity: 0.4; cursor: default; }
+.btn:focus-visible, input:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.steps { font-size: 0.82rem; color: var(--muted); font-variant-numeric: tabular-nums; margin-left: auto; }
+
+.reasons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.5rem; max-width: 46rem; }
+.reasons div { border-top: 2px solid var(--rule); padding-top: 0.6rem; }
+.reasons b { display: block; font-weight: 600; margin-bottom: 0.2rem; }
+.reasons p { font-size: 0.95rem; color: var(--muted); }
+
+.answer { font-size: 1.12rem; font-weight: 600; line-height: 1.5; color: var(--ink); }
+.callout { background: var(--panel); border-radius: 10px; padding: 1rem 1.2rem; max-width: 46rem; font-size: 0.97rem; }
+.callout b { font-weight: 600; }
+
+.criteria { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.55rem; max-width: 46rem; }
+.criteria li { display: grid; grid-template-columns: 11rem 1fr; gap: 1rem; padding-bottom: 0.55rem; border-bottom: 1px solid var(--rule); font-size: 0.97rem; }
+.criteria b { font-weight: 600; }
+
+.controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.5rem; }
+.ctl { display: grid; gap: 0.2rem; min-width: 0; }
+.ctl label { font-size: 0.85rem; color: var(--muted); display: flex; justify-content: space-between; gap: 0.5rem; }
+.ctl label output { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.ctl input[type=range] { width: 100%; accent-color: var(--accent); }
+.readout { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
+.readout div { border-top: 2px solid var(--rule); padding-top: 0.4rem; }
+.readout b { display: block; font-family: var(--serif); font-weight: 500; font-size: 1.6rem; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.readout span { font-size: 0.78rem; color: var(--muted); }
+.readout .key { border-color: var(--accent); }
+.readout .key b { color: var(--accent); }
+.verdict { font-size: 0.97rem; }
+.calc { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.5rem; }
+.field { display: grid; gap: 0.25rem; }
+.field label { font-size: 0.85rem; color: var(--muted); }
+.field .inp { display: flex; align-items: center; gap: 0.4rem; }
+.field select { font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 0.45rem 0.6rem; }
+.field input { font: inherit; width: 6.5rem; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 0.45rem 0.6rem; font-variant-numeric: tabular-nums; }
+.result { display: flex; align-items: baseline; gap: 0.8rem; flex-wrap: wrap; }
+.result b { font-family: var(--serif); font-weight: 500; font-size: 2.6rem; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+.ingredients { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.9rem; max-width: 60rem; }
+.ing { border: 1px solid var(--rule); border-radius: 12px; padding: 1rem; display: grid; gap: 0.4rem; align-content: start; }
+.ing-top { display: flex; justify-content: space-between; align-items: center; }
+.ing .n { font-family: var(--serif); font-size: 1.4rem; line-height: 1; color: var(--muted); }
+.ico { width: 2.6rem; height: 2.6rem; border-radius: 50%; background: var(--accent-soft); display: grid; place-items: center; }
+.ico svg { width: 1.45rem; height: 1.45rem; fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ico svg .dotfill { fill: var(--accent); stroke: none; }
+.ing b { font-weight: 600; line-height: 1.3; }
+.ing p { font-size: 0.9rem; color: var(--muted); }
+.errimg { display: block; width: 100%; max-width: 560px; height: auto; margin: 0 auto; border-radius: 6px; }
+.errtable { width: 100%; border-collapse: collapse; font-size: 0.93rem; min-width: 30rem; }
+.errtable th, .errtable td { border: 1px solid var(--rule); padding: 0.6rem 0.75rem; text-align: left; vertical-align: top; }
+.errtable thead th { font-weight: 600; background: var(--panel); }
+.errtable tbody th { font-weight: 600; background: var(--panel); width: 26%; }
+.errtable td.good { background: var(--accent-soft); }
+.errtable td.bad { color: var(--ink); }
+.errtable b { font-weight: 600; }
+.powtable td { font-variant-numeric: tabular-nums; }
+.powtable tr.hl td { background: var(--accent-soft); font-weight: 600; }
+.t-ink { fill: var(--ink); } .t-muted { fill: var(--muted); } .s-rule { stroke: var(--rule); }
+.f-coat { fill: #f4f6f7; stroke: #c9d1d6; stroke-width: 1.5; } .f-shirt { fill: #8fb3c9; } .s-steth { stroke: #3c4a57; }
+.f-gown { fill: #a9c6d8; } .f-dress { fill: #d98c7a; }
+.f-skin1 { fill: #e8b893; } .f-skin2 { fill: #8d5a3b; } .f-skin3 { fill: #f1c9a8; }
+.f-hair-grey { fill: #9aa3aa; } .f-eye { fill: #2b2522; } .s-eye { stroke: #2b2522; } .f-hair-dark { fill: #2b2522; } .f-hair-brown { fill: #6b4a33; } .f-hair-auburn { fill: #8a4b2b; }
+.f-bubble { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; } .f-bubble-tail { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round; }
+.refs { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.5rem; font-size: 0.92rem; max-width: 46rem; }
+
+@media (max-width: 720px) {
+  .reasons, .controls, .calc { grid-template-columns: 1fr; }
+  .ingredients { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ingredients .ing:last-child { grid-column: 1 / -1; }
+  .criteria li { grid-template-columns: 1fr; gap: 0.1rem; }
+  .readout { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .readout b { font-size: 1.3rem; }
+  .gfig { padding: 1rem; }
+}
+@media (max-width: 960px) and (min-width: 721px) { .ingredients { grid-template-columns: repeat(3, minmax(0, 1fr)); } .ingredients .ing:last-child { grid-column: span 2; } }
+@media (max-width: 420px) { .ingredients { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <div class="brand">
+        <a class="site-name" href="index.html">Jose Arellano Martorellet</a>
+        <button class="theme-toggle" type="button" aria-label="Cambiar a modo oscuro" title="Cambiar modo claro/oscuro">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+      </div>
+      <nav class="site-nav" aria-label="Main">
+        <ul>
+          <li><a href="index.html">About</a></li>
+          <li><a href="research.html">Research</a></li>
+          <li><a href="cv.html">CV</a></li>
+          <li><a href="experiments-es.html" aria-current="page">Experimentos 101</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap guide">
+  <div class="col">
+    <h1>Experimentos 101: preguntas frecuentes</h1>
+    <p class="lede">Respuestas breves a preguntas comunes sobre cómo comprobar si un programa, un mensaje o una política funciona.</p>
+    <p class="lang-switch"><a href="experiments.html" hreflang="en" lang="en">Read in English</a></p>
+    <ul class="toc">
+      <li><a class="toc-tool" href="#calc">Calculadora de tamaño de muestra</a></li>
+    </ul>
+    <p class="expand-all"><button type="button" id="expandAll">Abrir todas las secciones</button></p>
+  </div>
+
+  <!-- 1. INTRO -->
+  <section class="s" id="intro">
+    <span class="num">i</span>
+    <h2>Sobre estas preguntas frecuentes</h2>
+    <div class="col" style="display:grid; gap:0.9rem">
+      <p>Gobiernos, sistemas de salud y organizaciones lanzan programas, recordatorios y campañas todos los días, a menudo basados en la intuición, en lo que funcionó en otro lugar o en cifras que subieron después del lanzamiento. Estas señales pueden engañar: algunos programas que parecen obviamente útiles no logran nada (¡no desperdicie dinero!), mientras que algunos cambios pequeños funcionan sorprendentemente bien. Los experimentos son la forma más confiable de distinguir unos de otros. Estas preguntas frecuentes cubren algunos conceptos básicos en lenguaje sencillo, con ejemplos y figuras interactivas.</p>
+    </div>
+  </section>
+
+  <!-- 2. WHAT IS AN EXPERIMENT -->
+  <section class="s" id="what">
+    <span class="num">1</span>
+    <h2>¿Qué es un experimento?</h2>
+    <p class="col">En términos generales, un experimento es una prueba realizada en condiciones controladas para descubrir un efecto, poner a prueba una hipótesis o ensayar una idea nueva. En un experimento típico de ciencias del comportamiento, se asigna a las personas a grupos de forma aleatoria, se le da a cada grupo una versión distinta de algo que usted controla y se comparan sus resultados. Ese algo suele ser un mensaje, un formulario, un recordatorio o una opción predeterminada. Como solo el azar decidió quién recibió cada versión, los grupos son parecidos en promedio antes de que ocurra cualquier cosa. Por eso, cuando sus resultados difieren más de lo que produciría el azar por sí solo, la diferencia puede atribuirse a la versión que recibieron.</p>
+    <div class="gfig">
+      <svg class="chart" id="whatSvg" viewBox="0 0 680 230" role="img" aria-label="Diagrama: las personas se dividen al azar en dos grupos, uno recibe un recordatorio y luego se comparan los resultados"></svg>
+      <p class="cap">Ilustración. El grupo de comparación muestra lo que habría pasado sin el recordatorio.</p>
+    </div>
+    <p class="small col">Nota: esta guía trata sobre experimentos <b>entre sujetos</b>, en los que cada persona recibe una sola versión, el diseño que usa la mayoría de los ensayos controlados aleatorizados. No cubre los experimentos <b>intrasujeto</b>, en los que cada persona recibe varias versiones, ni los diseños <b>cuasiexperimentales</b>, como diferencias en diferencias, que estiman efectos causales sin asignación aleatoria pero dependen de supuestos más exigentes.</p>
+  </section>
+
+  <!-- 3. WHY EXPERIMENTS MATTER -->
+  <section class="s" id="why">
+    <span class="num">2</span>
+    <h2>¿Por qué importan los experimentos?</h2>
+    <p class="col">Dos cosas pueden moverse juntas (una <b>correlación</b>) sin que una cause la otra (<b>causalidad</b>). Los datos que solo observan a las personas, sin cambiar nada, a menudo no pueden distinguir entre ambas. Este es un caso bien documentado.</p>
+    <div class="gfig">
+      <svg class="chart" id="corrSvg" viewBox="0 0 680 300" role="img" aria-label="Ejemplo de correlación"></svg>
+      <p id="corrText"></p>
+      <div class="btns">
+        <button class="btn ghost" id="corrBack" type="button">Atrás</button>
+        <button class="btn" id="corrNext" type="button">Siguiente</button>
+        <span class="steps" id="corrStep"></span>
+      </div>
+      <p class="cap" id="corrCap">El gráfico de dispersión es una ilustración. Su patrón está exagerado para que se vea con facilidad; en los estudios reales, la asociación es menor.</p>
+    </div>
+
+    <div class="callout col">Los experimentos importan porque permiten separar la causa y el efecto de la mera coincidencia.</div>
+
+    <h3>¿Qué se gana con esto?</h3>
+    <div class="reasons">
+      <div><b>Saber qué funciona y qué no</b><p>En dos experimentos con más de 160,000 pacientes, un simple recordatorio por mensaje de texto aumentó la vacunación contra el COVID-19 en 3.6 puntos porcentuales. Añadir un video informativo no aumentó su efecto (Dai et al., 2021).</p></div>
+      <div><b>Comparar opciones directamente</b><p>Probar varias versiones a la vez, con las mismas personas y el mismo resultado, muestra cuál funciona mejor. En un megaestudio de 22 recordatorios por mensaje de texto para la vacuna contra la gripe, el mensaje con mejor resultado decía a los pacientes que había una vacuna "esperándolos" (Milkman et al., 2022).</p></div>
+      <div><b>Conocer el tamaño del efecto</b><p>"Funciona" no basta para decidir. En promedio, los 22 recordatorios de ese megaestudio aumentaron la vacunación en 2 puntos porcentuales (un aumento relativo de 6.8%), de alrededor de 29% a 31%. Ese tamaño, comparado con el costo, es lo que necesita una decisión.</p></div>
+      <div><b>Comprobar si los resultados se mantienen</b><p>Repetir una prueba en otros lugares, momentos o grupos muestra si un efecto es robusto o depende de otros factores (por ejemplo, el público objetivo o el contexto).</p></div>
+    </div>
+  </section>
+
+  <!-- 4. WHY RANDOMIZATION MATTERS -->
+  <section class="s" id="random">
+    <span class="num">3</span>
+    <h2>¿Por qué no basta con comparar el antes y el después?</h2>
+    <p class="col">Una forma común de evaluar un programa es comparar los resultados antes y después de que empiece. El problema es que muchas cosas cambian al mismo tiempo. Imagine que una clínica envía un recordatorio de vacunación contra la gripe a sus pacientes el 1 de octubre.</p>
+    <div class="gfig">
+      <svg class="chart" id="baSvg" viewBox="0 0 680 290" role="img" aria-label="Gráfico de líneas del porcentaje de pacientes vacunados, antes y después de un recordatorio"></svg>
+      <p id="baText"></p>
+      <div class="btns"><button class="btn" id="baBtn" type="button">Añadir un grupo de comparación elegido al azar</button></div>
+      <p class="cap">Ilustración con cifras inventadas.</p>
+    </div>
+  </section>
+
+  <!-- 4. CONTROL GROUP -->
+  <section class="s" id="control">
+    <span class="num">4</span>
+    <h2>¿Cómo elijo un grupo de control?</h2>
+    <p class="col">Un <b>grupo de control</b> (también llamado grupo de comparación) es el grupo que no recibe la nueva intervención. Su propósito es mostrar lo que habría pasado sin ella: como las personas se asignan a él al azar, la diferencia entre el grupo de control y los demás grupos estima el efecto de la intervención.</p>
+    <p class="col">Hay dos tipos principales:</p>
+    <div class="reasons">
+      <div><b>Control puro (sin intervención)</b><p>Las personas no reciben nada nuevo. Esto responde a la pregunta: ¿funciona la intervención en comparación con no hacer nada? Ejemplo: pacientes que no reciben ningún recordatorio de vacunación contra la gripe.</p></div>
+      <div><b>Control activo (atención habitual)</b><p>Las personas reciben el enfoque estándar, lo que normalmente se ofrece. Esto responde a la pregunta: ¿funciona la nueva versión mejor que lo que ya hacemos? Ejemplo: pacientes que reciben la carta de recordatorio habitual de la clínica.</p></div>
+    </div>
+    <p class="col">Cuál usar depende de la comparación que le interesa. Si quiere saber si un recordatorio basado en ciencias del comportamiento funciona mejor que el que su organización ya envía, use un control activo. Si actualmente no se hace nada, un control puro es la opción natural.</p>
+    <p class="col">También puede incluir ambos, si su muestra es lo bastante grande. Cada grupo adicional necesita su propia cantidad de personas para detectar los efectos que le interesan (vea la pregunta 5).</p>
+  </section>
+
+  <!-- 5. WHY SAMPLE SIZE MATTERS -->
+  <section class="s" id="size">
+    <span class="num">5</span>
+    <h2>¿Cuántas personas necesito?</h2>
+    <p class="answer col">Por lo general, más de las que se imagina: detectar efectos pequeños suele requerir miles de personas por grupo.</p>
+    <p class="col">Incluso con asignación aleatoria, los resultados varían por azar. Cuantas más personas haya en cada grupo, menos varían, y más pequeño es el efecto que se puede detectar de forma confiable. Muchos efectos que vale la pena lograr son pequeños: los mensajes de vacunación mencionados arriba aumentaron la vacunación en 2 puntos porcentuales. Detectar un efecto de ese tamaño requiere miles de personas por grupo.</p>
+
+    <h3>Lo que debe decidir antes de calcular</h3>
+    <ul class="criteria">
+      <li><b>Tasa base</b><span>Qué tan común es el resultado sin la intervención; por ejemplo, el 29% de los pacientes se vacuna. Los datos históricos suelen indicarlo.</span></li>
+      <li><b>Efecto mínimo que vale la pena detectar</b><span>El cambio más pequeño que importaría para su decisión; por ejemplo, 2 puntos porcentuales. Los efectos más pequeños requieren muchas más personas.</span></li>
+      <li><b>Nivel de significancia</b><span>Cuánto riesgo de una falsa alarma acepta. El estándar es 5%.</span></li>
+      <li><b>Poder estadístico</b><span>La probabilidad de detectar el efecto si es real y al menos tan grande como el efecto previsto. El estándar es 80%.</span></li>
+    </ul>
+
+    <h3>Vea cómo el tamaño de muestra cambia lo que puede aprender</h3>
+    <div class="gfig">
+      <div class="controls">
+        <div class="ctl"><label for="ciN">Personas por grupo <output id="ciNo"></output></label><input type="range" id="ciN" min="0" max="100" step="1" value="45"></div>
+        <div class="ctl"><label for="ciP">Tasa base <output id="ciPo"></output></label><input type="range" id="ciP" min="5" max="80" step="1" value="29"></div>
+      </div>
+      <svg class="chart" id="ciSvg" viewBox="0 0 680 150" role="img" aria-label="Efecto mínimo que el estudio puede detectar de forma confiable"></svg>
+      <div class="readout">
+        <div class="key"><b id="ciMde"></b><span>efecto mínimo que puede detectar de forma confiable</span></div>
+        <div><b id="ciMoe"></b><span>margen de error (95%)</span></div>
+        <div><b id="ciTot"></b><span>personas en total</span></div>
+      </div>
+      <p class="verdict" id="ciVerdict"></p>
+      <p class="cap">"Detectar de forma confiable" significa que un efecto real de ese tamaño se encontraría el 80% de las veces, con un nivel de significancia de 5%.</p>
+    </div>
+
+    <h3 id="calc" style="scroll-margin-top:1rem">Calculadora de tamaño de muestra <span class="muted" style="font-size:0.8em">(dos grupos, resultado de sí o no)</span></h3>
+    <div class="gfig">
+      <div class="calc">
+        <div class="field"><label for="cP">Tasa base</label><div class="inp"><input id="cP" type="number" min="1" max="95" step="0.5" value="29" inputmode="decimal"><span>%</span></div></div>
+        <div class="field"><label for="cE">Efecto mínimo que vale la pena detectar (aumento)</label><div class="inp"><input id="cE" type="number" min="0.5" max="50" step="0.5" value="2" inputmode="decimal"><span>puntos porcentuales</span></div></div>
+        <div class="field"><label for="cA">Nivel de significancia (bilateral)</label><div class="inp"><select id="cA"><option value="0.10">10%</option><option value="0.05" selected>5% (estándar)</option><option value="0.01">1%</option></select></div></div>
+        <div class="field"><label for="cW">Poder estadístico</label><div class="inp"><select id="cW"><option value="0.70">70%</option><option value="0.80" selected>80% (estándar)</option><option value="0.90">90%</option><option value="0.95">95%</option></select></div></div>
+      </div>
+      <div class="result"><b id="cOut"></b><span id="cOut2"></span></div>
+      <p class="small" id="cNote"></p>
+      <p class="cap">Usa la fórmula estándar para comparar dos proporciones.</p>
+      <p class="small"><a href="#errors">¿Por qué importan el nivel de significancia y el poder estadístico? Vea la pregunta 6, "¿Cómo puede el azar llevar a un estudio a una conclusión equivocada?"</a></p>
+    </div>
+  </section>
+
+  <!-- 6. TWO WAYS TO BE WRONG -->
+  <section class="s" id="errors">
+    <span class="num">6</span>
+    <h2>¿Cómo puede el azar llevar a un estudio a una conclusión equivocada?</h2>
+    <p class="answer col">De dos maneras: encontrando un efecto que no es real (un falso positivo) o pasando por alto uno que sí lo es (un falso negativo).</p>
+    <div class="col" style="display:grid; gap:0.9rem">
+      <p>Ambos errores ocurren porque los resultados varían por azar. Los dos ajustes de la calculadora, el nivel de significancia y el poder estadístico, controlan con qué frecuencia ocurre cada uno.</p>
+    </div>
+    <div class="gfig">
+      <img class="errimg" src="images/type-errors.webp" width="599" height="449" alt="Error tipo I (falso positivo): un médico le dice a un hombre que está embarazado. Error tipo II (falso negativo): un médico le dice a una mujer visiblemente embarazada que no lo está.">
+      <p class="cap" style="text-align:center">Error tipo I (falso positivo): "Está embarazado". Error tipo II (falso negativo): "No está embarazada".</p>
+    </div>
+    <div style="overflow-x:auto; max-width:46rem">
+      <table class="errtable">
+        <thead><tr><th></th><th>El efecto es real</th><th>No hay un efecto real</th></tr></thead>
+        <tbody>
+          <tr><th>El estudio encuentra un efecto</th><td class="good">Correcto. Su probabilidad es el <b>poder estadístico</b>.</td><td class="bad"><b>Error tipo I</b> (falso positivo). Su probabilidad es el <b>nivel de significancia</b>.</td></tr>
+          <tr><th>El estudio no encuentra un efecto</th><td class="bad"><b>Error tipo II</b> (falso negativo). Su probabilidad es 1 menos el poder estadístico.</td><td class="good">Correcto.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col" style="display:grid; gap:0.9rem">
+      <p>El <b>nivel de significancia</b> controla los falsos positivos. Con el 5% estándar, una intervención que en realidad no tiene ningún efecto igual producirá un resultado estadísticamente significativo en aproximadamente 1 de cada 20 pruebas, solo por azar.</p>
+      <p>El <b>poder estadístico</b> controla los falsos negativos. Con el 80% estándar, un efecto real del tamaño previsto se detectará 4 de cada 5 veces y pasará inadvertido 1 de cada 5.</p>
+      <p>Ambos errores tienen costos reales. Un falso positivo puede llevarle a escalar un programa que no funciona; un falso negativo, a abandonar uno que sí funciona. Protegerse con más rigor contra cualquiera de los dos requiere más personas, y por eso la calculadora pide ambos.</p>
+    </div>
+
+    <h3>¿Más personas reducen ambos errores?</h3>
+    <div class="col" style="display:grid; gap:0.9rem">
+      <p><b>Los falsos positivos (tipo I) no disminuyen con más personas.</b> Su tasa la fija el nivel de significancia que usted elige, sea cual sea el tamaño de muestra.</p>
+      <p><b>Los falsos negativos (tipo II) disminuyen a medida que crece la muestra.</b> Más personas significa menos ruido, así que un efecto real es más fácil de ver.</p>
+    </div>
+    <div class="col" style="display:grid; gap:0.9rem">
+      <p>Dos advertencias:</p>
+      <p><b>Los resultados significativos de estudios pequeños merecen especial cautela.</b> Un poder estadístico bajo significa sobre todo pasar por alto efectos reales, pero también hace que los resultados significativos sean menos confiables. Los efectos reales se detectan con menos frecuencia, mientras que los falsos positivos siguen ocurriendo a la misma tasa, así que una mayor proporción de los resultados significativos son falsos positivos. Por ejemplo, si la mitad de las ideas que se prueban realmente funcionan, alrededor de 1 de cada 17 resultados significativos es un falso positivo con un poder de 80%, pero alrededor de 1 de cada 5 con un poder de 20%. Además, los efectos reales que sí alcanzan significancia tienden a parecer más grandes de lo que son (Button et al., 2013).</p>
+      <p><b>Los estudios muy grandes pueden detectar efectos demasiado pequeños para importar</b> (aunque vea la pregunta 7). Con suficientes personas, incluso una diferencia mínima se vuelve estadísticamente significativa. Si vale la pena actuar en consecuencia depende de su tamaño y de su costo.</p>
+    </div>
+  </section>
+
+  <!-- 7. TOO BIG -->
+  <section class="s" id="toobig">
+    <span class="num">7</span>
+    <h2>¿Puede una muestra ser demasiado grande?</h2>
+    <div class="col" style="display:grid; gap:0.9rem">
+      <p>Estadísticamente, no. Más personas siempre dan una respuesta más precisa. La preocupación de que un estudio grande vuelva "significativos" efectos triviales se resuelve mirando el tamaño del efecto, que una muestra más grande no cambia, y no usando menos personas. Como dice Joe Simmons en el blog Data Colada, "nunca es peor tener más datos" (<a href="https://datacolada.org/6" target="_blank" rel="noopener">Simmons, 2013</a>; traducción propia). Los límites reales son prácticos: el costo, el tiempo y cuántas personas está dispuesto a exponer a una intervención que aún no ha sido probada.</p>
+    </div>
+  </section>
+
+  <!-- 7. INGREDIENTS -->
+  <section class="s" id="ingredients">
+    <span class="num">8</span>
+    <h2>¿Qué necesito para hacer un experimento?</h2>
+    <p class="col">No es una lista completa, pero no se puede hacer un experimento sin estos cinco elementos.</p>
+    <div class="ingredients">
+      <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg></span><span class="n">1</span></div><b>Algo que usted controla y puede variar</b><p>Un mensaje, una carta, un recordatorio, una opción predeterminada. Usted decide quién recibe cada versión.</p></div>
+      <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><circle cx="8.5" cy="8.5" r="1.3" class="dotfill"/><circle cx="15.5" cy="8.5" r="1.3" class="dotfill"/><circle cx="12" cy="12" r="1.3" class="dotfill"/><circle cx="8.5" cy="15.5" r="1.3" class="dotfill"/><circle cx="15.5" cy="15.5" r="1.3" class="dotfill"/></svg></span><span class="n">2</span></div><b>Asignación aleatoria</b><p>El azar, y no las decisiones de las personas ni las suyas, decide quién recibe cada versión.</p></div>
+      <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16"/><rect x="5.5" y="12" width="3" height="8"/><rect x="10.5" y="8" width="3" height="12"/><rect x="15.5" y="4" width="3" height="16"/></svg></span><span class="n">3</span></div><b>Un resultado que se pueda medir</b><p>Definido de antemano; por ejemplo, si cada persona se vacunó en un plazo de tres meses.</p></div>
+      <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="8.5" r="2.5"/><path d="M2.5 20c0-3.6 2.5-6 5.5-6s5.5 2.4 5.5 6"/><path d="M14 14.6c.8-.4 1.6-.6 2.5-.6 2.6 0 4.5 2.1 4.5 5.5"/></svg></span><span class="n">4</span></div><b>Suficientes personas</b><p>Calculadas antes de empezar, según el efecto mínimo que importaría.</p></div>
+      <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg></span><span class="n">5</span></div><b>Una forma de vincular resultados y grupos</b><p>Un registro de quién fue asignado a cada grupo y un identificador que conecte a cada persona con sus datos de resultado.</p></div>
+    </div>
+  </section>
+
+  <section class="s" id="sources">
+    <h2>Fuentes</h2>
+    <ol class="refs">
+      <li>Azad, M. B., et al. (2017). Nonnutritive sweeteners and cardiometabolic health: A systematic review and meta-analysis of randomized controlled trials and prospective cohort studies. <i>CMAJ, 189</i>(28), E929–E939.</li>
+      <li>Button, K. S., et al. (2013). Power failure: Why small sample size undermines the reliability of neuroscience. <i>Nature Reviews Neuroscience, 14</i>(5), 365–376.</li>
+      <li>Dai, H., Saccardo, S., Han, M. A., Roh, L., Raja, N., Vangala, S., Modi, H., Pandya, S., Sloyan, M., &amp; Croymans, D. M. (2021). Behavioural nudges increase COVID-19 vaccinations. <i>Nature, 597</i>(7876), 404–409.</li>
+      <li>Milkman, K. L., et al. (2022). A 680,000-person megastudy of nudges to encourage vaccination in pharmacies. <i>PNAS, 119</i>(6), e2115126119.</li>
+      <li>Miller, P. E., &amp; Perez, V. (2014). Low-calorie sweeteners and body weight and composition: A meta-analysis of randomized controlled trials and prospective cohort studies. <i>American Journal of Clinical Nutrition, 100</i>(3), 765–777.</li>
+      <li>Simmons, J. (2013). <a href="https://datacolada.org/6" target="_blank" rel="noopener">[6] Samples can't be too large</a>. Data Colada.</li>
+      <li>Wilms, R., Mäthner, E., Winnen, L., &amp; Lanwehr, R. (2021). <a href="https://www.sciencedirect.com/science/article/pii/S2590260121000321" target="_blank" rel="noopener">Omitted variable bias: A threat to estimating causal relationships</a>. <i>Methods in Psychology, 5</i>, 100075.</li>
+    </ol>
+  </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>Jose Arellano Martorellet</span>
+      <span>Carnegie Mellon University · <a href="mailto:josearel@andrew.cmu.edu">Email</a></span>
+    </div>
+  </footer>
+
+  <script>
+  (function () {
+    const NS = 'http://www.w3.org/2000/svg', F = 'Public Sans, system-ui, sans-serif', SERIF = 'Newsreader, Georgia, serif';
+    const tok = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    function el(tag, a, txt) { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; return e; }
+    const $ = id => document.getElementById(id);
+    function rng(s) { return () => { s = (s * 1664525 + 1013904223) % 4294967296; return s / 4294967296; }; }
+    function norm(r) { return Math.sqrt(-2 * Math.log(r() + 1e-9)) * Math.cos(2 * Math.PI * r()); }
+    function Phi(z) { const t = 1 / (1 + 0.2316419 * Math.abs(z)), d = 0.3989423 * Math.exp(-z * z / 2); const p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274)))); return z > 0 ? 1 - p : p; }
+    function arrowDefs(svg, list) { const d = el('defs', {}); list.forEach(([id, c]) => { const m = el('marker', { id, viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse' }); m.appendChild(el('path', { d: 'M0 0L10 5L0 10z', fill: c })); d.appendChild(m); }); svg.appendChild(d); }
+    function fit(svg, h) { const w = Math.round(Math.max(320, Math.min(680, svg.getBoundingClientRect().width || 680))); svg.setAttribute('viewBox', `0 0 ${w} ${h}`); return w; }
+  
+    // ---------- 2. What is an experiment ----------
+    function drawWhat() {
+      const svg = $('whatSvg'); svg.textContent = '';
+      const W = fit(svg, 230), ink = tok('--ink'), muted = tok('--muted'), dot = tok('--dot'), acc = tok('--accent'), rule = tok('--rule');
+      arrowDefs(svg, [['wa', muted]]);
+      const narrow = W < 520;
+      const c1 = W * 0.12, c2 = W * 0.42, c3 = W * 0.80;
+      const r = rng(3);
+      // everyone
+      for (let i = 0; i < 24; i++) svg.appendChild(el('circle', { cx: c1 - 30 + (i % 4) * 20, cy: 70 + Math.floor(i / 4) * 20, r: 6, fill: dot }));
+      svg.appendChild(el('text', { x: c1, y: 40, fill: ink, 'font-size': 13, 'font-weight': 600, 'text-anchor': 'middle', 'font-family': F }, 'Todos'));
+      // arrows to two groups
+      svg.appendChild(el('line', { x1: c1 + 48, y1: 110, x2: c2 - 52, y2: 75, stroke: muted, 'stroke-width': 1.5, 'marker-end': 'url(#wa)' }));
+      svg.appendChild(el('line', { x1: c1 + 48, y1: 130, x2: c2 - 52, y2: 170, stroke: muted, 'stroke-width': 1.5, 'marker-end': 'url(#wa)' }));
+      svg.appendChild(el('text', { x: (c1 + c2) / 2, y: 128, fill: muted, 'font-size': 12, 'text-anchor': 'middle', 'font-family': F }, narrow ? 'al azar' : 'división al azar'));
+      // coin (tilted, edge visible)
+      const amber = tok('--amber'), cx = (c1 + c2) / 2 + 2, cy = 56;
+      const coin = el('g', { transform: `rotate(-22 ${cx} ${cy})` });
+      coin.appendChild(el('ellipse', { cx, cy: cy + 4, rx: 15, ry: 9, fill: '#b9771a' }));
+      coin.appendChild(el('rect', { x: cx - 15, y: cy, width: 30, height: 4, fill: '#b9771a' }));
+      coin.appendChild(el('ellipse', { cx, cy, rx: 15, ry: 9, fill: amber }));
+      coin.appendChild(el('ellipse', { cx, cy, rx: 10.5, ry: 6, fill: 'none', stroke: '#fff3d6', 'stroke-width': 1.3, opacity: 0.9 }));
+      svg.appendChild(coin);
+      // groups
+      const grp = (cy, color, label) => {
+        for (let i = 0; i < 12; i++) svg.appendChild(el('circle', { cx: c2 - 30 + (i % 4) * 20, cy: cy - 15 + Math.floor(i / 4) * 15, r: 5.5, fill: color }));
+        svg.appendChild(el('text', { x: c2 + 52, y: cy + 4, fill: ink, 'font-size': 13, 'text-anchor': 'start', 'font-family': F }, label));
+      };
+      grp(68, acc, narrow ? 'Recordatorio' : 'Recibe el recordatorio');
+      grp(172, dot, narrow ? 'Sin recordatorio' : 'Sin recordatorio');
+      // compare
+      const bx = c3, bh = 110;
+      svg.appendChild(el('text', { x: bx, y: 40, fill: ink, 'font-size': 13, 'font-weight': 600, 'text-anchor': 'middle', 'font-family': F }, 'Comparar resultados'));
+      svg.appendChild(el('line', { x1: bx - 50, x2: bx + 50, y1: 190, y2: 190, stroke: rule }));
+      svg.appendChild(el('rect', { x: bx - 40, y: 190 - bh * 0.62, width: 32, height: bh * 0.62, rx: 3, fill: acc }));
+      svg.appendChild(el('rect', { x: bx + 8, y: 190 - bh * 0.5, width: 32, height: bh * 0.5, rx: 3, fill: dot }));
+      svg.appendChild(el('text', { x: bx, y: 212, fill: muted, 'font-size': 12, 'text-anchor': 'middle', 'font-family': F }, 'p. ej., % vacunados'));
+    }
+  
+    // ---------- 3. Correlation stepper ----------
+    const rA = rng(21), pts = [];
+    for (let i = 0; i < 130; i++) { const s = Math.max(0.2, Math.min(13.8, 1 + rA() * 12.6)); pts.push({ s, b: 23 + s * 0.75 + norm(rA) * 2.2 }); }
+    let cStep = 0;
+    const C_TEXT = [
+      'Las personas que consumen más edulcorantes artificiales tienden a tener un índice de masa corporal (IMC) más alto. Estudios de largo plazo que siguieron a más de 400,000 personas en total han vinculado un mayor consumo de edulcorantes con un IMC algo más alto y un mayor aumento de peso (Azad et al., 2017).',
+      'Es tentador concluir que los edulcorantes causan aumento de peso. Pero los experimentos, que asignan al azar quién recibe edulcorantes, no encuentran eso. Si acaso, cuando los edulcorantes reemplazan al azúcar, las personas terminan pesando un poco menos: alrededor de 0.8 kg en promedio (Miller & Perez, 2014). La explicación más probable va en sentido contrario. Las personas con un IMC más alto, o que intentan bajar de peso, tienen más probabilidades de elegir edulcorantes. Esto se llama causalidad inversa. Un tercer factor oculto, como la dieta en general, también podría crear el vínculo; esto se llama '
+    ];
+    const C_BTN = ['¿Es causal?', '¿Es causal?'];
+    let flipped = false, flipTimer = 0;
+    function drawCorr() {
+      const svg = $('corrSvg'); svg.textContent = '';
+      const H = cStep === 1 ? 210 : 300;
+      const W = fit(svg, H), ink = tok('--ink'), muted = tok('--muted'), rule = tok('--rule'), dot = tok('--dot'), acc = tok('--accent'), coral = tok('--coral'), panel = tok('--panel');
+      if (cStep === 0) {
+        const L = 46, R = 12, T = 14, B = 42;
+        const x = v => L + v / 14 * (W - L - R), y = v => H - B - (v - 18) / 22 * (H - B - T);
+        svg.appendChild(el('line', { x1: L, x2: W - R, y1: H - B, y2: H - B, stroke: rule }));
+        svg.appendChild(el('line', { x1: L, x2: L, y1: T, y2: H - B, stroke: rule }));
+        [['Bajo', 0], ['Alto', 14]].forEach(([t, v]) => svg.appendChild(el('text', { x: x(v), y: H - B + 18, fill: muted, 'font-size': 12, 'text-anchor': v ? 'end' : 'start', 'font-family': F }, t)));
+        [20, 30, 40].forEach(v => svg.appendChild(el('text', { x: L - 8, y: y(v) + 4, fill: muted, 'font-size': 12, 'text-anchor': 'end', 'font-family': F }, v)));
+        svg.appendChild(el('text', { x: (L + W - R) / 2, y: H - 6, fill: muted, 'font-size': 12, 'text-anchor': 'middle', 'font-family': F }, 'Consumo de edulcorantes artificiales'));
+        svg.appendChild(el('text', { x: 12, y: (T + H - B) / 2, fill: muted, 'font-size': 12, 'text-anchor': 'middle', 'font-family': F, transform: `rotate(-90 12 ${(T + H - B) / 2})` }, 'IMC'));
+        pts.forEach(p => svg.appendChild(el('circle', { cx: x(p.s), cy: y(p.b), r: 4, fill: dot })));
+        const n = pts.length, mx = pts.reduce((a, p) => a + p.s, 0) / n, my = pts.reduce((a, p) => a + p.b, 0) / n;
+        const b = pts.reduce((a, p) => a + (p.s - mx) * (p.b - my), 0) / pts.reduce((a, p) => a + (p.s - mx) ** 2, 0);
+        svg.appendChild(el('line', { x1: x(0), y1: y(my - b * mx), x2: x(14), y2: y(my + b * (14 - mx)), stroke: coral, 'stroke-width': 2.5 }));
+      } else {
+        arrowDefs(svg, [['cb', flipped ? acc : coral]]);
+        const y = 100, bw = Math.min(190, W * 0.34), lx = 20 + bw / 2, rx = W - 20 - bw / 2;
+        const box = (cx, label) => { svg.appendChild(el('rect', { x: cx - bw / 2, y: y - 30, width: bw, height: 60, rx: 30, fill: panel, stroke: rule, 'stroke-width': 1.5 })); svg.appendChild(el('text', { x: cx, y: y + 5, fill: ink, 'font-size': 15, 'font-weight': 600, 'text-anchor': 'middle', 'font-family': F }, label)); };
+        box(lx, 'Edulcorantes'); box(rx, 'IMC más alto');
+        const g = el('g', { id: 'flipArrow', class: 'flip' + (flipped ? ' on' : '') });
+        g.appendChild(el('line', { x1: lx + bw / 2 + 8, y1: y, x2: rx - bw / 2 - 10, y2: y, stroke: flipped ? acc : coral, 'stroke-width': 3, 'marker-end': 'url(#cb)' }));
+        svg.appendChild(g);
+        svg.appendChild(el('text', { id: 'flipLabel', x: W / 2, y: y - 18, fill: flipped ? acc : coral, 'font-size': 14, 'font-weight': 600, 'text-anchor': 'middle', 'font-family': F }, flipped ? 'lleva a' : '¿causa?'));
+        svg.appendChild(el('text', { id: 'flipName', x: W / 2, y: y + 64, fill: muted, 'font-size': 13, 'text-anchor': 'middle', 'font-family': F, opacity: flipped ? 1 : 0 }, 'Causalidad inversa'));
+      }
+      setCorrText();
+      $('corrCap').hidden = cStep !== 0;
+      $('corrBack').disabled = cStep === 0; $('corrNext').disabled = cStep === 1;
+      $('corrNext').hidden = cStep === 1;
+      $('corrNext').textContent = C_BTN[cStep]; $('corrStep').textContent = (cStep + 1) + ' de 2';
+    }
+    function setCorrText() {
+      const t = $('corrText'); t.textContent = C_TEXT[cStep];
+      if (cStep === 1) { const a = document.createElement('a'); a.href = 'https://www.sciencedirect.com/science/article/pii/S2590260121000321'; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'sesgo de variable omitida'; t.append(a, document.createTextNode('.')); }
+    }
+    function animateFlip() {
+      const g = $('flipArrow'); if (!g) return;
+      const c = flipped ? tok('--accent') : tok('--coral');
+      g.classList.toggle('on', flipped);
+      g.querySelector('line').setAttribute('stroke', c);
+      document.querySelector('#corrSvg #cb path').setAttribute('fill', c);
+      const lab = $('flipLabel'); lab.textContent = flipped ? 'lleva a' : '¿causa?'; lab.setAttribute('fill', c);
+      $('flipName').setAttribute('opacity', flipped ? 1 : 0);
+    }
+    $('corrNext').addEventListener('click', () => {
+      cStep = 1; flipped = false; drawCorr();
+      clearTimeout(flipTimer);
+      flipTimer = setTimeout(() => { if (cStep === 1) { flipped = true; animateFlip(); } }, 1000);   // the arrow turns around one second after arriving
+    });
+    $('corrBack').addEventListener('click', () => { clearTimeout(flipTimer); cStep = 0; flipped = false; drawCorr(); });
+  
+    // ---------- 4. Before/after ----------
+    let baCtrl = false;
+    const months = ['Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const withR = [2, 8, 27, 36, 38], without = [2, 8, 25, 34, 36];
+    function drawBA() {
+      const svg = $('baSvg'); svg.textContent = '';
+      const W = fit(svg, 290), H = 290, L = 44, R = baCtrl ? 120 : 90, T = 20, B = 36;
+      const ink = tok('--ink'), muted = tok('--muted'), rule = tok('--rule'), acc = tok('--accent'), dot = tok('--muted'), amber = tok('--amber');
+      const x = i => L + i / 4 * (W - L - R), y = v => H - B - v / 45 * (H - B - T);
+      [0, 20, 40].forEach(v => { svg.appendChild(el('line', { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: rule })); svg.appendChild(el('text', { x: L - 8, y: y(v) + 4, fill: muted, 'font-size': 12, 'text-anchor': 'end', 'font-family': F }, v + '%')); });
+      months.forEach((m, i) => svg.appendChild(el('text', { x: x(i), y: H - B + 20, fill: muted, 'font-size': 12, 'text-anchor': 'middle', 'font-family': F }, m)));
+      // launch marker (Oct 1 between Sep and Oct points)
+      const lx = x(1);
+      svg.appendChild(el('line', { x1: lx, x2: lx, y1: T, y2: H - B, stroke: amber, 'stroke-width': 1.5, 'stroke-dasharray': '4 4' }));
+      svg.appendChild(el('text', { x: lx + 6, y: T + 10, fill: amber, 'font-size': 12, 'font-weight': 600, 'font-family': F }, 'Recordatorio enviado'));
+      const line = (arr, c, label, dash) => {
+        svg.appendChild(el('polyline', { points: arr.map((v, i) => x(i) + ',' + y(v)).join(' '), fill: 'none', stroke: c, 'stroke-width': 3, 'stroke-dasharray': dash || 'none', 'stroke-linejoin': 'round' }));
+        arr.forEach((v, i) => svg.appendChild(el('circle', { cx: x(i), cy: y(v), r: 3.5, fill: c })));
+        svg.appendChild(el('text', { x: x(4) + 8, y: y(arr[4]) + (label.startsWith('Sin') ? 14 : -4), fill: c, 'font-size': 12.5, 'font-weight': 600, 'font-family': F }, label));
+      };
+      if (baCtrl) line(without, dot, 'Sin recordatorio', '6 5');
+      line(withR, acc, baCtrl ? 'Recordatorio' : 'Pacientes');
+      $('baText').textContent = baCtrl
+        ? 'Los pacientes elegidos al azar que no recibieron el recordatorio subieron casi igual de rápido, porque octubre es temporada de vacunación contra la gripe. El efecto real del recordatorio es la distancia entre las líneas: alrededor de 2 puntos porcentuales, no 19.'
+        : 'El porcentaje de pacientes vacunados saltó de 8% a fines de septiembre a 27% a fines de octubre. ¿El recordatorio sumó 19 puntos porcentuales?';
+      $('baBtn').textContent = baCtrl ? 'Ocultar el grupo de comparación' : 'Añadir un grupo de comparación elegido al azar';
+    }
+    $('baBtn').addEventListener('click', () => { baCtrl = !baCtrl; drawBA(); });
+  
+    // ---------- 5a. Smallest detectable effect (5% significance, 80% power) ----------
+    const nFromSlider = v => Math.round(Math.pow(10, 2 + v / 100 * 2.5) / 10) * 10;   // 100 … ~31,600
+    function nNeeded(p1, d, za, zb) {
+      const p2 = p1 + d, pb = (p1 + p2) / 2;
+      return Math.pow(za * Math.sqrt(2 * pb * (1 - pb)) + zb * Math.sqrt(p1 * (1 - p1) + p2 * (1 - p2)), 2) / (d * d);
+    }
+    function mde(p1, n) {            // smallest increase detectable with n per group (same formula as the calculator)
+      let lo = 1e-6, hi = 0.999 - p1;
+      if (nNeeded(p1, hi, 1.959964, 0.841621) > n) return null;
+      for (let k = 0; k < 60; k++) { const mid = (lo + hi) / 2; if (nNeeded(p1, mid, 1.959964, 0.841621) > n) lo = mid; else hi = mid; }
+      return hi;
+    }
+    function drawCI() {
+      const n = nFromSlider(+$('ciN').value), p = +$('ciP').value / 100;
+      const m = mde(p, n), moe = 1.96 * Math.sqrt(2 * p * (1 - p) / n);
+      const fmt = v => (v * 100 < 10 ? (v * 100).toFixed(1) : Math.round(v * 100));
+      $('ciNo').textContent = n.toLocaleString('es-MX'); $('ciPo').textContent = Math.round(p * 100) + '%';
+      $('ciMde').textContent = m == null ? 'demasiado grande' : '+' + fmt(m) + ' pts';
+      $('ciMoe').textContent = '\u00b1' + fmt(moe) + ' pts';
+      $('ciTot').textContent = (2 * n).toLocaleString('es-MX');
+      const v = $('ciVerdict');
+      if (m == null) v.textContent = 'Con ' + n.toLocaleString('es-MX') + ' personas por grupo, incluso efectos muy grandes pasarían inadvertidos a menudo.';
+      else v.textContent = 'Con ' + n.toLocaleString('es-MX') + ' personas por grupo, podría detectar de forma confiable efectos de alrededor de ' + fmt(m) + ' puntos porcentuales o más. ' +
+        (m <= 0.02 ? 'Un efecto de 2 puntos, como el promedio del megaestudio, se detectaría.' : 'Un efecto de 2 puntos, como el promedio del megaestudio, pasaría inadvertido a menudo.');
+      // chart: scale of possible effects, with the zone the study would often miss
+      const svg = $('ciSvg'); svg.textContent = '';
+      const W = fit(svg, 150), L = 16, R = 16, y0 = 70;
+      const ink = tok('--ink'), muted = tok('--muted'), rule = tok('--rule'), acc = tok('--accent'), coral = tok('--coral'), amber = tok('--amber');
+      const top = m == null ? 0.3 : Math.max(0.06, Math.min(0.3, Math.ceil(m * 1.5 * 100 / 2) * 2 / 100));
+      const x = d => L + Math.min(d, top) / top * (W - L - R);
+      const mm = m == null ? top : Math.min(m, top);
+      svg.appendChild(el('rect', { x: x(0), y: y0 - 14, width: x(mm) - x(0), height: 28, rx: 4, fill: coral, opacity: 0.18 }));
+      if (mm < top) svg.appendChild(el('rect', { x: x(mm), y: y0 - 14, width: x(top) - x(mm), height: 28, rx: 4, fill: acc, opacity: 0.18 }));
+      svg.appendChild(el('line', { x1: x(mm), x2: x(mm), y1: y0 - 22, y2: y0 + 22, stroke: acc, 'stroke-width': 2.5 }));
+      const missLabel = x(mm) - x(0) > 150 ? 'a menudo no se detecta' : '';
+      if (missLabel) svg.appendChild(el('text', { x: x(mm) - 10, y: y0 + 5, fill: coral, 'font-size': 12.5, 'font-weight': 600, 'text-anchor': 'end', 'font-family': F }, missLabel));
+      if (mm < top && x(top) - x(mm) > 130) svg.appendChild(el('text', { x: (x(mm) + x(top)) / 2, y: y0 + 5, fill: acc, 'font-size': 12.5, 'font-weight': 600, 'text-anchor': 'middle', 'font-family': F }, 'se detecta de forma confiable'));
+      // megastudy marker
+      const mx = x(0.02);
+      svg.appendChild(el('line', { x1: mx, x2: mx, y1: y0 - 30, y2: y0 + 18, stroke: amber, 'stroke-width': 2, 'stroke-dasharray': '4 3' }));
+      svg.appendChild(el('text', { x: mx + 5, y: y0 - 32, fill: amber, 'font-size': 12, 'font-weight': 600, 'font-family': F }, 'promedio del megaestudio (2 pts)'));
+      // axis
+      svg.appendChild(el('line', { x1: L, x2: W - R, y1: y0 + 28, y2: y0 + 28, stroke: rule }));
+      const step = top > 0.2 ? 0.05 : top > 0.1 ? 0.02 : 0.01;
+      for (let t = 0; t <= top + 1e-9; t += step) {
+        svg.appendChild(el('line', { x1: x(t), x2: x(t), y1: y0 + 28, y2: y0 + 33, stroke: rule }));
+        svg.appendChild(el('text', { x: x(t), y: y0 + 47, fill: muted, 'font-size': 11, 'text-anchor': t === 0 ? 'start' : 'middle', 'font-family': F }, (t > 0 ? '+' : '') + Math.round(t * 100)));
+      }
+      svg.appendChild(el('text', { x: W - R, y: y0 + 64, fill: muted, 'font-size': 11, 'text-anchor': 'end', 'font-family': F }, 'tamaño del efecto, puntos porcentuales'));
+    }
+    ['ciN', 'ciP'].forEach(id => $(id).addEventListener('input', drawCI));
+  
+    // ---------- 5b. Calculator ----------
+    function invPhi(p) {   // inverse standard normal (Acklam's approximation)
+      const a = [-39.69683028665376, 220.9460984245205, -275.9285104469687, 138.357751867269, -30.66479806614716, 2.506628277459239];
+      const b = [-54.47609879822406, 161.5858368580409, -155.6989798598866, 66.80131188771972, -13.28068155288572];
+      const c = [-0.007784894002430293, -0.3223964580411365, -2.400758277161838, -2.549732539343734, 4.374664141464968, 2.938163982698783];
+      const d = [0.007784695709041462, 0.3224671290700398, 2.445134137142996, 3.754408661907416];
+      const pl = 0.02425;
+      if (p < pl) { const q = Math.sqrt(-2 * Math.log(p)); return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+      if (p > 1 - pl) { const q = Math.sqrt(-2 * Math.log(1 - p)); return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+      const q = p - 0.5, r = q * q;
+      return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+    }
+    function calc() {
+      const p1 = +$('cP').value / 100, d = +$('cE').value / 100, p2 = p1 + d;
+      const ZA = invPhi(1 - +$('cA').value / 2), ZB = invPhi(+$('cW').value);
+      const out = $('cOut'), out2 = $('cOut2'), note = $('cNote');
+      if (!(p1 > 0 && p1 < 1 && d > 0 && p2 < 1)) { out.textContent = '–'; out2.textContent = 'Ingrese una tasa base entre 1% y 95%, y un efecto que mantenga el total por debajo de 100%.'; note.textContent = ''; return; }
+      const pb = (p1 + p2) / 2;
+      const n = Math.ceil(Math.pow(ZA * Math.sqrt(2 * pb * (1 - pb)) + ZB * Math.sqrt(p1 * (1 - p1) + p2 * (1 - p2)), 2) / (d * d));
+      out.textContent = n.toLocaleString('es-MX');
+      out2.textContent = 'personas por grupo, ' + (2 * n).toLocaleString('es-MX') + ' en total';
+      note.textContent = 'Ejemplo: detectar el efecto promedio del megaestudio en farmacias (2 puntos sobre una tasa base de 29%) requiere 8,241 personas por grupo con los ajustes estándar.';
+    }
+    ['cP', 'cE', 'cA', 'cW'].forEach(id => { $(id).addEventListener('input', calc); $(id).addEventListener('change', calc); });
+  
+    function all() { drawWhat(); drawCorr(); drawBA(); drawCI(); }
+  
+    // ---------- Collapsible banners ----------
+    const CHEV = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6"/></svg>';
+    const sections = [...document.querySelectorAll('main section.s')].filter(sec => sec.id !== 'sources');   // Sources stays a plain list
+    sections.forEach((sec, idx) => {
+      const numEl = sec.querySelector(':scope > .num'), h2 = sec.querySelector(':scope > h2');
+      const label = numEl ? numEl.textContent.trim() : '';
+      const m = label.match(/^(\d+|i)(?:\s*·\s*(.*))?$/);
+      const body = document.createElement('div'); body.className = 'banner-body'; body.id = sec.id + '-body';
+      const clip = document.createElement('div'); clip.className = 'banner-clip';
+      const inner = document.createElement('div'); inner.className = 'banner-inner';
+      [...sec.childNodes].forEach(n => { if (n !== numEl && n !== h2) inner.appendChild(n); });
+      clip.appendChild(inner); body.appendChild(clip);
+      const head = document.createElement('h2'); head.className = 'banner-h';
+      const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'banner-btn';
+      btn.setAttribute('aria-controls', body.id); btn.setAttribute('aria-expanded', 'false');
+      const badge = document.createElement('span'); badge.className = 'badge'; badge.setAttribute('aria-hidden', 'true'); badge.textContent = m ? m[1] : '\u2197';
+      const txt = document.createElement('span'); txt.className = 'banner-text';
+      const eb = document.createElement('span'); eb.className = 'banner-eyebrow'; eb.textContent = m && m[2] ? m[2] : '';
+      const ti = document.createElement('span'); ti.className = 'banner-title'; ti.textContent = h2 ? h2.textContent : label;
+      const su = document.createElement('span'); su.className = 'banner-sum'; su.textContent = sec.dataset.summary || '';
+      if (eb.textContent) txt.appendChild(eb); txt.appendChild(ti); if (su.textContent) txt.appendChild(su);
+      const ch = document.createElement('span'); ch.className = 'chev'; ch.innerHTML = CHEV;
+      btn.append(badge, txt, ch); head.appendChild(btn);
+      sec.textContent = ''; sec.append(head, body);
+      btn.addEventListener('click', () => setOpen(sec, !sec.classList.contains('open')));
+      setOpen(sec, idx === 0, true);
+    });
+    document.querySelector('main').classList.add('banners');
+    function setOpen(sec, open, quiet) {
+      sec.classList.toggle('open', open);
+      sec.querySelector('.banner-btn').setAttribute('aria-expanded', open ? 'true' : 'false');
+      const body = sec.querySelector('.banner-body');
+      if (open) body.removeAttribute('inert'); else body.setAttribute('inert', '');
+      if (open && !quiet) requestAnimationFrame(all);
+      updateExpandAll();
+    }
+    function updateExpandAll() {
+      const b = $('expandAll'); if (!b) return;
+      const allOpen = sections.length && sections.every(s => s.classList.contains('open'));
+      b.textContent = allOpen ? 'Cerrar todas las secciones' : 'Abrir todas las secciones';
+    }
+    $('expandAll').addEventListener('click', () => {
+      const allOpen = sections.every(s => s.classList.contains('open'));
+      sections.forEach(s => setOpen(s, !allOpen, true)); requestAnimationFrame(all);
+    });
+    function goTo(id) {
+      const target = document.getElementById(id); if (!target) return;
+      const sec = target.closest('section.s'); if (!sec) return;
+      const wasOpen = sec.classList.contains('open');
+      if (!wasOpen) setOpen(sec, true);
+      const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      setTimeout(() => (target === sec ? sec : target).scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' }), wasOpen ? 0 : 400);
+    }
+    document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+      const id = a.getAttribute('href').slice(1); if (!id) return;
+      e.preventDefault(); goTo(id);
+    }));
+    updateExpandAll();
+    all(); calc();
+    let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(all, 150); });
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', all);
+    new MutationObserver(all).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  })();
+  </script>
+  <!-- Opens every link to another website in a new tab, including links added later. -->
+  <script>
+    document.querySelectorAll('a[href^="http"]').forEach(function (a) {
+      if (a.hostname !== location.hostname) { a.target = '_blank'; a.rel = 'noopener'; }
+    });
+  </script>
+  <!-- Light/dark mode button: switches the theme and remembers the choice -->
+  <script>
+    (function () {
+      var btn = document.querySelector('.theme-toggle');
+      if (!btn) return;
+      function label() {
+        var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+        btn.setAttribute('aria-label', dark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+      }
+      label();
+      btn.addEventListener('click', function () {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        label();
+      });
+    })();
+  </script>
+  <!-- Visitor stats (GoatCounter, no cookies): https://josearellanom.goatcounter.com -->
+  <script data-goatcounter="https://josearellanom.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

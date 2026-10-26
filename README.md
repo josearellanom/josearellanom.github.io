@@ -10,6 +10,7 @@ Personal academic website of Jose Arellano Martorellet. Plain HTML and CSS, no b
 | `research.html` | Publications and working papers |
 | `cv.html` | Education, experience, awards and grants, presentations, teaching, public writing, skills |
 | `experiments.html` | Experiments 101 FAQ for practitioners: collapsible questions, interactive figures, and a sample size calculator (two groups, yes-or-no outcome). `images/type-errors.webp` is the Type I/II illustration |
+| `experiments-es.html` | Spanish version of the Experiments 101 FAQ. When you change the English page, make the same change here |
 | `tennis.html` | Hidden tennis game (opened by clicking the small gold dot next to the photo) with a top-5 leaderboard stored in Firebase |
 | `_paused/guess.html` | **Paused.** Hidden guessing game (opened by clicking a small teal ⅔ next to the photo): guess two-thirds of the average, one guess per visitor per monthly round, guesses stored in Firebase |
 | `style.css` | All colors, fonts, and spacing (colors are at the top) |
