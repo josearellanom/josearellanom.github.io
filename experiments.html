@@ -51,6 +51,25 @@ html { scroll-behavior: smooth; }
 .col { max-width: 42rem; }
 :where(.guide) h1 { font-family: var(--sans); font-weight: 700; font-size: clamp(2.3rem, 6vw, 3.2rem); letter-spacing: -0.03em; line-height: 1.02; margin: 0 0 0.8rem; }
 .lede { font-size: 1.15rem; color: var(--muted); margin: 0; max-width: 40rem; }
+.nudge { margin-top: 3rem; display: grid; gap: 1rem; max-width: 46rem; }
+.nudge h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(1.3rem, 3vw, 1.6rem); line-height: 1.25; margin: 0; text-wrap: balance; }
+.nudge-stage { display: flex; align-items: flex-end; gap: 0.25rem; }
+.nudge-finger { font-size: 3.2rem; line-height: 1; background: none; border: 0; padding: 0.25rem; cursor: pointer; margin-bottom: 4.2rem; border-radius: 12px; }
+.nudge-finger:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.nudge-finger.poke { animation: nudge-poke 0.55s ease-in-out; }
+.nudge-photo { position: relative; width: 13rem; max-width: 55vw; }
+.nudge-photo::before { content: ""; position: absolute; left: 8%; right: 8%; bottom: 0; aspect-ratio: 1; border-radius: 50%; background: var(--accent-soft); }
+.nudge-photo img { position: relative; display: block; width: 100%; height: auto; transform-origin: 50% 100%; }
+.nudge-photo.wobble img { animation: nudge-wobble 0.6s ease-in-out 0.18s; }
+.nudge-count { font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 1.4em; margin: 0; }
+.nudge-quote { margin: 0; padding: 0.2rem 0 0.2rem 1rem; border-left: 3px solid var(--amber); opacity: 0; transform: translateY(6px); transition: opacity 0.4s ease, transform 0.4s ease; }
+.nudge-quote.show { opacity: 1; transform: none; }
+.nudge-quote p { margin: 0; font-family: var(--serif); font-size: 1.25rem; line-height: 1.4; }
+.nudge-quote footer { margin-top: 0.4rem; font-size: 0.85rem; color: var(--muted); }
+.nudge-credit { font-size: 0.75rem; color: var(--muted); margin: 0; }
+@keyframes nudge-poke { 0% { transform: translateX(0); } 45% { transform: translateX(26px) rotate(-6deg); } 100% { transform: translateX(0); } }
+@keyframes nudge-wobble { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(4deg) translateX(6px); } 55% { transform: rotate(-3deg); } 80% { transform: rotate(1.5deg); } }
+@media (prefers-reduced-motion: reduce) { .nudge-finger.poke, .nudge-photo.wobble img { animation: none; } .nudge-quote { transition: none; } }
 .ask { margin-top: 1.5rem; border: 1px solid var(--rule); border-radius: 14px; padding: 1.25rem; display: grid; gap: 0.8rem; max-width: 46rem; }
 .ask h2 { font-family: var(--serif); font-weight: 500; font-size: 1.3rem; margin: 0; }
 .ask p { margin: 0; color: var(--muted); font-size: 0.95rem; }
@@ -412,6 +431,17 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
       <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg></span><span class="n">5</span></div><b>A way to link outcomes to groups</b><p>A record of who was assigned to which group, and an ID that connects each person to their outcome data.</p></div>
     </div>
   </section>
+  <section class="nudge" aria-labelledby="nudgeTitle">
+    <h2 id="nudgeTitle">Nudge behavioral economist Richard Thaler to get a quote about experiments</h2>
+    <div class="nudge-stage">
+      <button class="nudge-finger" id="nudgeBtn" type="button" aria-label="Nudge Richard Thaler" title="Nudge Richard Thaler">👉</button>
+      <div class="nudge-photo" id="nudgePhoto"><img src="images/thaler.webp" width="584" height="560" alt="Richard Thaler"></div>
+    </div>
+    <p class="nudge-count" id="nudgeCount" aria-live="polite"></p>
+    <blockquote class="nudge-quote" id="nudgeQuote" aria-live="polite" hidden><p id="nudgeText"></p><footer id="nudgeSrc"></footer></blockquote>
+    <p class="nudge-credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:Nobel_6_Dec_2017_007_copy_(25018121308).jpg" target="_blank" rel="noopener">Wikimedia Commons</a>, background removed.</p>
+  </section>
+
   <form class="ask" id="askForm" novalidate>
     <h2>Have another question?</h2>
     <p>Ask it here. I read every question and may add it to these FAQs.</p>
@@ -436,6 +466,8 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
       <li>Milkman, K. L., et al. (2022). A 680,000-person megastudy of nudges to encourage vaccination in pharmacies. <i>PNAS, 119</i>(6), e2115126119.</li>
       <li>Miller, P. E., &amp; Perez, V. (2014). Low-calorie sweeteners and body weight and composition: A meta-analysis of randomized controlled trials and prospective cohort studies. <i>American Journal of Clinical Nutrition, 100</i>(3), 765–777.</li>
       <li>Simmons, J. (2013). <a href="https://datacolada.org/6" target="_blank" rel="noopener">[6] Samples can't be too large</a>. Data Colada.</li>
+      <li>Thaler, R. H. (2012). <a href="https://edge.org/conversation/richard_h_thaler-we-cant-do-evidence-based-policy-without-evidence" target="_blank" rel="noopener">We can't do evidence-based policy without evidence</a> [Conversation]. Edge.</li>
+      <li>Thaler, R. H. (2015). <a href="https://www.youtube.com/watch?v=42qbHeFxdzE" target="_blank" rel="noopener">Misbehaving: The making of behavioral economics</a> [Talk]. Talks at Google.</li>
       <li>Wilms, R., Mäthner, E., Winnen, L., &amp; Lanwehr, R. (2021). <a href="https://www.sciencedirect.com/science/article/pii/S2590260121000321" target="_blank" rel="noopener">Omitted variable bias: A threat to estimating causal relationships</a>. <i>Methods in Psychology, 5</i>, 100075.</li>
     </ol>
   </section>
@@ -826,6 +858,48 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
       } finally {
         askSend.disabled = false; askSend.textContent = 'Send question';
       }
+    });
+
+    // ---------- Nudge Richard Thaler: quotes alternate on each nudge; a shared counter lives in Firebase (counters/thaler) ----------
+    const NUDGE_QUOTES = [
+      { text: '\u2026When you can, you should run experiments. And the only way really to learn is to run experiments.', src: 'Richard Thaler, <a href="https://www.youtube.com/watch?v=42qbHeFxdzE" target="_blank" rel="noopener">Talks at Google</a> (2015)' },
+      { text: 'Look, we have to keep running the control condition because otherwise we\u2019re not going to learn anything.', src: 'Richard Thaler, <a href="https://edge.org/conversation/richard_h_thaler-we-cant-do-evidence-based-policy-without-evidence" target="_blank" rel="noopener">Edge</a> (2012)' }
+    ];
+    const nudgeBtn = document.getElementById('nudgeBtn'), nudgePhoto = document.getElementById('nudgePhoto');
+    const nudgeCount = document.getElementById('nudgeCount'), nudgeQuote = document.getElementById('nudgeQuote');
+    const nudgeText = document.getElementById('nudgeText'), nudgeSrc = document.getElementById('nudgeSrc');
+    let nudges = null, nudgeIdx = 0, nudgeBusy = false;
+    function showNudges() {
+      if (nudges === null) return;
+      const n = nudges;
+      nudgeCount.textContent = n === 0 ? 'Be the first to nudge him.' : (n === 1 ? 'Richard Thaler has been nudged 1 time.' : 'Richard Thaler has been nudged ' + n.toLocaleString('en-US') + ' times.');
+    }
+    async function loadNudges() {
+      try {
+        const snap = await fs.getDoc(fs.doc(db, 'counters', 'thaler'));
+        nudges = snap.exists() ? (snap.data().count || 0) : 0;
+        showNudges();
+      } catch (e) { console.error(e); }
+    }
+    const waitDb = setInterval(() => { if (db) { clearInterval(waitDb); loadNudges(); } }, 200);
+    setTimeout(() => clearInterval(waitDb), 15000);
+    nudgeBtn.addEventListener('click', () => {
+      if (nudgeBusy) return;
+      nudgeBusy = true;
+      nudgeBtn.classList.remove('poke'); nudgePhoto.classList.remove('wobble');
+      void nudgeBtn.offsetWidth;
+      nudgeBtn.classList.add('poke'); nudgePhoto.classList.add('wobble');
+      const q = NUDGE_QUOTES[nudgeIdx % NUDGE_QUOTES.length]; nudgeIdx++;
+      nudgeQuote.classList.remove('show');
+      setTimeout(() => {
+        nudgeText.textContent = '\u201c' + q.text + '\u201d';
+        nudgeSrc.innerHTML = '\u2014 ' + q.src;
+        nudgeQuote.hidden = false;
+        requestAnimationFrame(() => nudgeQuote.classList.add('show'));
+      }, 260);
+      setTimeout(() => { nudgeBusy = false; }, 700);
+      if (nudges !== null) { nudges++; showNudges(); }
+      if (db) fs.setDoc(fs.doc(db, 'counters', 'thaler'), { count: fs.increment(1) }, { merge: true }).catch(e => console.error(e));
     });
   </script>
   <!-- Visitor stats (GoatCounter, no cookies): https://josearellanom.goatcounter.com -->

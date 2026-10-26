@@ -116,6 +116,21 @@ match /questions/{id} {
 }
 ```
 
+## "Nudge Richard Thaler"
+
+Below question 8 on both Experiments 101 pages. Clicking the finger nudges the photo (`images/thaler.webp`, a background-removed crop of a Wikimedia Commons photo) and shows a quote; the two quotes alternate, and both are listed in Sources. The shared nudge count (English and Spanish together) is one Firebase document, `counters/thaler`, with a single field `count`. To reset it, edit or delete that document in the console. Firestore rules for it:
+
+```
+match /counters/{id} {
+  allow read: if id == 'thaler';
+  allow create: if id == 'thaler' && request.resource.data.keys().hasOnly(['count'])
+    && request.resource.data.count == 1;
+  allow update: if id == 'thaler' && request.resource.data.keys().hasOnly(['count'])
+    && request.resource.data.count == resource.data.count + 1;
+  allow delete: if false;
+}
+```
+
 ## Visitor stats
 
 Visits are counted with GoatCounter (no cookies). Dashboard: https://josearellanom.goatcounter.com. The snippet is the last `<script>` before `</body>` on index, research, cv, experiments, experiments-es, and tennis. Add the same line to any new page you want counted.
