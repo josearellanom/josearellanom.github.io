@@ -114,4 +114,4 @@ match /likes/{id} {
 
 ## Visitor stats
 
-Visits are counted with GoatCounter (no cookies). Dashboard: https://josearellanom.goatcounter.com. The snippet is the last `<script>` before `</body>` on index, research, and cv. Add the same line to any new page you want counted.
+Visits are counted with GoatCounter (no cookies). Dashboard: https://josearellanom.goatcounter.com. The snippet is the last `<script>` before `</body>` on index, research, cv, experiments, experiments-es, and tennis. Add the same line to any new page you want counted.
