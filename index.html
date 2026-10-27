@@ -136,7 +136,8 @@
   <!-- ===== FOOTER (same on every page) ===== -->
   <footer class="site-footer">
     <div class="wrap">
-      <span>© 2026 · All rights reserved</span>
+      <span>© <span class="copy-year">2026</span> · All rights reserved</span>
+      <script>document.querySelectorAll(".copy-year").forEach(e => e.textContent = new Date().getFullYear());</script>
       <span>Carnegie Mellon University · <a href="mailto:josearel@andrew.cmu.edu">Email</a></span>
     </div>
   </footer>
