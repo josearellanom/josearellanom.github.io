@@ -247,7 +247,7 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
     <p class="expand-all"><button type="button" id="expandAll">Abrir todas las secciones</button></p>
   </div>
 
-  <!-- 1. INTRO -->
+  <!-- i. INTRO -->
   <section class="s" id="intro">
     <span class="num">i</span>
     <h2>Sobre estas preguntas frecuentes</h2>
@@ -256,7 +256,7 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
     </div>
   </section>
 
-  <!-- 2. WHAT IS AN EXPERIMENT -->
+  <!-- 1. WHAT IS AN EXPERIMENT -->
   <section class="s" id="what">
     <span class="num">1</span>
     <h2>¿Qué es un experimento?</h2>
@@ -268,9 +268,23 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
     <p class="small col">Nota: esta guía trata sobre experimentos <b>entre sujetos</b>, en los que cada persona recibe una sola versión, el diseño que usa la mayoría de los ensayos controlados aleatorizados. No cubre los experimentos <b>intrasujeto</b>, en los que cada persona recibe varias versiones, ni los diseños <b>cuasiexperimentales</b>, como diferencias en diferencias, que estiman efectos causales sin asignación aleatoria pero dependen de supuestos más exigentes.</p>
   </section>
 
+  <!-- 2. INGREDIENTS -->
+  <section class="s" id="ingredients">
+    <span class="num">2</span>
+    <h2>¿Qué necesito para hacer un experimento?</h2>
+    <p class="col">No es una lista completa, pero sin estos cinco no hay experimento.</p>
+    <div class="ingredients">
+      <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg></span><span class="n">1</span></div><b>Algo que controlas y puedes variar</b><p>Un mensaje, una carta, un recordatorio, una opción predeterminada. Tú decides quién recibe cada versión.</p></div>
+      <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><circle cx="8.5" cy="8.5" r="1.3" class="dotfill"/><circle cx="15.5" cy="8.5" r="1.3" class="dotfill"/><circle cx="12" cy="12" r="1.3" class="dotfill"/><circle cx="8.5" cy="15.5" r="1.3" class="dotfill"/><circle cx="15.5" cy="15.5" r="1.3" class="dotfill"/></svg></span><span class="n">2</span></div><b>Asignación aleatoria</b><p>El azar, y no las decisiones de las personas ni las tuyas, decide quién recibe cada versión.</p></div>
+      <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16"/><rect x="5.5" y="12" width="3" height="8"/><rect x="10.5" y="8" width="3" height="12"/><rect x="15.5" y="4" width="3" height="16"/></svg></span><span class="n">3</span></div><b>Un resultado que se pueda medir</b><p>Definido de antemano; por ejemplo, si cada persona se vacunó en un plazo de tres meses.</p></div>
+      <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="8.5" r="2.5"/><path d="M2.5 20c0-3.6 2.5-6 5.5-6s5.5 2.4 5.5 6"/><path d="M14 14.6c.8-.4 1.6-.6 2.5-.6 2.6 0 4.5 2.1 4.5 5.5"/></svg></span><span class="n">4</span></div><b>Suficientes personas</b><p>Calculadas antes de empezar, según el efecto mínimo que importaría.</p></div>
+      <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg></span><span class="n">5</span></div><b>Una forma de vincular resultados y grupos</b><p>Un registro de quién fue asignado a cada grupo y un identificador que conecte a cada persona con sus datos de resultado.</p></div>
+    </div>
+  </section>
+
   <!-- 3. WHY EXPERIMENTS MATTER -->
   <section class="s" id="why">
-    <span class="num">2</span>
+    <span class="num">3</span>
     <h2>¿Por qué importan los experimentos?</h2>
     <p class="col">Dos cosas pueden moverse juntas (una <b>correlación</b>) sin que una cause la otra (<b>causalidad</b>). Los datos que solo observan a las personas, sin cambiar nada, a menudo no pueden distinguir entre ambas. Aquí va un caso bien documentado.</p>
     <div class="gfig">
@@ -297,7 +311,7 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
 
   <!-- 4. WHY RANDOMIZATION MATTERS -->
   <section class="s" id="random">
-    <span class="num">3</span>
+    <span class="num">4</span>
     <h2>¿Por qué no basta con comparar el antes y el después?</h2>
     <p class="col">Una forma común de evaluar un programa es comparar los resultados antes y después de que empiece. El problema es que muchas cosas cambian al mismo tiempo. Imagina que una clínica envía un recordatorio de vacunación contra la gripe a sus pacientes el 1 de octubre.</p>
     <div class="gfig">
@@ -308,9 +322,9 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
     </div>
   </section>
 
-  <!-- 4. CONTROL GROUP -->
+  <!-- 5. CONTROL GROUP -->
   <section class="s" id="control">
-    <span class="num">4</span>
+    <span class="num">5</span>
     <h2>¿Cómo escojo un grupo de control?</h2>
     <p class="col">Un <b>grupo de control</b> (también llamado grupo de comparación) es el grupo que no recibe la nueva intervención. Sirve para mostrar lo que habría pasado sin ella: como las personas se asignan a él al azar, la diferencia entre el grupo de control y los demás grupos estima el efecto de la intervención.</p>
     <p class="col">Hay dos tipos principales:</p>
@@ -319,12 +333,12 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
       <div><b>Control activo (atención habitual)</b><p>Las personas reciben el enfoque estándar, lo que normalmente se ofrece. Esto responde a la pregunta: ¿funciona la nueva versión mejor que lo que ya hacemos? Ejemplo: pacientes que reciben la carta de recordatorio habitual de la clínica.</p></div>
     </div>
     <p class="col">Cuál usar depende de la comparación que te interesa. Si quieres saber si un recordatorio basado en ciencias del comportamiento funciona mejor que el que tu organización ya envía, usa un control activo. Si actualmente no se hace nada, un control puro es la opción natural.</p>
-    <p class="col">También puedes incluir ambos, si tu muestra es lo bastante grande. Cada grupo adicional necesita su propia cantidad de personas para detectar los efectos que te interesan (consulta la pregunta 5).</p>
+    <p class="col">También puedes incluir ambos, si tu muestra es lo bastante grande. Cada grupo adicional necesita su propia cantidad de personas para detectar los efectos que te interesan (consulta la pregunta 6).</p>
   </section>
 
-  <!-- 5. WHY SAMPLE SIZE MATTERS -->
+  <!-- 6. WHY SAMPLE SIZE MATTERS -->
   <section class="s" id="size">
-    <span class="num">5</span>
+    <span class="num">6</span>
     <h2>¿Cuántas personas necesito?</h2>
     <p class="answer col">Por lo general, más de las que imaginas: detectar efectos pequeños suele requerir miles de personas por grupo.</p>
     <p class="col">Incluso con asignación aleatoria, los resultados varían por azar. Cuantas más personas haya en cada grupo, menos varían, y más pequeño es el efecto que se puede detectar de forma confiable. Muchos efectos que vale la pena lograr son pequeños: los mensajes de vacunación mencionados arriba aumentaron la vacunación en 2 puntos porcentuales. Detectar un efecto de ese tamaño requiere miles de personas por grupo.</p>
@@ -364,13 +378,13 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
       <div class="result"><b id="cOut"></b><span id="cOut2"></span></div>
       <p class="small" id="cNote"></p>
       <p class="cap">Usa la fórmula estándar para comparar dos proporciones.</p>
-      <p class="small"><a href="#errors">¿Por qué importan el nivel de significancia y el poder estadístico? Consulta la pregunta 6, "¿Cómo puede el azar llevar a un estudio a una conclusión equivocada?"</a></p>
+      <p class="small"><a href="#errors">¿Por qué importan el nivel de significancia y el poder estadístico? Consulta la pregunta 7, "¿Cómo puede el azar llevar a un estudio a una conclusión equivocada?"</a></p>
     </div>
   </section>
 
-  <!-- 6. TWO WAYS TO BE WRONG -->
+  <!-- 7. TWO WAYS TO BE WRONG -->
   <section class="s" id="errors">
-    <span class="num">6</span>
+    <span class="num">7</span>
     <h2>¿Cómo puede el azar llevar a un estudio a una conclusión equivocada?</h2>
     <p class="answer col">De dos maneras: encontrando un efecto que no es real (un falso positivo) o pasando por alto uno que sí lo es (un falso negativo).</p>
     <div class="col" style="display:grid; gap:0.9rem">
@@ -403,32 +417,19 @@ section.s { padding-top: 3.25rem; margin-top: 3.25rem; border-top: 1px solid var
     <div class="col" style="display:grid; gap:0.9rem">
       <p>Dos advertencias:</p>
       <p><b>Los resultados significativos de estudios pequeños merecen especial cautela.</b> Un poder estadístico bajo significa sobre todo pasar por alto efectos reales, pero también hace que los resultados significativos sean menos confiables. Los efectos reales se detectan con menos frecuencia, mientras que los falsos positivos siguen ocurriendo a la misma tasa, así que una mayor proporción de los resultados significativos son falsos positivos. Por ejemplo, si la mitad de las ideas que se prueban realmente funcionan, alrededor de 1 de cada 17 resultados significativos es un falso positivo con un poder de 80%, pero alrededor de 1 de cada 5 con un poder de 20%. Además, los efectos reales que sí alcanzan significancia tienden a parecer más grandes de lo que son (Button et al., 2013).</p>
-      <p><b>Los estudios muy grandes pueden detectar efectos demasiado pequeños para importar</b> (aunque consulta la pregunta 7). Con suficientes personas, incluso una diferencia mínima se vuelve estadísticamente significativa. Si vale la pena actuar en consecuencia depende de su tamaño y de su costo.</p>
+      <p><b>Los estudios muy grandes pueden detectar efectos demasiado pequeños para importar</b> (aunque consulta la pregunta 8). Con suficientes personas, incluso una diferencia mínima se vuelve estadísticamente significativa. Si vale la pena actuar en consecuencia depende de su tamaño y de su costo.</p>
     </div>
   </section>
 
-  <!-- 7. TOO BIG -->
+  <!-- 8. TOO BIG -->
   <section class="s" id="toobig">
-    <span class="num">7</span>
+    <span class="num">8</span>
     <h2>¿Puede una muestra ser demasiado grande?</h2>
     <div class="col" style="display:grid; gap:0.9rem">
       <p>Estadísticamente, no. Más personas siempre dan una respuesta más precisa. Si te preocupa que un estudio grande vuelva "significativos" efectos triviales, la solución es mirar el tamaño del efecto (que una muestra más grande no cambia), no usar menos personas. Como dice Joe Simmons en el blog Data Colada, "nunca es peor tener más datos" (<a href="https://datacolada.org/6" target="_blank" rel="noopener">Simmons, 2013</a>; traducción propia). Los límites reales son prácticos: el costo, el tiempo y cuántas personas estás dispuesto a exponer a una intervención que aún no ha sido probada.</p>
     </div>
   </section>
 
-  <!-- 7. INGREDIENTS -->
-  <section class="s" id="ingredients">
-    <span class="num">8</span>
-    <h2>¿Qué necesito para hacer un experimento?</h2>
-    <p class="col">No es una lista completa, pero sin estos cinco no hay experimento.</p>
-    <div class="ingredients">
-      <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg></span><span class="n">1</span></div><b>Algo que controlas y puedes variar</b><p>Un mensaje, una carta, un recordatorio, una opción predeterminada. Tú decides quién recibe cada versión.</p></div>
-      <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><circle cx="8.5" cy="8.5" r="1.3" class="dotfill"/><circle cx="15.5" cy="8.5" r="1.3" class="dotfill"/><circle cx="12" cy="12" r="1.3" class="dotfill"/><circle cx="8.5" cy="15.5" r="1.3" class="dotfill"/><circle cx="15.5" cy="15.5" r="1.3" class="dotfill"/></svg></span><span class="n">2</span></div><b>Asignación aleatoria</b><p>El azar, y no las decisiones de las personas ni las tuyas, decide quién recibe cada versión.</p></div>
-      <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16"/><rect x="5.5" y="12" width="3" height="8"/><rect x="10.5" y="8" width="3" height="12"/><rect x="15.5" y="4" width="3" height="16"/></svg></span><span class="n">3</span></div><b>Un resultado que se pueda medir</b><p>Definido de antemano; por ejemplo, si cada persona se vacunó en un plazo de tres meses.</p></div>
-      <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="8.5" r="2.5"/><path d="M2.5 20c0-3.6 2.5-6 5.5-6s5.5 2.4 5.5 6"/><path d="M14 14.6c.8-.4 1.6-.6 2.5-.6 2.6 0 4.5 2.1 4.5 5.5"/></svg></span><span class="n">4</span></div><b>Suficientes personas</b><p>Calculadas antes de empezar, según el efecto mínimo que importaría.</p></div>
-      <div class="ing"><div class="ing-top"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg></span><span class="n">5</span></div><b>Una forma de vincular resultados y grupos</b><p>Un registro de quién fue asignado a cada grupo y un identificador que conecte a cada persona con sus datos de resultado.</p></div>
-    </div>
-  </section>
   <section class="nudge" aria-labelledby="nudgeTitle">
     <h2 id="nudgeTitle">Dale un empujoncito al economista conductual Richard Thaler para recibir una frase sobre experimentos</h2>
     <div class="nudge-row">
