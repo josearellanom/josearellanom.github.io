@@ -71,6 +71,7 @@ You can preview the site anytime by double-clicking `index.html`.
 - The leaderboard is stored in a free Firebase (Firestore) database, in a collection called `scores`.
 - The connection settings are the `firebaseConfig` block near the top of the script in `tennis.html`. While `apiKey` is empty, the game still works but scores are not saved.
 - To remove an unwanted entry, open the Firebase console → Firestore Database → `scores`, and delete the document. Visitors cannot edit or delete scores.
+- **Paddle arms:** the player's paddle has two hinged arms (Q/A keys, Space for the nearest, or buttons under the court on phones). At rest they are part of the paddle, so it matches the computer's paddle length. A flicked arm smashes the ball at a steep angle; a point won that way counts double. Settings are the `ARM_` constants near the top of the game script (`ARM_LEN` = 26 px, `ARM_COOLDOWN` = 1 s, `ARM_POINTS` = 2).
 
 ## Guessing game (paused)
 

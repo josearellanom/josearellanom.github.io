@@ -97,6 +97,21 @@
     .form-msg { min-height: 1.2em; font-size: 0.9rem; }
     .attempts { font-size: 0.85rem; color: rgba(255, 255, 255, 0.75); min-height: 1.2em; }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }
+    .arm-btns { display: none; gap: 0.6rem; margin-top: 0.6rem; }
+    .arm-btns.on { display: flex; }
+    .arm-btns button {
+      flex: 1; font: inherit; font-weight: 600; font-size: 0.95rem; padding: 0.85rem 0.5rem;
+      border-radius: 12px; border: 1px solid var(--rule); background: var(--accent-soft); color: var(--ink);
+      touch-action: manipulation; -webkit-user-select: none; user-select: none; cursor: pointer;
+    }
+    .arm-btns button:active { filter: brightness(0.92); }
+    @media (max-width: 520px) {
+      .overlay { gap: 0.35rem; padding: 0.5rem; }
+      .overlay h2 { font-size: 1.15rem; }
+      .overlay p { font-size: 0.82rem; line-height: 1.35; }
+      .overlay .btn { padding: 0.45rem 1.1rem; }
+      .attempts { font-size: 0.75rem; min-height: 0; }
+    }
     .hint { font-size: 0.88rem; color: var(--muted); margin: 0.75rem 0 0; }
 
     .board h2 { font-size: 1.4rem; margin-bottom: 0.75rem; }
@@ -175,7 +190,7 @@
 
             <div class="overlay" id="overlay">
               <h2 id="ov-title">Ready?</h2>
-              <p id="ov-text">Move with the mouse, a finger, W/S, or the arrow keys.</p>
+              <p id="ov-text">Move with the mouse, a finger, W/S, or the arrow keys. Flick your paddle’s arms with Q (top) and A (bottom), or Space for the nearest one.</p>
               <form class="name-form" id="name-form" hidden>
                 <label class="visually-hidden" for="player-name">Your name</label>
                 <input id="player-name" maxlength="12" autocomplete="off" placeholder="Your name (max 12)">
@@ -186,7 +201,11 @@
               <p class="attempts" id="attempts" aria-live="polite"></p>
             </div>
           </div>
-          <p class="hint">Tip: hitting the ball with the edge of your paddle sends it at a sharper angle.</p>
+          <div class="arm-btns" aria-label="Paddle arms">
+            <button type="button" id="arm-top">▲ Top arm</button>
+            <button type="button" id="arm-bottom">▼ Bottom arm</button>
+          </div>
+          <p class="hint">New: your paddle has two arms. Flick one just as the ball reaches it: the top arm smashes the ball downward, the bottom arm sends it upward. A point won with an arm shot counts double. Each arm needs a second to recharge.</p>
         </div>
 
         <aside class="board" aria-labelledby="board-title">
@@ -321,9 +340,82 @@
 
     let playerY, cpuY, ball, score, lives, running = false, last = 0, keys = {}, pointerY = null, serveTimer = 0;
 
+    // ---- Paddle arms: one on each end of your paddle ----
+    // At rest they fold back. When flicked, an arm sweeps forward; if it touches the ball mid-swing it smashes
+    // the ball at a steep angle (top arm: downward, bottom arm: upward). A point won from an arm shot counts double.
+    // Paddle + resting arms together are as long as the computer's paddle (PAD_H). At rest the arms are part of the
+    // paddle; a flicked arm leaves a gap until it swings back.
+    const ARM_LEN = 26, ARM_W = 8;
+    const ARM_REST = 90 * Math.PI / 180, ARM_OUT = -15 * Math.PI / 180;    // angle from straight ahead
+    const ARM_REACH = ARM_LEN * Math.sin(ARM_REST);
+    const ARM_OUT_TIME = 0.08, ARM_HOLD = 0.08, ARM_BACK_TIME = 0.15;       // seconds
+    const ARM_COOLDOWN = 1.0;                                               // seconds before it can be used again
+    const ARM_SHOT_ANGLE = 48 * Math.PI / 180;
+    const ARM_POINTS = 2;
+    const arms = [{ side: -1, t: -1, cool: 0, prev: ARM_REST, key: 'Q' }, { side: 1, t: -1, cool: 0, prev: ARM_REST, key: 'A' }];
+    let armShot = false;               // true while the ball in play came off an arm
+    let popups = [];                   // little "+2" / "Smash!" labels
+
+    function armAngle(arm) {
+      const t = arm.t;
+      if (t < 0) return ARM_REST;
+      if (t < ARM_OUT_TIME) return ARM_REST + (ARM_OUT - ARM_REST) * (t / ARM_OUT_TIME);
+      if (t < ARM_OUT_TIME + ARM_HOLD) return ARM_OUT;
+      const d = (t - ARM_OUT_TIME - ARM_HOLD) / ARM_BACK_TIME;
+      return d >= 1 ? ARM_REST : ARM_OUT + (ARM_REST - ARM_OUT) * d;
+    }
+    function armHinge(arm) {
+      return { x: EDGE + PAD_W / 2, y: arm.side < 0 ? playerY + ARM_REACH : playerY + PAD_H - ARM_REACH };
+    }
+    function armTip(arm, a) {
+      const h = armHinge(arm);
+      return { x: h.x + ARM_LEN * Math.cos(a), y: h.y + arm.side * ARM_LEN * Math.sin(a) };
+    }
+    function padTop() { return arms[0].t < 0 ? playerY : playerY + ARM_REACH; }          // a flicked arm leaves a gap
+    function padBottom() { return arms[1].t < 0 ? playerY + PAD_H : playerY + PAD_H - ARM_REACH; }
+    function fireArm(i) {
+      const arm = arms[i];
+      if (!running || arm.t >= 0 || arm.cool > 0) return;
+      arm.t = 0; arm.cool = ARM_COOLDOWN; arm.kicked = false;
+    }
+    function fireNearest() {
+      const y = ball ? ball.y : H / 2;
+      fireArm(y < playerY + PAD_H / 2 ? 0 : 1);
+    }
+    function updateArms(dt) {
+      for (const arm of arms) {
+        arm.prev = armAngle(arm);
+        if (arm.t >= 0) { arm.t += dt; if (arm.t > ARM_OUT_TIME + ARM_HOLD + ARM_BACK_TIME) arm.t = -1; }
+        if (arm.cool > 0) arm.cool = Math.max(0, arm.cool - dt);
+      }
+      popups = popups.filter(p => (p.t += dt) < 0.9);
+    }
+    function armCollide() {
+      for (const arm of arms) {
+        const swinging = arm.t >= 0 && arm.t < ARM_OUT_TIME + ARM_HOLD;
+        if (!swinging || arm.kicked || ball.vx > 0) continue;
+        const h = armHinge(arm), a1 = arm.prev, a2 = armAngle(arm);
+        for (let k = 0; k <= 4; k++) {                 // check a few in-between positions so a fast swing can't skip the ball
+          const tip = armTip(arm, a1 + (a2 - a1) * k / 4);
+          const dx = tip.x - h.x, dy = tip.y - h.y;
+          const u = Math.max(0, Math.min(1, ((ball.x - h.x) * dx + (ball.y - h.y) * dy) / (dx * dx + dy * dy)));
+          if (Math.hypot(ball.x - (h.x + u * dx), ball.y - (h.y + u * dy)) >= BALL_R + ARM_W / 2) continue;
+          const speed = Math.min(Math.max(Math.hypot(ball.vx, ball.vy) * 1.15, 850), 950);
+          const ang = arm.side < 0 ? ARM_SHOT_ANGLE : -ARM_SHOT_ANGLE;   // top arm smashes down, bottom arm up
+          ball.vx = speed * Math.cos(ang); ball.vy = speed * Math.sin(ang);
+          ball.x = Math.max(ball.x, EDGE + PAD_W + BALL_R + 1);
+          arm.kicked = true; armShot = true;
+          newCpuAim(); cpuAim *= 2.2;                   // arm shots are harder for the computer to read
+          popups.push({ text: 'Smash!', x: tip.x + 50, y: tip.y, t: 0 });
+          break;
+        }
+      }
+    }
+
     function resetRound(towardPlayer) {
       ball = { x: W / 2, y: H / 2, vx: 0, vy: 0 };
       serveTimer = 0.7;                          // short pause before each serve
+      armShot = false;
       ball.dir = towardPlayer ? -1 : 1;
     }
 
@@ -338,6 +430,8 @@
     function newGame() {
       playerY = cpuY = H / 2 - PAD_H / 2;
       score = 0; lives = MAX_LIVES;
+      for (const arm of arms) { arm.t = -1; arm.cool = 0; }
+      armShot = false; popups = [];
       updateHud();
       resetRound(true);
       running = true;
@@ -391,6 +485,8 @@
       cpuY += Math.sign(diff) * Math.min(Math.abs(diff), cpuSpeed() * dt);
       cpuY = Math.max(0, Math.min(H - PAD_H, cpuY));
 
+      updateArms(dt);
+
       if (serveTimer > 0) {
         serveTimer -= dt;
         if (serveTimer <= 0) serve();
@@ -401,11 +497,13 @@
       ball.y += ball.vy * dt;
       if (ball.y < BALL_R) { ball.y = BALL_R; ball.vy = Math.abs(ball.vy); }
       if (ball.y > H - BALL_R) { ball.y = H - BALL_R; ball.vy = -Math.abs(ball.vy); }
+      armCollide();
 
       // Player paddle
       if (ball.vx < 0 && ball.x - BALL_R <= EDGE + PAD_W && ball.x > EDGE &&
-          ball.y >= playerY - BALL_R && ball.y <= playerY + PAD_H + BALL_R) {
+          ball.y >= padTop() - BALL_R && ball.y <= padBottom() + BALL_R) {
         bounce(playerY, 1, 1.05);
+        armShot = false;
         newCpuAim();
         ball.x = EDGE + PAD_W + BALL_R;
       }
@@ -413,12 +511,15 @@
       if (ball.vx > 0 && ball.x + BALL_R >= W - CPU_EDGE - PAD_W && ball.x < W - CPU_EDGE &&
           ball.y >= cpuY - BALL_R && ball.y <= cpuY + PAD_H + BALL_R) {
         bounce(cpuY, -1, 1.02);
+        armShot = false;
         ball.x = W - CPU_EDGE - PAD_W - BALL_R;
       }
 
       // Points
       if (ball.x > W + BALL_R) {                 // computer missed: you score
-        score = Math.min(score + 1, MAX_SCORE);
+        const gain = armShot ? ARM_POINTS : 1;
+        score = Math.min(score + gain, MAX_SCORE);
+        if (gain > 1) popups.push({ text: '+' + gain, x: W - 70, y: Math.max(40, Math.min(H - 40, ball.y)), t: 0 });
         updateHud();
         resetRound(false);
       } else if (ball.x < -BALL_R) {             // you missed: lose a life
@@ -454,6 +555,7 @@
       ctx.beginPath(); ctx.arc(x, y, FACE_R, 0, Math.PI * 2); ctx.stroke();
     }
 
+    const coarse = window.matchMedia('(pointer: coarse)').matches;
     function draw() {
       ctx.fillStyle = '#2f7d55';
       ctx.fillRect(0, 0, W, H);
@@ -470,8 +572,21 @@
       ctx.fillStyle = 'rgba(255,255,255,0.8)';
       ctx.fillRect(W / 2 - 2, 4, 4, H - 8);           // net
 
+      for (const arm of arms) {                        // paddle arms
+        const h = armHinge(arm), tip = armTip(arm, armAngle(arm));
+        ctx.strokeStyle = arm.cool > 0 ? '#c99f52' : '#f1c879';     // a little darker while recharging
+        ctx.lineWidth = arm.t < 0 ? PAD_W : ARM_W; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(h.x, h.y); ctx.lineTo(tip.x, tip.y); ctx.stroke();
+        if (!coarse && !running) {
+          ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '600 13px system-ui, sans-serif'; ctx.textAlign = 'left';
+          ctx.fillText(arm.key, h.x + 14, h.y + arm.side * 18 + 4);
+        }
+      }
+      ctx.lineCap = 'butt';
       ctx.fillStyle = '#f1c879';                       // you
-      ctx.beginPath(); ctx.roundRect(EDGE, playerY, PAD_W, PAD_H, 5); ctx.fill();
+      ctx.beginPath(); ctx.roundRect(EDGE, playerY + ARM_REACH - 2, PAD_W, PAD_H - 2 * ARM_REACH + 4, 4); ctx.fill();
+      ctx.fillStyle = '#1b2330';                       // hinges
+      for (const arm of arms) { const h = armHinge(arm); ctx.beginPath(); ctx.arc(h.x, h.y, 2.5, 0, Math.PI * 2); ctx.fill(); }
       ctx.fillStyle = '#e57c69';                       // computer
       ctx.beginPath(); ctx.roundRect(W - CPU_EDGE - PAD_W, cpuY, PAD_W, PAD_H, 5); ctx.fill();
       drawFace(W - CPU_EDGE - PAD_W / 2, cpuY + PAD_H / 2);  // my face rides on the computer's paddle
@@ -481,6 +596,13 @@
       ctx.strokeStyle = 'rgba(255,255,255,0.7)';
       ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.arc(ball.x - 4, ball.y, BALL_R * 0.8, -0.9, 0.9); ctx.stroke();
+
+      for (const p of popups) {                        // "+2" and "Smash!" labels
+        ctx.globalAlpha = Math.max(0, 1 - p.t / 0.9);
+        ctx.fillStyle = '#fff'; ctx.font = '700 20px system-ui, sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(p.text, p.x, p.y - p.t * 30);
+      }
+      ctx.globalAlpha = 1;
     }
 
     function loop(now) {
@@ -572,6 +694,11 @@
     const KEYS_UP = ['ArrowUp', 'w', 'W'], KEYS_DOWN = ['ArrowDown', 's', 'S'];
     document.addEventListener('keydown', (e) => {
       if (document.activeElement === nameInput) return;
+      if (running && !e.repeat) {
+        if (e.key === 'q' || e.key === 'Q') fireArm(0);
+        if (e.key === 'a' || e.key === 'A') fireArm(1);
+        if (e.key === ' ') { fireNearest(); e.preventDefault(); }
+      }
       if (KEYS_UP.includes(e.key)) { keys.up = true; pointerY = null; }
       if (KEYS_DOWN.includes(e.key)) { keys.down = true; pointerY = null; }
       if (running && (KEYS_UP.includes(e.key) || KEYS_DOWN.includes(e.key))) e.preventDefault();
@@ -587,6 +714,12 @@
     canvas.addEventListener('pointermove', (e) => { pointerY = toCanvasY(e.clientY); });
     canvas.addEventListener('pointerdown', (e) => { pointerY = toCanvasY(e.clientY); });
     canvas.addEventListener('touchmove', (e) => { if (running) e.preventDefault(); }, { passive: false });
+    if (coarse || navigator.maxTouchPoints > 0) {
+      document.querySelector('.arm-btns').classList.add('on');
+      document.getElementById('ov-text').textContent = 'Drag on the court to move. Tap the buttons below the court to flick your paddle\u2019s arms.';
+    }
+    document.getElementById('arm-top').addEventListener('pointerdown', (e) => { e.preventDefault(); fireArm(0); });
+    document.getElementById('arm-bottom').addEventListener('pointerdown', (e) => { e.preventDefault(); fireArm(1); });
 
     // Pause between points if the tab is hidden
     document.addEventListener('visibilitychange', () => {
