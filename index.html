@@ -146,17 +146,8 @@
   <!-- ===== FOOTER (same on every page) ===== -->
   <footer class="site-footer">
     <div class="wrap">
-      <span>Made in Pittsburgh. Last updated <span class="updated">November 2026</span>.</span>
-      <script>
-        (function () {   /* "Last updated": the month this page was last changed on the server */
-          var d = new Date(document.lastModified);
-          if (isNaN(d)) return;
-          var es = document.documentElement.lang === 'es';
-          document.querySelectorAll('.updated').forEach(function (e) {
-            e.textContent = d.toLocaleDateString(es ? 'es' : 'en-US', { month: 'long', year: 'numeric' });
-          });
-        })();
-      </script>
+      <span>© <span class="copy-year">2026</span> · All rights reserved</span>
+      <script>document.querySelectorAll(".copy-year").forEach(e => e.textContent = new Date().getFullYear());</script>
       <a href="mailto:josearel@andrew.cmu.edu">josearel@andrew.cmu.edu</a>
     </div>
   </footer>

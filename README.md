@@ -62,7 +62,6 @@ You can preview the site anytime by double-clicking `index.html`.
 - To add a paper, copy an `<article class="entry"> … </article>` block in `research.html` and edit it. Comments in the files mark where things go.
 - A paper's status ("Under review", "Working paper, 2026") is the `<span class="status">` line above its title.
 - **Lately** on the About page: each item is a `<dt>` ("Now" or a year) followed by a `<dd>` (the text). Add new items at the top, under "Now", and drop old ones when the list gets long.
-- The footer's "Last updated" month fills itself in from the date the page was last changed.
 - The header and footer are repeated on each page. If you change one (for example, adding a nav link), change it on all three.
 - The moon/sun button next to the name switches light and dark mode and remembers each visitor's choice. Dark-mode colors are defined twice near the top of `style.css` (once for the device setting, once for the button); change both when editing them.
 - After editing `style.css`, bump the number in `style.css?v=8` (to `v=9`, and so on) in every HTML file, so visitors' browsers load the new version instead of an old cached copy.
