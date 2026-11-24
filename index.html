@@ -32,7 +32,7 @@
       document.documentElement.setAttribute('data-theme', t);
     })();
   </script>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
 
@@ -117,22 +117,23 @@
         </dl>
       </section>
 
-      <!-- RESEARCH QUESTIONS: each theme (<h3>) is followed by its questions (<li>). -->
+      <!-- RESEARCH QUESTIONS: each theme (<h3>) is followed by its questions (<li>).
+           Each theme name links to the Research page filtered to that theme; its color is set in style.css (--t-…). -->
       <section class="home-section" aria-labelledby="themes-title">
         <h2 id="themes-title">Questions that drive my work</h2>
         <div class="rows questions-rows">
-          <h3>Attention and engagement</h3>
+          <h3 class="t-attention"><a href="research.html?theme=attention">Attention and engagement</a></h3>
           <ul>
             <li>Why do people avoid potentially life-saving health information?</li>
             <li>Can redesigning routine patient notifications get more people to engage with their care?</li>
           </ul>
-          <h3>Credibility and beliefs</h3>
+          <h3 class="t-credibility"><a href="research.html?theme=credibility">Credibility and beliefs</a></h3>
           <ul>
             <li>What makes a health communicator look like an expert?</li>
             <li>Why do some social norm messages persuade while others fall flat?</li>
             <li>How can trust in scientists be strengthened?</li>
           </ul>
-          <h3>From intention to action</h3>
+          <h3 class="t-action"><a href="research.html?theme=action">From intention to action</a></h3>
           <ul>
             <li>What helps patients and physicians close gaps in preventive care?</li>
             <li>Can low-cost, behaviorally informed programs change everyday parenting practices?</li>

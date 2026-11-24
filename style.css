@@ -14,6 +14,11 @@
   --accent-soft: #f3e4e0; /* light tint behind small highlights */
   --rule:    #dfe3ea;  /* thin divider lines */
 
+  /* Research-theme colors: theme names on the About page, theme tags and filters on the Research page */
+  --t-attention:   #8a5800;  /* Attention and engagement (ochre) */
+  --t-credibility: #17675f;  /* Credibility and beliefs (teal) */
+  --t-action:      #7d3a73;  /* From intention to action (plum) */
+
   /* Older theme colors, still used by the tennis game and Experiments 101 */
   --amber:   #df9a2b;
   --teal:    #1f8a80;
@@ -40,6 +45,9 @@
     --accent:  #f0917e;
     --accent-soft: #3a2421;
     --rule:    #2b303c;
+    --t-attention:   #e0b052;
+    --t-credibility: #5fc4b8;
+    --t-action:      #d99acb;
     --amber:   #e8ae4f;
     --teal:    #4fb8ac;
     --coral:   #e57c69;
@@ -54,6 +62,9 @@
   --accent:  #f0917e;
   --accent-soft: #3a2421;
   --rule:    #2b303c;
+  --t-attention:   #e0b052;
+  --t-credibility: #5fc4b8;
+  --t-action:    #d99acb;
   --amber:   #e8ae4f;
   --teal:    #4fb8ac;
   --coral:   #e57c69;
@@ -400,7 +411,7 @@ main { padding: 3.5rem 0 4rem; }
   display: block;
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--muted);
   margin-bottom: 0.3rem;
 }
 .entry-links {
@@ -412,6 +423,54 @@ main { padding: 3.5rem 0 4rem; }
   padding: 0;
   font-size: 0.97rem;
 }
+
+/* Research themes: each theme has its own color (tokens at the top) */
+.t-attention   { --t: var(--t-attention); }
+.t-credibility { --t: var(--t-credibility); }
+.t-action      { --t: var(--t-action); }
+.questions-rows h3 a { color: var(--t); }
+
+/* The theme names under each paper */
+.themes-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.themes-tags li { color: var(--t); }
+
+/* Theme filters at the top of the Research page (shown only when JavaScript runs) */
+.theme-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 1.75rem;
+  margin-top: 1.75rem;
+}
+.theme-filters[hidden] { display: none; }
+.theme-filters button {
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--t, var(--ink));
+  background: none;
+  border: 0;
+  padding: 0.6rem 0;
+  min-height: 2.75rem;
+  cursor: pointer;
+}
+.theme-filters button:hover,
+.theme-filters button[aria-pressed="true"] {
+  text-decoration: underline;
+  text-underline-offset: 0.45em;
+}
+.theme-filters button[aria-pressed="true"] { text-decoration-thickness: 2px; }
+.theme-filters button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.entry[hidden], .section[hidden] { display: none; }
 
 /* A publication shown with a small cover image on the right */
 .entry.with-cover {
