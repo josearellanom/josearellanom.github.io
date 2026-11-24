@@ -6,7 +6,7 @@ Personal academic website of Jose Arellano Martorellet. Plain HTML and CSS, no b
 
 | File | What it is |
 |---|---|
-| `index.html` | About page (photo, bio, contact links, research themes, link to the Research page) |
+| `index.html` | About page: the blue intro band (header, "Hello!", bio, "See my research" button, contact links, photo), then "Lately" (Now plus dated news) and "Questions that drive my work" |
 | `research.html` | Publications and working papers |
 | `cv.html` | Education, experience, awards and grants, presentations, teaching, public writing, skills |
 | `experiments.html` | Experiments 101 FAQ for practitioners: collapsible questions, interactive figures, and a sample size calculator (two groups, yes-or-no outcome). `images/type-errors.webp` is the Type I/II illustration |
@@ -60,11 +60,13 @@ You can preview the site anytime by double-clicking `index.html`.
 
 - On github.com, open a file, click the pencil icon, make the change, and click **Commit changes**. The live site updates within a minute or two.
 - To add a paper, copy an `<article class="entry"> … </article>` block in `research.html` and edit it. Comments in the files mark where things go.
-- Each paper's colored dot comes from `style="--dot: var(--amber)"` on its `<article>` (use `--amber`, `--teal`, or `--coral` for the three research themes).
+- A paper's status ("Under review", "Working paper, 2026") is the `<span class="status">` line above its title.
+- **Lately** on the About page: each item is a `<dt>` ("Now" or a year) followed by a `<dd>` (the text). Add new items at the top, under "Now", and drop old ones when the list gets long.
+- The footer's "Last updated" month fills itself in from the date the page was last changed.
 - The header and footer are repeated on each page. If you change one (for example, adding a nav link), change it on all three.
 - The moon/sun button next to the name switches light and dark mode and remembers each visitor's choice. Dark-mode colors are defined twice near the top of `style.css` (once for the device setting, once for the button); change both when editing them.
-- After editing `style.css`, bump the number in `style.css?v=7` (to `v=8`, and so on) in every HTML file, so visitors' browsers load the new version instead of an old cached copy.
-- To change colors, edit the variables at the top of `style.css`. The three research-theme colors are `--amber` (attention and engagement), `--teal` (credibility and beliefs), and `--coral` (from intention to action). A paper that belongs to two themes gets two dots.
+- After editing `style.css`, bump the number in `style.css?v=8` (to `v=9`, and so on) in every HTML file, so visitors' browsers load the new version instead of an old cached copy.
+- To change colors, edit the variables at the top of `style.css`: `--field` is the soft blue band behind the intro, `--accent` the brick red of links and the "!" in Hello!, `--ink` the text. Headings and buttons use Public Sans; reading text (bio, questions, paper summaries) uses Newsreader.
 
 ## Tennis leaderboard
 

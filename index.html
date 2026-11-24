@@ -22,9 +22,7 @@
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Icon library for the contact links (Font Awesome) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Light/dark mode: applies the saved choice (or the device setting) before the page draws -->
   <script>
     (function () {
@@ -34,111 +32,132 @@
       document.documentElement.setAttribute('data-theme', t);
     })();
   </script>
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 
-  <!-- ===== HEADER (same on every page) ===== -->
-  <header class="site-header">
-    <div class="wrap">
-      <div class="brand">
-        <a class="site-name" href="index.html">Jose Arellano Martorellet</a>
-        <button class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch light/dark mode">
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-        </button>
+  <!-- The soft blue band at the top holds the header and the intro (color: --field in style.css) -->
+  <div class="intro">
+    <!-- ===== HEADER (same on every page) ===== -->
+    <header class="site-header">
+      <div class="wrap">
+        <div class="brand">
+          <a class="site-name" href="index.html">Jose Arellano Martorellet</a>
+          <button class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch light/dark mode">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          </button>
+        </div>
+        <nav class="site-nav" aria-label="Main">
+          <ul>
+            <li><a href="index.html" aria-current="page">About</a></li>
+            <li><a href="research.html">Research</a></li>
+            <li><a href="cv.html">CV</a></li>
+            <li><a href="experiments.html">Experiments 101</a></li>
+          </ul>
+        </nav>
       </div>
-      <nav class="site-nav" aria-label="Main">
-        <ul>
-          <li><a href="index.html" aria-current="page">About</a></li>
-          <li><a href="research.html">Research</a></li>
-          <li><a href="cv.html">CV</a></li>
-          <li><a href="experiments.html">Experiments 101</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+    </header>
 
-  <main>
     <div class="wrap">
       <section class="hero">
         <div class="hero-text">
-          <h1 class="hello">Hello!</h1>
+          <h1 class="hello">Hello<span class="bang">!</span></h1>
 
           <!-- BIO: edit these paragraphs freely -->
-          <div class="bio">
+          <div class="bio prose">
             <p>I am a PhD candidate in Behavioral Decision Research in the Department of Social and Decision Sciences at Carnegie Mellon University, advised by Gretchen B. Chapman and Silvia Saccardo.</p>
             <p>I'm drawn to behavioral research that can inform policy. My work uses field and online experiments, along with administrative data, to examine how people engage with information, form judgments and make decisions, particularly in health.</p>
             <p>Before my doctoral studies, I worked extensively on applied research and behavioral interventions with public and private organizations in Peru and across Latin America.</p>
           </div>
 
-          <!-- CONTACT LINKS: icons only. target="_blank" opens a profile in a new tab. The aria-label/title text is what screen readers
-               read aloud and what appears when someone hovers over the icon. -->
-          <ul class="icon-links" aria-label="Contact and profiles">
-            <li><a href="mailto:josearel@andrew.cmu.edu" aria-label="Email" title="Email"><i class="fa-regular fa-envelope" aria-hidden="true"></i></a></li>
-            <li><a href="https://www.linkedin.com/in/jose-arellano-martorellet/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a></li>
-            <li><a href="https://scholar.google.com/citations?user=qfkP73gAAAAJ" target="_blank" rel="noopener" aria-label="Google Scholar" title="Google Scholar"><i class="fa-brands fa-google-scholar" aria-hidden="true"></i></a></li>
-            <li><a href="https://orcid.org/0000-0002-6596-2134" target="_blank" rel="noopener" aria-label="ORCID" title="ORCID"><i class="fa-brands fa-orcid" aria-hidden="true"></i></a></li>
-            <li><a href="https://www.cmu.edu/dietrich/sds/people/phdstudents/jose-arellano.html" target="_blank" rel="noopener" aria-label="CMU profile" title="CMU profile"><i class="fa-solid fa-building-columns" aria-hidden="true"></i></a></li>
-          </ul>
+          <!-- BUTTON AND CONTACT LINKS. target="_blank" opens a profile in a new tab. -->
+          <div class="hero-actions">
+            <a class="button" href="research.html">See my research</a>
+            <ul class="text-links" aria-label="Contact and profiles">
+              <li><a href="mailto:josearel@andrew.cmu.edu">Email</a></li>
+              <li><a href="https://scholar.google.com/citations?user=qfkP73gAAAAJ" target="_blank" rel="noopener">Google Scholar</a></li>
+              <li><a href="https://www.linkedin.com/in/jose-arellano-martorellet/" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="https://orcid.org/0000-0002-6596-2134" target="_blank" rel="noopener">ORCID</a></li>
+              <li><a href="https://www.cmu.edu/dietrich/sds/people/phdstudents/jose-arellano.html" target="_blank" rel="noopener">CMU profile</a></li>
+            </ul>
+          </div>
         </div>
 
-        <!-- PHOTO AND NAME: the name and title under the photo are in the <p class="namecard"> below. -->
-        <div class="portrait">
-          <!-- PHOTO: images/portrait.webp is your photo with the background removed.
-               To change it, replace that file with another cut-out image of the same name. -->
-          <figure class="figure">
-            <img src="images/portrait.webp" alt="Jose Arellano Martorellet" width="596" height="850">
-            <!-- EASTER EGG: the small gold dot next to the photo opens the tennis game. -->
-            <a class="ball" href="tennis.html" aria-label="Take a break: play tennis" title="Take a break"></a>
-            <!-- EASTER EGG 2 (paused): to bring back the guessing game, move _paused/guess.html back to the main folder
-                 and remove the comment markers around the next line.
-            <a class="egg-guess" href="guess.html" aria-label="Play a guessing game" title="Can you outguess everyone?">⅔</a>
-            -->
-          </figure>
-          <p class="namecard"><span class="namecard-name">Jose Arellano Martorellet</span><span class="namecard-title">PhD Candidate · Carnegie Mellon University</span></p>
-        </div>
+        <!-- PHOTO: images/portrait.webp is your photo with the background removed.
+             To change it, replace that file with another cut-out image of the same name. -->
+        <figure class="figure">
+          <img src="images/portrait.webp" alt="Jose Arellano Martorellet" width="596" height="850">
+          <!-- EASTER EGG: the small tennis ball next to the photo opens the tennis game. -->
+          <a class="ball" href="tennis.html" aria-label="Take a break: play tennis" title="Take a break"></a>
+          <!-- EASTER EGG 2 (paused): to bring back the guessing game, move _paused/guess.html back to the main folder
+               and remove the comment markers around the next line.
+          <a class="egg-guess" href="guess.html" aria-label="Play a guessing game" title="Can you outguess everyone?">&frac23;</a>
+          -->
+        </figure>
+      </section>
+    </div>
+  </div>
+
+  <main>
+    <div class="wrap">
+
+      <!-- LATELY: "Now" first, then dated news, newest first. Each item is a <dt> (label) and a <dd> (text). -->
+      <section class="home-section" aria-labelledby="lately-title">
+        <h2 id="lately-title">Lately</h2>
+        <dl class="rows prose">
+          <dt class="now">Now</dt>
+          <dd>Finishing my dissertation; PhD expected early 2027. Back from a summer with the World Bank's Mind, Behavior, and Development Unit, on an early-childhood nutrition intervention in Mendoza, Argentina.</dd>
+          <dt>2026</dt>
+          <dd>Awarded a Center for Behavioral and Decision Research Small Grant at Carnegie Mellon.</dd>
+          <dt>2025</dt>
+          <dd>Presented <em>Selective (In)attention</em> at SJDM in San Francisco, with the J. Frank Yates Memorial Student Travel Award, and at the Academy of Management in Copenhagen.</dd>
+          <dt>2025</dt>
+          <dd>Presented the patient-portal trial at Penn's Nudges in Health Care Symposium, and published a chapter in <em>The SAGE Handbook of Health Psychology</em>.</dd>
+        </dl>
       </section>
 
-      <!-- RESEARCH THEMES: each theme lists the questions its papers address.
-           To edit a question, change the text inside <li>…</li>. -->
-      <h2 class="themes-title" id="themes-title">Questions that drive my work</h2>
-      <section class="themes" aria-labelledby="themes-title">
-        <div class="theme" style="--dot: var(--amber)">
-          <h2><span class="dot"></span>Attention and engagement</h2>
-          <ul class="questions">
+      <!-- RESEARCH QUESTIONS: each theme (<h3>) is followed by its questions (<li>). -->
+      <section class="home-section" aria-labelledby="themes-title">
+        <h2 id="themes-title">Questions that drive my work</h2>
+        <div class="rows questions-rows">
+          <h3>Attention and engagement</h3>
+          <ul>
             <li>Why do people avoid potentially life-saving health information?</li>
             <li>Can redesigning routine patient notifications get more people to engage with their care?</li>
           </ul>
-        </div>
-        <div class="theme" style="--dot: var(--teal)">
-          <h2><span class="dot"></span>Credibility and beliefs</h2>
-          <ul class="questions">
+          <h3>Credibility and beliefs</h3>
+          <ul>
             <li>What makes a health communicator look like an expert?</li>
             <li>Why do some social norm messages persuade while others fall flat?</li>
             <li>How can trust in scientists be strengthened?</li>
           </ul>
-        </div>
-        <div class="theme" style="--dot: var(--coral)">
-          <h2><span class="dot"></span>From intention to action</h2>
-          <ul class="questions">
+          <h3>From intention to action</h3>
+          <ul>
             <li>What helps patients and physicians close gaps in preventive care?</li>
             <li>Can low-cost, behaviorally informed programs change everyday parenting practices?</li>
           </ul>
         </div>
       </section>
 
-      <!-- Link to the full Research page, shown under the three themes -->
-      <p class="research-link"><a class="button-link" href="research.html">See my research</a></p>
     </div>
   </main>
 
   <!-- ===== FOOTER (same on every page) ===== -->
   <footer class="site-footer">
     <div class="wrap">
-      <span>© <span class="copy-year">2026</span> · All rights reserved</span>
-      <script>document.querySelectorAll(".copy-year").forEach(e => e.textContent = new Date().getFullYear());</script>
-      <span>Carnegie Mellon University · <a href="mailto:josearel@andrew.cmu.edu">Email</a></span>
+      <span>Made in Pittsburgh. Last updated <span class="updated">November 2026</span>.</span>
+      <script>
+        (function () {   /* "Last updated": the month this page was last changed on the server */
+          var d = new Date(document.lastModified);
+          if (isNaN(d)) return;
+          var es = document.documentElement.lang === 'es';
+          document.querySelectorAll('.updated').forEach(function (e) {
+            e.textContent = d.toLocaleDateString(es ? 'es' : 'en-US', { month: 'long', year: 'numeric' });
+          });
+        })();
+      </script>
+      <a href="mailto:josearel@andrew.cmu.edu">josearel@andrew.cmu.edu</a>
     </div>
   </footer>
 

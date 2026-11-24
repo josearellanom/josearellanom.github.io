@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <!-- Light/dark mode: applies the saved choice (or the device setting) before the page draws -->
   <script>
     (function () {
@@ -25,7 +25,7 @@
       document.documentElement.setAttribute('data-theme', t);
     })();
   </script>
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 
@@ -55,24 +55,15 @@
       <h1 class="page-title">Research</h1>
       <p class="page-lede">I study how people engage with health information, and how communication and behavioral interventions change what they do.</p>
 
-      <!-- THEME KEY: the colored dots mark which research theme each paper belongs to.
-           Set a paper's theme with style="--dot: var(--amber)" / var(--teal) / var(--coral) on its <article>.
-           A paper with two themes gets two dots, each with its own color (see the patient portal trial). -->
-      <ul class="theme-key" aria-label="Research themes">
-        <li style="--dot: var(--amber)"><span class="dot"></span>Attention and engagement</li>
-        <li style="--dot: var(--teal)"><span class="dot"></span>Credibility and beliefs</li>
-        <li style="--dot: var(--coral)"><span class="dot"></span>From intention to action</li>
-      </ul>
-
       <!-- ===================== PUBLICATIONS ===================== -->
       <section class="section" aria-labelledby="pubs">
         <h2 id="pubs">Publications</h2>
 
         <!-- To add a publication, copy everything from <article> to </article>
              and paste it above this one (newest first). -->
-        <article class="entry with-cover" style="--dot: var(--teal)">
+        <article class="entry with-cover">
           <div class="entry-body">
-            <h3><span class="dot" style="--dot: var(--teal)" aria-hidden="true"></span><span class="dot" style="--dot: var(--coral)" aria-hidden="true"></span>Information Provision and Vaccination Behavior</h3>
+            <h3>Information Provision and Vaccination Behavior</h3>
             <p class="authors">With Silvia Saccardo and Gretchen B. Chapman</p>
             <p class="venue">In <em>The SAGE Handbook of Health Psychology</em> (2nd ed., Vol. 2, pp. 433–460). SAGE Publications, 2025.</p>
             <p class="summary">Evidence synthesis from information provision interventions as a lever for vaccination. Applying a framework based on informational (e.g., risk communication) and non-informational elements (e.g., message source), we evaluate effects on beliefs, attitudes, intentions, and uptake, identify the conditions under which information is more or less likely to change behavior, and outline methodological priorities for future research.</p>
@@ -94,51 +85,51 @@
         <!-- To add a paper, copy an <article> block. When one is published,
              move it to the Publications section above. -->
 
-        <article class="entry" style="--dot: var(--teal)">
+        <article class="entry">
           <span class="status">Under review</span>
-          <h3><span class="dot" aria-hidden="true"></span>Believability of Social Norm Messages and Vaccination Intentions</h3>
+          <h3>Believability of Social Norm Messages and Vaccination Intentions</h3>
           <p class="authors">With Gretchen B. Chapman and Silvia Saccardo</p>
           <p class="summary">Experiments showing that the effectiveness often credited to injunctive norms and physician endorsement stems partly from something simpler: their claims are easier to believe.</p>
         </article>
 
-        <article class="entry" style="--dot: var(--amber)">
+        <article class="entry">
           <span class="status">Working paper, 2026</span>
-          <h3><span class="dot" style="--dot: var(--amber)" aria-hidden="true"></span><span class="dot" style="--dot: var(--coral)" aria-hidden="true"></span>Behaviorally-Enhanced Notification for Patient Portal Messages and Preventive Care Engagement:<br>A Clinical Trial</h3>
+          <h3>Behaviorally-Enhanced Notification for Patient Portal Messages and Preventive Care Engagement:<br>A Clinical Trial</h3>
           <p class="authors">With Silvia Saccardo, Jeff Borenstein, Jana Gallus, Craig Fox, Leah Mireles, Suzette Ma,<br>Jennifer Bocek, Sarah Meshkat, Sitaram Vangala, Jeffrey Fujimoto, and Hengchen Dai</p>
           <p class="summary">A large-scale randomized controlled trial testing whether behaviorally informed patient communications increase engagement with, and completion of, recommended preventive care.</p>
         </article>
 
-        <article class="entry" style="--dot: var(--coral)">
+        <article class="entry">
           <span class="status">Working paper, 2026</span>
-          <h3><span class="dot" style="--dot: var(--coral)" aria-hidden="true"></span><span class="dot" style="--dot: var(--teal)" aria-hidden="true"></span>Improving Parental Emotion Socialization Practices: Effects of a Behavioral Economics-Based Intervention</h3>
+          <h3>Improving Parental Emotion Socialization Practices: Effects of a Behavioral Economics-Based Intervention</h3>
           <p class="authors">Magaly S. Noblega, <span class="me">Jose Arellano Martorellet</span>, Katherine Fourment, Olenka Retiz, Ramon Bartra, and Lucía Márquez</p>
           <p class="summary">Evaluation of a behaviorally informed intervention, delivered through WhatsApp, that supports parental emotion socialization practices among caregivers in Peru.</p>
         </article>
         
-        <article class="entry" style="--dot: var(--amber)">
+        <article class="entry">
           <span class="status">Manuscript in preparation</span>
-          <h3><span class="dot" aria-hidden="true"></span>Selective (In)attention: Evidence from Healthcare</h3>
+          <h3>Selective (In)attention: Evidence from Healthcare</h3>
           <p class="authors">With Andrea Low, Silvia Saccardo, Hengchen Dai, Craig Fox, Artin Galoosian, Richard Leuchter, Folasade May, Sitaram Vangala, and Jeff Fujimoto</p>
           <p class="summary">Field and online experiments on how health communications designed to capture patients attention affect their willingness to engage with health information, including cases where interventions discourage rather than encourage engagement.</p>
         </article>
 
-        <article class="entry" style="--dot: var(--teal)">
+        <article class="entry">
           <span class="status">In progress</span>
-          <h3><span class="dot" aria-hidden="true"></span>Misleading Expertise: Inferring Expertise from Source and Content Cues in Health Communication</h3>
+          <h3>Misleading Expertise: Inferring Expertise from Source and Content Cues in Health Communication</h3>
           <p class="authors">With Gretchen B. Chapman and Silvia Saccardo</p>
           <p class="summary">Experiments examining whether peripheral cues weakly diagnostic of competence, such as professional attire and technical jargon, substitute for credentials in inferences of expertise, and how such cues interact when presented jointly.</p>
         </article>
 
-        <article class="entry" style="--dot: var(--coral)">
+        <article class="entry">
           <span class="status">In progress</span>
-          <h3><span class="dot" aria-hidden="true"></span>Leveraging the Intention-Action Framework to Close Cardiology Care Gaps</h3>
+          <h3>Leveraging the Intention-Action Framework to Close Cardiology Care Gaps</h3>
           <p class="authors">Amber Tang, Hengchen Dai, Jana Gallus, Richard Leuchter, Silvia Saccardo, <span class="me">Jose Arellano Martorellet</span>, Sitaram Vangala, and UCLA Health collaborators</p>
           <p class="summary">A field experiment testing the separate and joint effects of two behavioral interventions on physicians' actions to close their patients' cardiology care gaps, such as aspirin therapy.</p>
         </article>
 
-        <article class="entry" style="--dot: var(--teal)">
+        <article class="entry">
           <span class="status">In progress</span>
-          <h3><span class="dot" aria-hidden="true"></span>Strengthening Trust in Climate Scientists: A Megastudy</h3>
+          <h3>Strengthening Trust in Climate Scientists: A Megastudy</h3>
           <p class="authors">With Dhwani Yagnaraman, as part of a megastudy led by Jan Pfänder and colleagues</p>
           <p class="summary">Selected from 107 submissions for a US megastudy on trust in climate scientists, our intervention uses a value-aligned narrative and a delayed reveal to prompt reappraisal of climate scientists.</p>
           <ul class="entry-links">
@@ -153,9 +144,18 @@
   <!-- ===== FOOTER (same on every page) ===== -->
   <footer class="site-footer">
     <div class="wrap">
-      <span>© <span class="copy-year">2026</span> · All rights reserved</span>
-      <script>document.querySelectorAll(".copy-year").forEach(e => e.textContent = new Date().getFullYear());</script>
-      <span>Carnegie Mellon University · <a href="mailto:josearel@andrew.cmu.edu">Email</a></span>
+      <span>Made in Pittsburgh. Last updated <span class="updated">November 2026</span>.</span>
+      <script>
+        (function () {   /* "Last updated": the month this page was last changed on the server */
+          var d = new Date(document.lastModified);
+          if (isNaN(d)) return;
+          var es = document.documentElement.lang === 'es';
+          document.querySelectorAll('.updated').forEach(function (e) {
+            e.textContent = d.toLocaleDateString(es ? 'es' : 'en-US', { month: 'long', year: 'numeric' });
+          });
+        })();
+      </script>
+      <a href="mailto:josearel@andrew.cmu.edu">josearel@andrew.cmu.edu</a>
     </div>
   </footer>
 

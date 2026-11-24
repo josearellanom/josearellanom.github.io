@@ -10,7 +10,7 @@
   <link rel="icon" href="images/favicon-tennis.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <!-- Light/dark mode: applies the saved choice (or the device setting) before the page draws -->
   <script>
     (function () {
@@ -20,7 +20,7 @@
       document.documentElement.setAttribute('data-theme', t);
     })();
   </script>
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
   <style>
     .game-intro { color: var(--muted); max-width: var(--text); margin: 0 0 1.75rem; }
     .game-rules { display: block; margin-top: 0.35rem; font-size: 0.92rem; font-style: italic; }
@@ -219,8 +219,17 @@
 
   <footer class="site-footer">
     <div class="wrap">
-      <span>© <span class="copy-year">2026</span> · All rights reserved</span>
-      <script>document.querySelectorAll(".copy-year").forEach(e => e.textContent = new Date().getFullYear());</script>
+      <span>Made in Pittsburgh. Last updated <span class="updated">November 2026</span>.</span>
+      <script>
+        (function () {   /* "Last updated": the month this page was last changed on the server */
+          var d = new Date(document.lastModified);
+          if (isNaN(d)) return;
+          var es = document.documentElement.lang === 'es';
+          document.querySelectorAll('.updated').forEach(function (e) {
+            e.textContent = d.toLocaleDateString(es ? 'es' : 'en-US', { month: 'long', year: 'numeric' });
+          });
+        })();
+      </script>
       <span><a href="index.html">Back to the site</a></span>
     </div>
   </footer>
